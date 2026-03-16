@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClinPharm AI Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #111827;
+  --bg-card: #1a2236;
+  --bg-card-hover: #1f2a42;
+  --bg-elevated: #243049;
+  --accent: #00d4aa;
+  --accent-glow: rgba(0, 212, 170, 0.15);
+  --accent-bright: #00f5c4;
+  --accent-secondary: #6366f1;
+  --accent-warm: #f59e0b;
+  --accent-danger: #ef4444;
+  --accent-success: #10b981;
+  --accent-info: #3b82f6;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: rgba(148, 163, 184, 0.08);
+  --border-accent: rgba(0, 212, 170, 0.25);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.5);
+  --shadow-glow: 0 0 30px rgba(0, 212, 170, 0.1);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --font-main: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: 'Playfair Display', serif;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+.bg-mesh {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 600px 400px at 10% 20%, rgba(0,212,170,0.06), transparent),
+    radial-gradient(ellipse 500px 500px at 90% 80%, rgba(99,102,241,0.05), transparent),
+    radial-gradient(ellipse 400px 300px at 50% 50%, rgba(245,158,11,0.03), transparent);
+}
+
+.floating-orb {
+  position: fixed; border-radius: 50%; filter: blur(80px);
+  pointer-events: none; z-index: 0; animation: orbFloat 20s ease-in-out infinite;
+}
+.floating-orb:nth-child(1) { width: 300px; height: 300px; top: -100px; right: -100px; background: rgba(0,212,170,0.08); }
+.floating-orb:nth-child(2) { width: 250px; height: 250px; bottom: -80px; left: -80px; background: rgba(99,102,241,0.06); animation-delay: -7s; }
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(30px, -30px); }
+  66% { transform: translate(-20px, 20px); }
+}
+
+/* UTILITY */
+.hidden { display: none !important; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.gap-05 { gap: 4px; }
+.gap-1 { gap: 8px; }
+.gap-2 { gap: 16px; }
+.gap-3 { gap: 24px; }
+.w-full { width: 100%; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.mb-3 { margin-bottom: 24px; }
+.ml-auto { margin-left: auto; }
+.truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.relative { position: relative; }
+.cursor-pointer { cursor: pointer; }
+
+/* BUTTONS */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 24px; border-radius: var(--radius-sm);
+  font-family: var(--font-main); font-size: 14px; font-weight: 600;
+  cursor: pointer; border: none; transition: var(--transition);
+  text-decoration: none; white-space: nowrap; line-height: 1;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: linear-gradient(135deg, var(--accent), #00b894); color: var(--bg-primary); box-shadow: 0 4px 15px rgba(0,212,170,0.3); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,212,170,0.4); }
+.btn-secondary { background: var(--bg-elevated); color: var(--text-primary); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--bg-card-hover); border-color: var(--border-accent); }
+.btn-danger { background: rgba(239,68,68,0.15); color: var(--accent-danger); border: 1px solid rgba(239,68,68,0.2); }
+.btn-danger:hover { background: rgba(239,68,68,0.25); }
+.btn-info { background: rgba(59,130,246,0.15); color: var(--accent-info); border: 1px solid rgba(59,130,246,0.2); }
+.btn-info:hover { background: rgba(59,130,246,0.25); }
+.btn-warning { background: rgba(245,158,11,0.15); color: var(--accent-warm); border: 1px solid rgba(245,158,11,0.2); }
+.btn-warning:hover { background: rgba(245,158,11,0.25); }
+.btn-sm { padding: 8px 16px; font-size: 13px; }
+.btn-xs { padding: 5px 10px; font-size: 12px; }
+.btn-lg { padding: 16px 32px; font-size: 16px; }
+.btn-icon { width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary); cursor: pointer; transition: var(--transition); }
+.btn-icon:hover { color: var(--accent); border-color: var(--border-accent); }
+.btn-icon-sm { width: 32px; height: 32px; }
+.btn-ghost { background: transparent; border: none; color: var(--text-secondary); padding: 8px; }
+.btn-ghost:hover { color: var(--accent); }
+.btn[disabled] { opacity: 0.5; pointer-events: none; }
+
+/* FORM ELEMENTS */
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px; text-transform: uppercase; }
+.form-input, .form-select, .form-textarea {
+  padding: 12px 16px; background: var(--bg-primary);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--text-primary); font-family: var(--font-main); font-size: 14px;
+  transition: var(--transition); outline: none; width: 100%;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.form-input::placeholder, .form-textarea::placeholder { color: var(--text-muted); }
+.form-textarea { resize: vertical; min-height: 90px; }
+.form-select { cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
+}
+.form-select option { background: var(--bg-secondary); color: var(--text-primary); }
+.form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.form-row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.form-hint { font-size: 12px; color: var(--text-muted); }
+.form-error { font-size: 12px; color: var(--accent-danger); }
+.form-checkbox { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; }
+.form-checkbox input { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+
+/* SEARCH INPUT */
+.search-box {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px; background: var(--bg-primary);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+.search-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.search-box input { background: none; border: none; outline: none; color: var(--text-primary); font-family: var(--font-main); font-size: 14px; flex: 1; }
+.search-box input::placeholder { color: var(--text-muted); }
+.search-box svg { color: var(--text-muted); flex-shrink: 0; }
+
+/* CARDS */
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; transition: var(--transition); }
+.card-hover:hover { border-color: var(--border-accent); box-shadow: var(--shadow-glow); }
+.card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.card-title { font-size: 16px; font-weight: 700; }
+
+/* BADGES */
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.badge-accent { background: var(--accent-glow); color: var(--accent); }
+.badge-purple { background: rgba(99,102,241,0.15); color: #818cf8; }
+.badge-amber { background: rgba(245,158,11,0.15); color: #fbbf24; }
+.badge-danger { background: rgba(239,68,68,0.15); color: #f87171; }
+.badge-success { background: rgba(16,185,129,0.15); color: #34d399; }
+.badge-info { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.badge-lg { padding: 6px 14px; font-size: 13px; }
+
+/* PROGRESS */
+.progress-bar { width: 100%; height: 8px; background: var(--bg-primary); border-radius: 10px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--accent), var(--accent-bright)); transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+.progress-fill-danger { background: linear-gradient(90deg, var(--accent-danger), #f87171); }
+.progress-fill-amber { background: linear-gradient(90deg, var(--accent-warm), #fbbf24); }
+
+/* STAT CARD */
+.stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; transition: var(--transition); position: relative; overflow: hidden; }
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-secondary)); }
+.stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-glow); }
+.stat-value { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.stat-label { font-size: 13px; color: var(--text-secondary); }
+.stat-change { font-size: 12px; margin-top: 4px; }
+
+/* GRIDS */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+
+@media (max-width: 1024px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .form-row { grid-template-columns: 1fr; }
+  .form-row-3 { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.mobile-open { transform: translateX(0); }
+  .main-content { margin-left: 0 !important; }
+  .mobile-menu-btn { display: flex !important; }
+  .hide-mobile { display: none !important; }
+  .page-body { padding: 16px !important; }
+  .page-header { padding: 16px !important; }
+}
+
+/* AUTH */
+.auth-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; position: relative; z-index: 1; }
+.auth-card { width: 100%; max-width: 460px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 40px; box-shadow: var(--shadow-lg); }
+.auth-logo { text-align: center; margin-bottom: 32px; }
+.auth-logo-icon { width: 64px; height: 64px; margin: 0 auto 12px; border-radius: 18px; background: linear-gradient(135deg, var(--accent-glow), rgba(99,102,241,0.15)); display: flex; align-items: center; justify-content: center; font-size: 32px; }
+.auth-logo h1 { font-family: var(--font-display); font-size: 26px; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.auth-logo p { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
+.auth-tabs { display: flex; gap: 4px; padding: 4px; background: var(--bg-primary); border-radius: var(--radius-sm); margin-bottom: 24px; }
+.auth-tab { flex: 1; padding: 10px; text-align: center; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: var(--transition); border: none; color: var(--text-secondary); background: transparent; }
+.auth-tab.active { background: var(--bg-card); color: var(--accent); box-shadow: var(--shadow-sm); }
+.role-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+.role-option { padding: 14px 8px; text-align: center; background: var(--bg-primary); border: 2px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); font-size: 13px; font-weight: 600; }
+.role-option:hover { border-color: var(--border-accent); }
+.role-option.active { border-color: var(--accent); background: var(--accent-glow); color: var(--accent); }
+.role-icon { font-size: 24px; display: block; margin-bottom: 6px; }
+.demo-logins { margin-top: 20px; padding: 16px; background: var(--bg-primary); border-radius: var(--radius-sm); border: 1px solid var(--border); }
+.demo-logins-title { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; font-weight: 700; }
+.demo-login-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.demo-login-item:last-child { border: none; }
+
+/* APP LAYOUT */
+.app-layout { display: flex; min-height: 100vh; }
+.sidebar { width: 270px; background: var(--bg-secondary); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; z-index: 100; transition: transform 0.3s ease; }
+.sidebar-header { padding: 20px; border-bottom: 1px solid var(--border); }
+.sidebar-logo { font-family: var(--font-display); font-size: 20px; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 8px; }
+.sidebar-subtitle { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 12px; overflow-y: auto; }
+.nav-section { margin-bottom: 20px; }
+.nav-section-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; padding: 0 12px; margin-bottom: 8px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); color: var(--text-secondary); font-size: 14px; font-weight: 500; cursor: pointer; transition: var(--transition); border: none; background: none; width: 100%; text-align: left; }
+.nav-item:hover { background: var(--bg-card); color: var(--text-primary); }
+.nav-item.active { background: var(--accent-glow); color: var(--accent); font-weight: 600; }
+.nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+.nav-badge { margin-left: auto; padding: 2px 8px; border-radius: 10px; background: var(--accent); color: var(--bg-primary); font-size: 11px; font-weight: 700; }
+.sidebar-footer { padding: 16px; border-top: 1px solid var(--border); }
+.user-card { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: var(--radius-sm); background: var(--bg-card); cursor: pointer; transition: var(--transition); }
+.user-card:hover { background: var(--bg-card-hover); }
+.user-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-secondary)); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.user-info { flex: 1; overflow: hidden; }
+.user-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: 11px; color: var(--text-muted); }
+
+.main-content { margin-left: 270px; flex: 1; min-height: 100vh; }
+.mobile-menu-btn { display: none !important; }
+
+.page-header { padding: 20px 32px; border-bottom: 1px solid var(--border); background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 50; }
+.page-title { font-size: 20px; font-weight: 800; }
+.page-desc { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.page-body { padding: 24px 32px; }
+
+/* CASE CARD */
+.case-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: var(--transition); cursor: pointer; }
+.case-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-glow); border-color: var(--border-accent); }
+.case-card-top { height: 4px; }
+.case-card-top-easy { background: linear-gradient(90deg, var(--accent-success), #6ee7b7); }
+.case-card-top-medium { background: linear-gradient(90deg, var(--accent-warm), #fbbf24); }
+.case-card-top-hard { background: linear-gradient(90deg, var(--accent-danger), #f87171); }
+.case-card-body { padding: 20px; }
+.case-card-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+.case-card-footer { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--text-muted); }
+
+/* CASE SOLVER */
+.case-solver { display: flex; gap: 24px; }
+.case-info-panel { width: 380px; flex-shrink: 0; position: sticky; top: 90px; height: calc(100vh - 110px); overflow-y: auto; padding-right: 4px; }
+.case-work-panel { flex: 1; min-width: 0; }
+.info-section { padding: 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 10px; }
+.info-section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.info-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 13px; gap: 8px; }
+.info-label { color: var(--text-secondary); flex-shrink: 0; }
+.info-value { font-weight: 600; text-align: right; }
+.info-value-danger { color: var(--accent-danger); }
+
+.decision-step { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 16px; }
+.step-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.step-number { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-glow); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.step-title { font-size: 16px; font-weight: 700; }
+
+/* RESULTS */
+.result-score-circle { width: 140px; height: 140px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
+.result-score-inner { width: 110px; height: 110px; border-radius: 50%; background: var(--bg-card); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.result-score-value { font-size: 36px; font-weight: 800; }
+.result-score-label { font-size: 12px; color: var(--text-muted); }
+.result-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.result-item:last-child { border: none; }
+.result-check { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+.result-check.correct { background: rgba(16,185,129,0.15); color: var(--accent-success); }
+.result-check.wrong { background: rgba(239,68,68,0.15); color: var(--accent-danger); }
+.result-check.partial { background: rgba(245,158,11,0.15); color: var(--accent-warm); }
+
+/* AI FEEDBACK */
+.ai-feedback { background: linear-gradient(135deg, rgba(0,212,170,0.05), rgba(99,102,241,0.05)); border: 1px solid var(--border-accent); border-radius: var(--radius-lg); padding: 24px; position: relative; overflow: hidden; }
+.ai-feedback::before { content: '🤖 AI Тахлил'; position: absolute; top: -1px; left: 20px; background: var(--bg-primary); padding: 2px 14px; border-radius: 0 0 10px 10px; font-size: 12px; font-weight: 700; color: var(--accent); border: 1px solid var(--border-accent); border-top: none; }
+.ai-feedback-text { margin-top: 16px; font-size: 14px; line-height: 1.8; color: var(--text-secondary); }
+.ai-feedback-text strong { color: var(--text-primary); }
+
+/* TABLE */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 2px solid var(--border); background: var(--bg-primary); position: sticky; top: 0; }
+.data-table td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid var(--border); }
+.data-table tr:hover td { background: rgba(0,212,170,0.03); }
+.data-table-wrapper { overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border); }
+
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.modal-overlay.active { opacity: 1; pointer-events: all; }
+.modal { width: 100%; max-width: 750px; max-height: 85vh; overflow-y: auto; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 32px; transform: translateY(20px); transition: transform 0.3s; }
+.modal-overlay.active .modal { transform: translateY(0); }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.modal-title { font-size: 20px; font-weight: 800; }
+.modal-sm { max-width: 500px; }
+.modal-lg { max-width: 900px; }
+
+/* TABS */
+.tab-bar { display: flex; gap: 4px; padding: 4px; background: var(--bg-primary); border-radius: var(--radius-sm); margin-bottom: 24px; overflow-x: auto; }
+.tab-btn { padding: 10px 20px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: var(--transition); border: none; color: var(--text-secondary); background: transparent; white-space: nowrap; }
+.tab-btn.active { background: var(--bg-card); color: var(--accent); box-shadow: var(--shadow-sm); }
+.tab-btn:hover:not(.active) { color: var(--text-primary); }
+
+/* NOTIFICATION DOT */
+.notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-danger); position: absolute; top: -2px; right: -2px; }
+
+/* TAGS */
+.tag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; background: var(--bg-elevated); color: var(--text-secondary); border: 1px solid var(--border); }
+.tag-remove { cursor: pointer; opacity: 0.6; font-size: 14px; line-height: 1; }
+.tag-remove:hover { opacity: 1; color: var(--accent-danger); }
+
+/* TOOLTIP */
+[data-tooltip] { position: relative; }
+[data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); padding: 6px 12px; background: var(--bg-elevated); color: var(--text-primary); font-size: 12px; border-radius: 6px; white-space: nowrap; z-index: 100; box-shadow: var(--shadow-md); margin-bottom: 6px; }
+
+/* EMPTY STATE */
+.empty-state { text-align: center; padding: 60px 20px; }
+.empty-icon { font-size: 56px; margin-bottom: 16px; }
+.empty-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.empty-desc { color: var(--text-secondary); font-size: 14px; margin-bottom: 20px; max-width: 400px; margin-left: auto; margin-right: auto; }
+
+/* ACCORDION */
+.accordion-header { display: flex; align-items: center; justify-content: space-between; padding: 14px; cursor: pointer; transition: var(--transition); border-radius: var(--radius-sm); }
+.accordion-header:hover { background: var(--bg-elevated); }
+.accordion-body { padding: 0 14px 14px; display: none; }
+.accordion-body.open { display: block; }
+.accordion-arrow { transition: transform 0.3s; font-size: 12px; color: var(--text-muted); }
+.accordion-arrow.open { transform: rotate(180deg); }
+
+/* ANIMATIONS */
+.fade-in { animation: fadeIn 0.5s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } }
+.slide-in { animation: slideIn 0.4s ease-out; }
+@keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } }
+.stagger > * { opacity: 0; animation: fadeIn 0.4s ease-out forwards; }
+.stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger > *:nth-child(6) { animation-delay: 0.3s; }
+.stagger > *:nth-child(7) { animation-delay: 0.35s; }
+.stagger > *:nth-child(8) { animation-delay: 0.4s; }
+
+/* SPINNER */
+.spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+.spinner-sm { width: 20px; height: 20px; border-width: 2px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* TOAST */
+.toast-container { position: fixed; top: 24px; right: 24px; z-index: 5000; display: flex; flex-direction: column; gap: 8px; }
+.toast { padding: 14px 20px; border-radius: var(--radius-sm); background: var(--bg-card); border: 1px solid var(--border); font-size: 14px; font-weight: 500; box-shadow: var(--shadow-md); animation: toastIn 0.3s ease-out; display: flex; align-items: center; gap: 8px; max-width: 400px; }
+.toast-success { border-left: 3px solid var(--accent-success); }
+.toast-error { border-left: 3px solid var(--accent-danger); }
+.toast-info { border-left: 3px solid var(--accent-info); }
+.toast-warning { border-left: 3px solid var(--accent-warm); }
+@keyframes toastIn { from { opacity: 0; transform: translateX(40px); } }
+
+/* CHART BARS */
+.chart-bar-h { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.chart-bar-label { width: 120px; font-size: 12px; color: var(--text-secondary); text-align: right; flex-shrink: 0; }
+.chart-bar-track { flex: 1; height: 24px; background: var(--bg-primary); border-radius: 4px; overflow: hidden; position: relative; }
+.chart-bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 11px; font-weight: 700; color: #fff; min-width: 30px; }
+.chart-bar-value { font-size: 13px; font-weight: 600; width: 50px; flex-shrink: 0; }
+
+/* RESPONSIVE CASE */
+@media (max-width: 1024px) {
+  .case-solver { flex-direction: column; }
+  .case-info-panel { width: 100%; position: static; height: auto; }
+}
+
+/* PRINT */
+@media print {
+  .sidebar, .page-header, .btn, .toast-container { display: none !important; }
+  .main-content { margin-left: 0 !important; }
+  body { background: #fff; color: #000; }
+  .card { border: 1px solid #ddd; box-shadow: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+<div class="floating-orb"></div>
+<div class="floating-orb"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- AUTH SCREEN -->
+<div id="authScreen" class="auth-wrapper">
+  <div class="auth-card fade-in">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">💊</div>
+      <h1>ClinPharm AI Trainer</h1>
+      <p>Клиник фармакология тренажёр платформаси</p>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">Кириш</button>
+      <button class="auth-tab" onclick="switchAuthTab('register')">Рўйхатдан ўтиш</button>
+    </div>
+    <!-- LOGIN -->
+    <div id="loginForm">
+      <div class="form-group mb-2">
+        <label class="form-label">Логин</label>
+        <input class="form-input" type="text" id="loginEmail" placeholder="login@mail.uz">
+      </div>
+      <div class="form-group mb-3">
+        <label class="form-label">Парол</label>
+        <input class="form-input" type="password" id="loginPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')handleLogin()">
+      </div>
+      <button class="btn btn-primary w-full btn-lg" onclick="handleLogin()">Тизимга кириш</button>
+      <p style="text-align:center;margin-top:14px;font-size:13px;color:var(--text-muted)">
+        <a href="#" onclick="switchAuthTab('reset')" style="color:var(--accent);text-decoration:none">Паролни унутдингизми?</a>
+      </p>
+      <div class="demo-logins">
+        <div class="demo-logins-title">Демо логинлар</div>
+        <div class="demo-login-item"><span>🎓 Талаба</span><button class="btn btn-xs btn-secondary" onclick="demoLogin('student')">Кириш</button></div>
+        <div class="demo-login-item"><span>👨‍🏫 Ўқитувчи</span><button class="btn btn-xs btn-secondary" onclick="demoLogin('teacher')">Кириш</button></div>
+        <div class="demo-login-item"><span>⚙️ Админ</span><button class="btn btn-xs btn-secondary" onclick="demoLogin('admin')">Кириш</button></div>
+      </div>
+    </div>
+    <!-- REGISTER -->
+    <div id="registerForm" class="hidden">
+      <div class="form-group mb-2">
+        <label class="form-label">Тўлиқ исм</label>
+        <input class="form-input" type="text" id="regName" placeholder="Исмингизни киритинг">
+      </div>
+      <div class="form-group mb-2">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="regEmail" placeholder="email@mail.uz">
+      </div>
+      <div class="form-group mb-2">
+        <label class="form-label">Парол</label>
+        <input class="form-input" type="password" id="regPassword" placeholder="Камида 8 белги">
+      </div>
+      <div class="form-group mb-2">
+        <label class="form-label">Гуруҳ (ихтиёрий)</label>
+        <input class="form-input" type="text" id="regGroup" placeholder="Масалан: 301-гуруҳ">
+      </div>
+      <div class="form-group mb-2">
+        <label class="form-label">Роль</label>
+        <div class="role-selector">
+          <div class="role-option active" onclick="selectRole(this,'student')"><span class="role-icon">🎓</span>Талаба</div>
+          <div class="role-option" onclick="selectRole(this,'teacher')"><span class="role-icon">👨‍🏫</span>Ўқитувчи</div>
+          <div class="role-option" onclick="selectRole(this,'admin')"><span class="role-icon">⚙️</span>Админ</div>
+        </div>
+      </div>
+      <button class="btn btn-primary w-full btn-lg" onclick="handleRegister()">Рўйхатдан ўтиш</button>
+    </div>
+    <!-- RESET -->
+    <div id="resetForm" class="hidden">
+      <div class="form-group mb-3">
+        <label class="form-label">Email манзилингиз</label>
+        <input class="form-input" type="email" id="resetEmail" placeholder="email@mail.uz">
+      </div>
+      <button class="btn btn-primary w-full btn-lg" onclick="handleResetPassword()">Паролни тиклаш</button>
+      <p style="text-align:center;margin-top:14px;font-size:13px"><a href="#" onclick="switchAuthTab('login')" style="color:var(--accent);text-decoration:none">← Кириш саҳифасига қайтиш</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="appScreen" class="app-layout hidden">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">💊 ClinPharm AI</div>
+      <div class="sidebar-subtitle">Training Platform v2.0</div>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+    <div class="sidebar-footer">
+      <div class="user-card" onclick="openModal(renderProfileModal())">
+        <div class="user-avatar" id="userAvatarSB">ТА</div>
+        <div class="user-info">
+          <div class="user-name" id="userNameSB">Талаба</div>
+          <div class="user-role" id="userRoleSB">Талаба</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <button class="btn-icon mobile-menu-btn" id="mobileMenuBtn" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')" style="position:fixed;top:12px;left:12px;z-index:200">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+  <main class="main-content" id="mainContent"></main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+// ============================================================
+// DATABASE / STATE
+// ============================================================
+const DB = {
+  currentUser: null,
+  currentPage: 'dashboard',
+  selectedRole: 'student',
+  caseFilters: { category: '', difficulty: '', topic: '', search: '' },
+
+  users: [
+    { id: 1, name: 'Админ Алишер', email: 'admin@mail.uz', password: 'admin123', role: 'admin', group: '', createdAt: '2025-01-15', status: 'active' },
+    { id: 2, name: 'Доц. Каримова Д.', email: 'teacher@mail.uz', password: 'teacher123', role: 'teacher', group: '', createdAt: '2025-01-20', status: 'active' },
+    { id: 3, name: 'Проф. Рахимов С.', email: 'teacher2@mail.uz', password: 'teacher123', role: 'teacher', group: '', createdAt: '2025-02-10', status: 'active' },
+    { id: 4, name: 'Жасур Алимов', email: 'student@mail.uz', password: 'student123', role: 'student', group: '301-гуруҳ', createdAt: '2025-03-01', status: 'active' },
+    { id: 5, name: 'Малика Усмонова', email: 'malika@mail.uz', password: 'student123', role: 'student', group: '301-гуруҳ', createdAt: '2025-03-01', status: 'active' },
+    { id: 6, name: 'Бобур Тошматов', email: 'bobur@mail.uz', password: 'student123', role: 'student', group: '302-гуруҳ', createdAt: '2025-03-05', status: 'active' },
+    { id: 7, name: 'Дилноза Каримова', email: 'dilnoza@mail.uz', password: 'student123', role: 'student', group: '302-гуруҳ', createdAt: '2025-03-05', status: 'active' },
+    { id: 8, name: 'Сардор Ибрагимов', email: 'sardor@mail.uz', password: 'student123', role: 'student', group: '303-гуруҳ', createdAt: '2025-03-10', status: 'active' },
+  ],
+
+  notifications: [],
+
+  knowledgeBase: [
+    { id: 1, category: 'Антибиотиклар', rule: 'Пенициллин аллергиясида макролидлар (азитромицин, кларитромицин) биринчи танлов', source: 'Клиник протоколлар 2024' },
+    { id: 2, category: 'Ҳомиладорлик', rule: 'АКЕИ ва АРБ гуруҳи ҳомиладорликда қатъий ман этилган (тератоген)', source: 'FDA категория X' },
+    { id: 3, category: 'Буйрак', rule: 'GFR < 30 мл/мин бўлса НСТЯД ман этилган', source: 'KDIGO 2024' },
+    { id: 4, category: 'Буйрак', rule: 'Метформин GFR < 30 мл/мин да ман этилган', source: 'ADA Guidelines 2024' },
+    { id: 5, category: 'Антибиотиклар', rule: 'Жамоа пневмониясида биринчи танлов: амоксициллин ёки макролидлар', source: 'BTS/NICE Guidelines' },
+    { id: 6, category: 'Ҳомиладорлик', rule: 'Метилдопа ҳомиладорликда артериал гипертензиянинг биринчи танлов дориси', source: 'ACOG Guidelines 2024' },
+    { id: 7, category: 'Жигар', rule: 'Жигар циррозида парацетамол 2г/сут дан ошмаслиги керак', source: 'EASL Guidelines' },
+    { id: 8, category: 'Педиатрия', rule: 'Болаларда тетрациклинлар 8 ёшгача ман этилган', source: 'ВОЗ рекомендации' },
+  ],
+
+  drugInteractions: [
+    { drug1: 'Варфарин', drug2: 'Азитромицин', severity: 'Ўрта', effect: 'INR ошиши хавфи, қон кетиш хавфи' },
+    { drug1: 'Метформин', drug2: 'Контраст модда', severity: 'Юқори', effect: 'Лактик ацидоз хавфи' },
+    { drug1: 'АКЕИ', drug2: 'Калий препаратлари', severity: 'Юқори', effect: 'Гиперкалиемия хавфи' },
+    { drug1: 'НСТЯД', drug2: 'АКЕИ', severity: 'Ўрта', effect: 'Буйрак функцияси ёмонлашиши' },
+    { drug1: 'Статинлар', drug2: 'Макролидлар', severity: 'Ўрта', effect: 'Миопатия/рабдомиолиз хавфи' },
+    { drug1: 'Дигоксин', drug2: 'Амиодарон', severity: 'Юқори', effect: 'Дигоксин концентрацияси ошиши' },
+  ],
+
+  topics: ['Антибиотиклар', 'Гипотензив дорилар', 'Анальгетиклар', 'Антикоагулянтлар', 'Антидиабетик дорилар', 'Психотроп дорилар', 'Бронходилататорлар', 'ГКС'],
+  categories: ['Инфекцион касалликлар', 'Кардиология', 'Нефрология', 'Акушерлик', 'Неврология', 'Эндокринология', 'Пульмонология', 'Гастроэнтерология'],
+  groups: ['301-гуруҳ', '302-гуруҳ', '303-гуруҳ'],
+
+  cases: [],
+  results: [],
+  bookmarks: [],
+};
+
+// ============================================================
+// CLINICAL CASES DATABASE
+// ============================================================
+DB.cases = [
+  {
+    id: 1, title: 'Пневмонияда антибиотик танлаш',
+    description: 'Жамоа орасида тарқалган пневмония билан касалланган 45 ёшли эркак бемор учун антибактериал терапия танлаш.',
+    category: 'Инфекцион касалликлар', difficulty: 'Ўрта', topic: 'Антибиотиклар',
+    author: 'Доц. Каримова Д.', authorId: 2, createdAt: '2025-03-15', updatedAt: '2025-03-15', status: 'active',
+    patient: {
+      age: 45, gender: 'Эркак', weight: 82,
+      complaints: 'Йўтал (балғамли), иситма 38.7°C 3 кундан бери, кўкрак оғриғи, ҳансираш',
+      anamnesis: '3 кун олдин совуқ тегиб касалланган. Аввал антибиотик қабул қилмаган. Сигарета чекади (15 йил).',
+      comorbidities: 'Гипертония II даража, 2-тур қандли диабет',
+      pregnancy: 'Тегишли эмас', liver: 'Норма (АЛТ: 28 Е/л, АСТ: 32 Е/л)',
+      kidney: 'Норма (GFR: 85 мл/мин, Креатинин: 92 мкмоль/л)',
+      allergy: 'Пенициллинга аллергия (тери тошмаси ва қичиш)',
+      currentMeds: 'Амлодипин 5мг/сут, Метформин 1000мг/сут',
+      labs: 'Лейкоцитлар: 14.2×10⁹/л, СРБ: 68 мг/л, Прокальцитонин: 0.8 нг/мл, Глюкоза: 8.2 ммоль/л, Креатинин: 92 мкмоль/л, Тромбоцитлар: 245×10⁹/л, Гемоглобин: 138 г/л',
+      imaging: 'Рентген: ўнг ўпканинг пастки бўлагида инфильтрация аниқланди. SpO2: 94%',
+      severity: 'Ўрта оғир'
+    },
+    correctAnswers: {
+      mainDrug: 'Азитромицин', altDrug: 'Левофлоксацин',
+      singleDose: '500 мг', dailyDose: '500 мг/сут',
+      route: 'Оғиз орқали', duration: '5 кун',
+      combination: 'Монотерапия етарли; оғир бўлса Цефтриаксон 1г/сут в/в + Азитромицин',
+      monitoring: 'Иситма динамикаси, лейкоцитлар, СРБ 48-72 соатда, рентген 10-14 кунда, SpO2',
+      sideEffects: 'ОИТ бузилиши (диарея, кўнгил айниш), QT интервали узайиши мониторинги, жигар ферментлари'
+    },
+    evaluation: {
+      drugChoice: { max: 20, criteria: 'Пенициллин аллергияси ҳисобга олинганми; макролид ёки фторхинолон танланганми' },
+      doseCorrect: { max: 15, criteria: 'Доза стандарт терапевтик диапазонда; ёш ва вазнга мос' },
+      contraindication: { max: 15, criteria: 'Пенициллин аллергияси, ҳамроҳ касалликлар ҳисобга олинганми' },
+      interaction: { max: 10, criteria: 'Метформин ва амлодипин билан ўзаро таъсир текширилганми' },
+      duration: { max: 10, criteria: '5-7 кун оптимал давомийлик' },
+      monitoring: { max: 15, criteria: 'Иситма, лейкоцитоз, СРБ, рентген контроль режаси' },
+      safety: { max: 15, criteria: 'Ножўя таъсирларни олдини олиш чоралари кўрсатилганми' }
+    },
+    attempts: 47, avgScore: 72
+  },
+  {
+    id: 2, title: 'Ҳомиладорликда гипертензия',
+    description: 'Ҳомиладорликнинг 28-ҳафтасида артериал гипертензия аниқланган 30 ёшли аёл бемор учун гипотензив терапия танлаш.',
+    category: 'Акушерлик', difficulty: 'Қийин', topic: 'Гипотензив дорилар',
+    author: 'Доц. Каримова Д.', authorId: 2, createdAt: '2025-03-20', updatedAt: '2025-03-20', status: 'active',
+    patient: {
+      age: 30, gender: 'Аёл', weight: 68,
+      complaints: 'Бош оғриғи, кўз олдида чивинлар учиши, АБ 150/95 мм.рт.ст., оёқлар шиши',
+      anamnesis: 'Биринчи ҳомиладорлик, 28 ҳафта. 2 ҳафтадан бери бош оғриғи. Ҳомиладорликдан олдин АБ нормал.',
+      comorbidities: 'Йўқ',
+      pregnancy: 'Ҳомиладор, 28 ҳафта',
+      liver: 'АЛТ: 42 Е/л (бироз кўтарилган), АСТ: 38 Е/л',
+      kidney: 'Креатинин: 68 мкмоль/л, GFR: 98 мл/мин, Протеинурия: 0.4 г/сут',
+      allergy: 'Йўқ',
+      currentMeds: 'Фолий кислотаси 400мкг, Темир препарати (Сорбифер) 1т/сут',
+      labs: 'Тромбоцитлар: 165×10⁹/л, Гемоглобин: 108 г/л, АЛТ: 42 Е/л, АСТ: 38 Е/л, Умумий оқсил: 62 г/л, Мочевая кислота: 380 мкмоль/л, ЛДГ: 280 Е/л',
+      imaging: 'УЗИ: ҳомила ривожланиши ҳафталикка мос, плацента нормал. Допплер: утероплацентар қон оқими норма.',
+      severity: 'Ўрта оғир (преэклампсия хавфи)'
+    },
+    correctAnswers: {
+      mainDrug: 'Метилдопа', altDrug: 'Нифедипин ретард',
+      singleDose: '250 мг', dailyDose: '750 мг/сут (250мг × 3 марта)',
+      route: 'Оғиз орқали', duration: 'Тугруққа қадар (ва тугруқдан кейин 6 ҳафта)',
+      combination: 'Самарасиз бўлса: Метилдопа + Нифедипин ретард 20мг/сут',
+      monitoring: 'АБ суткалик мониторинг, протеинурия ҳафталик, тромбоцитлар, жигар ферментлари, ЛДГ, мочевая кислота, ҳомила ҳолати (КТГ, допплер)',
+      sideEffects: 'Уйқучанлик, оғиз қуриши, ортостатик гипотензия, депрессия (узоқ муддатда)'
+    },
+    evaluation: {
+      drugChoice: { max: 25, criteria: 'Ҳомиладорликда хавфсиз дори танланганми (Метилдопа/Нифедипин/Лабеталол)' },
+      doseCorrect: { max: 15, criteria: 'Доза стандарт ва хавфсиз диапазонда' },
+      contraindication: { max: 15, criteria: 'АКЕИ/АРБ/Диуретик танланмаганлиги' },
+      interaction: { max: 5, criteria: 'Мавжуд дорилар билан таъсир' },
+      duration: { max: 10, criteria: 'Тугруққа қадар ва ундан кейин давом' },
+      monitoring: { max: 15, criteria: 'Она ва ҳомила мониторинги режаси' },
+      safety: { max: 15, criteria: 'Она ва ҳомила хавфсизлиги баҳоланганми' }
+    },
+    attempts: 35, avgScore: 65
+  },
+  {
+    id: 3, title: 'Буйрак етишмовчилигида оғриқ қолдириш',
+    description: 'Сурункали буйрак етишмовчилиги бор 68 ёшли бемор учун хавфсиз анальгетик терапия танлаш.',
+    category: 'Нефрология', difficulty: 'Қийин', topic: 'Анальгетиклар',
+    author: 'Админ Алишер', authorId: 1, createdAt: '2025-04-01', updatedAt: '2025-04-01', status: 'active',
+    patient: {
+      age: 68, gender: 'Эркак', weight: 75,
+      complaints: 'Бел соҳасида кучли оғриқ (ВАШ 7/10), тиззалар оғриғи, ҳаракат чекланганлиги',
+      anamnesis: 'Остеоартроз 10 йилдан ортиқ. Олдин ибупрофен ишлатган (2 йил). СБЕ аниқланганга 3 йил.',
+      comorbidities: 'ГБ III даража, ИБС, СБЕ 3б-босқич (C3b), Остеоартроз',
+      pregnancy: 'Тегишли эмас',
+      liver: 'Норма (АЛТ: 24 Е/л)',
+      kidney: 'GFR: 35 мл/мин, Креатинин: 180 мкмоль/л — ўрта даражали бузилиш',
+      allergy: 'Йўқ',
+      currentMeds: 'Эналаприл 10мг/сут, Аторвастатин 20мг/сут, Аспирин 75мг/сут, Фуросемид 40мг/сут',
+      labs: 'Гемоглобин: 98 г/л (анемия), Креатинин: 180 мкмоль/л, GFR: 35 мл/мин, Калий: 5.1 ммоль/л, Мочевина: 12.4 ммоль/л, Алб: 34 г/л, Фосфор: 1.6 ммоль/л',
+      imaging: 'Рентген: тизза бўғимларида деформация, остеофитлар, бўғим тирқиши торайган. УЗИ буйрак: ўлчамлари кичрайган.',
+      severity: 'Ўрта оғир'
+    },
+    correctAnswers: {
+      mainDrug: 'Парацетамол', altDrug: 'Трамадол (паст дозада, эҳтиёткорлик билан)',
+      singleDose: '500-1000 мг', dailyDose: '2000 мг/сут максимал (GFR ҳисобга олинган)',
+      route: 'Оғиз орқали', duration: 'Оғриқ давомийлигига қараб, узоқ муддат',
+      combination: 'Парацетамол 500мг + Трамадол 50мг (комбинация), маҳаллий НСТЯД гели',
+      monitoring: 'Жигар ферментлари (ой сайин), буйрак функцияси (2 ҳафтада), калий, оғриқ баҳоси (ВАШ)',
+      sideEffects: 'Парацетамол: гепатотоксиклик хавфи (доза чегарасига амал қилиш). НСТЯД қатъий ман этилган! Трамадол: бош айланиш, кўнгил айниш, қабзият'
+    },
+    evaluation: {
+      drugChoice: { max: 25, criteria: 'НСТЯД танланмаганлиги (буйрак учун хавфли); Парацетамол биринчи танлов' },
+      doseCorrect: { max: 15, criteria: 'GFR 35 бўйича доза мослаштирилганми; максимал доза чегарасига амал' },
+      contraindication: { max: 15, criteria: 'НСТЯД ман этилганлиги; аспирин билан таъсир; буйрак ҳолати' },
+      interaction: { max: 10, criteria: 'Эналаприл, фуросемид, аспирин билан ўзаро таъсир текширилганми' },
+      duration: { max: 10, criteria: 'Сурункали оғриқда узоқ муддат стратегияси' },
+      monitoring: { max: 15, criteria: 'Жигар, буйрак, оғриқ мониторинги режаси' },
+      safety: { max: 10, criteria: 'Умумий хавфсизлик ва ножўя таъсирларни олдини олиш' }
+    },
+    attempts: 28, avgScore: 58
+  },
+  {
+    id: 4, title: 'Болаларда отит антибиотикотерапияси',
+    description: '5 ёшли болада ўткир ўрта отит учун антибиотик танлаш ва дозалаш.',
+    category: 'Инфекцион касалликлар', difficulty: 'Осон', topic: 'Антибиотиклар',
+    author: 'Проф. Рахимов С.', authorId: 3, createdAt: '2025-04-10', updatedAt: '2025-04-10', status: 'active',
+    patient: {
+      age: 5, gender: 'Эркак', weight: 20,
+      complaints: 'Қулоқ оғриғи (ўнг), иситма 38.5°C, безовталик, тунги уйқу бузилган',
+      anamnesis: 'Бугун эрталабдан қулоқ оғриғи бошланган. 3 кун олдин бурун оқиш бўлган. Олдин антибиотик қабул қилмаган.',
+      comorbidities: 'Йўқ',
+      pregnancy: 'Тегишли эмас',
+      liver: 'Норма',
+      kidney: 'Норма',
+      allergy: 'Йўқ',
+      currentMeds: 'Парацетамол суспензия зарурат бўйича',
+      labs: 'Лейкоцитлар: 12.8×10⁹/л, СРБ: 24 мг/л',
+      imaging: 'Отоскопия: ўнг ноғора парда гиперемияланган, бўртган, ёруғлик рефлекси йўқ',
+      severity: 'Ўрта'
+    },
+    correctAnswers: {
+      mainDrug: 'Амоксициллин', altDrug: 'Амоксициллин/Клавуланат',
+      singleDose: '250-500 мг (40-45мг/кг/сут ÷ 3)',
+      dailyDose: '800-900 мг/сут (40-45мг/кг/сут)',
+      route: 'Оғиз орқали (суспензия)',
+      duration: '7-10 кун',
+      combination: 'Монотерапия; парацетамол/ибупрофен оғриқ қолдириш учун',
+      monitoring: '48-72 соатда симптомлар динамикаси, иситма, отоскопия контроль',
+      sideEffects: 'Диарея, тери тошмаси, ОИТ дисбактериоз. Пробиотик тавсия этилади.'
+    },
+    evaluation: {
+      drugChoice: { max: 20, criteria: 'Амоксициллин биринчи танлов; ёшга мос форма (суспензия)' },
+      doseCorrect: { max: 20, criteria: 'Вазнга тўғри ҳисобланганми (мг/кг/сут)' },
+      contraindication: { max: 10, criteria: 'Аллергия ва ёш чеклови' },
+      interaction: { max: 5, criteria: 'Парацетамол билан мослик' },
+      duration: { max: 15, criteria: '7-10 кун стандарт' },
+      monitoring: { max: 15, criteria: '48-72 соат контроль' },
+      safety: { max: 15, criteria: 'Болалар хавфсизлиги' }
+    },
+    attempts: 52, avgScore: 78
+  },
+  {
+    id: 5, title: 'Қандли диабетда антигипергликемик терапия',
+    description: '55 ёшли 2-тур қандли диабет бемор учун метформинга қўшимча дори танлаш.',
+    category: 'Эндокринология', difficulty: 'Ўрта', topic: 'Антидиабетик дорилар',
+    author: 'Проф. Рахимов С.', authorId: 3, createdAt: '2025-04-15', updatedAt: '2025-04-15', status: 'active',
+    patient: {
+      age: 55, gender: 'Аёл', weight: 88,
+      complaints: 'Чанқоқлик, тез-тез сийиш, чарчаш, кўриш пасайиши',
+      anamnesis: '2-тур ҚД 5 йилдан бери. Метформин 2000мг/сут қабул қилади, лекин HbA1c 8.2% (мақсад < 7%).',
+      comorbidities: 'Семизлик (ИМТ: 32), Гипертония I даража, Дислипидемия',
+      pregnancy: 'Тегишли эмас (менопауза)',
+      liver: 'Норма (АЛТ: 30 Е/л)',
+      kidney: 'GFR: 72 мл/мин (бироз пасайган)',
+      allergy: 'Йўқ',
+      currentMeds: 'Метформин 1000мг×2/сут, Лизиноприл 10мг/сут, Аторвастатин 10мг/сут',
+      labs: 'Глюкоза очқорнига: 9.4 ммоль/л, HbA1c: 8.2%, Креатинин: 88 мкмоль/л, GFR: 72, Умумий холестерин: 6.2 ммоль/л, Триглицеридлар: 2.8 ммоль/л',
+      imaging: 'Кўз тубини текшириш: препролиферативсиз диабетик ретинопатия белгилари',
+      severity: 'Ўрта'
+    },
+    correctAnswers: {
+      mainDrug: 'Эмпаглифлозин (SGLT2 ингибитори)',
+      altDrug: 'Ситаглиптин (DPP-4 ингибитори) ёки Лираглутид (GLP-1 агонист)',
+      singleDose: '10 мг', dailyDose: '10 мг/сут',
+      route: 'Оғиз орқали', duration: 'Доимий (умрбод)',
+      combination: 'Метформин 2000мг/сут + Эмпаглифлозин 10мг/сут',
+      monitoring: 'HbA1c 3 ой сайин, глюкоза, GFR, электролитлар, генитал инфекция белгилари, вазн',
+      sideEffects: 'Генитал инфекциялар (кандидоз), полиурия, гипотензия хавфи, ДКА (камдан-кам), дегидратация'
+    },
+    evaluation: {
+      drugChoice: { max: 20, criteria: 'SGLT2 ёки GLP-1 — семизликда ва юрак-қон томир хавфида афзал' },
+      doseCorrect: { max: 15, criteria: 'Стандарт доза; GFR 72 да мослаштириш зарур эмас' },
+      contraindication: { max: 15, criteria: 'GFR текширилганми; инсулин зарурати йўқлиги' },
+      interaction: { max: 10, criteria: 'Лизиноприл билан гипотензия хавфи' },
+      duration: { max: 10, criteria: 'Узоқ муддат/доимий терапия' },
+      monitoring: { max: 15, criteria: 'HbA1c, GFR, ножўя таъсирлар мониторинги' },
+      safety: { max: 15, criteria: 'Генитал инфекция, дегидратация хавфи' }
+    },
+    attempts: 31, avgScore: 68
+  }
+];
+
+// Pre-populate some results for demo
+DB.results = [
+  { id: 1, userId: 4, caseId: 1, caseTitle: 'Пневмонияда антибиотик танлаш', score: 85, total: 85, maxTotal: 100, date: '2025-04-01', scores: {}, answers: {} },
+  { id: 2, userId: 4, caseId: 2, caseTitle: 'Ҳомиладорликда гипертензия', score: 62, total: 62, maxTotal: 100, date: '2025-04-05', scores: {}, answers: {} },
+  { id: 3, userId: 5, caseId: 1, caseTitle: 'Пневмонияда антибиотик танлаш', score: 78, total: 78, maxTotal: 100, date: '2025-04-02', scores: {}, answers: {} },
+  { id: 4, userId: 5, caseId: 4, caseTitle: 'Болаларда отит антибиотикотерапияси', score: 90, total: 90, maxTotal: 100, date: '2025-04-08', scores: {}, answers: {} },
+  { id: 5, userId: 6, caseId: 1, caseTitle: 'Пневмонияда антибиотик танлаш', score: 55, total: 55, maxTotal: 100, date: '2025-04-03', scores: {}, answers: {} },
+  { id: 6, userId: 6, caseId: 3, caseTitle: 'Буйрак етишмовчилигида оғриқ қолдириш', score: 45, total: 45, maxTotal: 100, date: '2025-04-09', scores: {}, answers: {} },
+  { id: 7, userId: 7, caseId: 1, caseTitle: 'Пневмонияда антибиотик танлаш', score: 72, total: 72, maxTotal: 100, date: '2025-04-04', scores: {}, answers: {} },
+  { id: 8, userId: 7, caseId: 5, caseTitle: 'Қандли диабетда антигипергликемик терапия', score: 70, total: 70, maxTotal: 100, date: '2025-04-12', scores: {}, answers: {} },
+  { id: 9, userId: 8, caseId: 4, caseTitle: 'Болаларда отит антибиотикотерапияси', score: 82, total: 82, maxTotal: 100, date: '2025-04-11', scores: {}, answers: {} },
+];
+
+// ============================================================
+// UTILITIES
+// ============================================================
+function showToast(msg, type='success') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast toast-${type}`;
+  t.innerHTML = `<span>${type==='success'?'✅':type==='error'?'❌':type==='warning'?'⚠️':'ℹ️'}</span> ${msg}`;
+  c.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(40px)'; setTimeout(() => t.remove(), 300); }, 3500);
+}
+
+function openModal(html, size='') {
+  const mc = document.getElementById('modalContent');
+  mc.className = 'modal' + (size ? ` modal-${size}` : '');
+  mc.innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('active');
+}
+
+function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+
+function getInitials(name) { return name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase(); }
+function getRoleName(r) { return {admin:'Администратор',teacher:'Ўқитувчи',student:'Талаба'}[r] || r; }
+function getDifficultyClass(d) { return d==='Осон'?'success':d==='Ўрта'?'amber':'danger'; }
+function getScoreClass(s) { return s>=80?'success':s>=60?'amber':'danger'; }
+function formatDate(d) { return d || new Date().toISOString().split('T')[0]; }
+
+function similar(a, b) {
+  if (!a || !b) return false;
+  a = a.toLowerCase().trim(); b = b.toLowerCase().trim();
+  if (a.includes(b) || b.includes(a)) return true;
+  const words_a = a.split(/\s+/), words_b = b.split(/\s+/);
+  let matches = 0;
+  words_a.forEach(wa => { if (words_b.some(wb => wb.includes(wa) || wa.includes(wb))) matches++; });
+  return matches >= Math.min(words_a.length, words_b.length) * 0.5;
+}
+
+function exportToCSV(data, filename) {
+  if (!data.length) return showToast('Экспорт қилиш учун маълумот йўқ', 'warning');
+  const headers = Object.keys(data[0]);
+  const csv = [headers.join(','), ...data.map(row => headers.map(h => `"${(row[h]||'').toString().replace(/"/g,'""')}"`).join(','))].join('\n');
+  const blob = new Blob(['\uFEFF' + csv], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+}
+
+function printPage() { window.print(); }
+
+// ============================================================
+// AUTH
+// ============================================================
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', (tab==='login'&&i===0)||(tab==='register'&&i===1)));
+  ['loginForm','registerForm','resetForm'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  document.getElementById(tab === 'login' ? 'loginForm' : tab === 'register' ? 'registerForm' : 'resetForm').classList.remove('hidden');
+}
+
+function selectRole(el, role) {
+  document.querySelectorAll('.role-option').forEach(o => o.classList.remove('active'));
+  el.classList.add('active');
+  DB.selectedRole = role;
+}
+
+function demoLogin(role) {
+  const demos = {admin:'admin@mail.uz',teacher:'teacher@mail.uz',student:'student@mail.uz'};
+  const u = DB.users.find(x => x.email === demos[role]);
+  if (u) { DB.currentUser = u; showToast(`Хуш келибсиз, ${u.name}!`); showApp(); }
+}
+
+function handleLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPassword').value;
+  const user = DB.users.find(u => u.email === email && u.password === pass);
+  if (user) {
+    if (user.status === 'blocked') return showToast('Аккаунтингиз блокланган!', 'error');
+    DB.currentUser = user;
+    showToast(`Хуш келибсиз, ${user.name}!`);
+    showApp();
+  } else {
+    showToast('Логин ёки парол хато!', 'error');
+  }
+}
+
+function handleRegister() {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPassword').value;
+  const group = document.getElementById('regGroup').value.trim();
+  if (!name || !email || !pass) return showToast('Барча майдонларни тўлдиринг!', 'error');
+  if (pass.length < 6) return showToast('Парол камида 6 белги бўлиши керак!', 'error');
+  if (DB.users.find(u => u.email === email)) return showToast('Бу email аллақачон рўйхатдан ўтган!', 'error');
+  const newUser = { id: DB.users.length + 1, name, email, password: pass, role: DB.selectedRole, group, createdAt: formatDate(), status: 'active' };
+  DB.users.push(newUser);
+  if (group && !DB.groups.includes(group)) DB.groups.push(group);
+  DB.currentUser = newUser;
+  showToast('Муваффақиятли рўйхатдан ўтдингиз!');
+  showApp();
+}
+
+function handleResetPassword() {
+  const email = document.getElementById('resetEmail').value.trim();
+  if (!email) return showToast('Email киритинг!', 'error');
+  const user = DB.users.find(u => u.email === email);
+  if (user) {
+    showToast('Янги парол: reset123 (демо режим)', 'info');
+    user.password = 'reset123';
+  } else { showToast('Бу email топилмади!', 'error'); }
+  switchAuthTab('login');
+}
+
+function handleLogout() {
+  DB.currentUser = null;
+  document.getElementById('appScreen').classList.add('hidden');
+  document.getElementById('authScreen').classList.remove('hidden');
+  showToast('Тизимдан чиқдингиз');
+}
+
+// ============================================================
+// APP INIT
+// ============================================================
+function showApp() {
+  document.getElementById('authScreen').classList.add('hidden');
+  document.getElementById('appScreen').classList.remove('hidden');
+  buildSidebar();
+  navigateTo('dashboard');
+}
+
+const SVG = {
+  dashboard: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
+  cases: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>',
+  results: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>',
+  ai: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>',
+  profile: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+  create: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>',
+  students: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>',
+  reports: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>',
+  settings: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>',
+  kb: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>',
+  interactions: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4.93 4.93l14.14 14.14M14.83 9.17a4 4 0 01-5.66 5.66"/><circle cx="12" cy="12" r="9"/></svg>',
+  bookmark: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>',
+  errors: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+};
+
+function buildSidebar() {
+  const u = DB.currentUser;
+  document.getElementById('userNameSB').textContent = u.name;
+  document.getElementById('userRoleSB').textContent = getRoleName(u.role);
+  document.getElementById('userAvatarSB').textContent = getInitials(u.name);
+
+  const menus = {
+    student: [
+      { section: 'Асосий', items: [
+        { id:'dashboard', icon: SVG.dashboard, label:'Бош саҳифа' },
+        { id:'cases', icon: SVG.cases, label:'Кейслар', badge: DB.cases.filter(c=>c.status==='active').length },
+        { id:'results', icon: SVG.results, label:'Натижалар' },
+        { id:'errors-analysis', icon: SVG.errors, label:'Хатолар таҳлили' },
+        { id:'bookmarks', icon: SVG.bookmark, label:'Сақланганлар' },
+        { id:'ai-help', icon: SVG.ai, label:'AI Ёрдамчи' },
+      ]},
+      { section: 'Профиль', items: [{ id:'profile', icon: SVG.profile, label:'Менинг профилим' }]}
+    ],
+    teacher: [
+      { section: 'Бошқарув', items: [
+        { id:'dashboard', icon: SVG.dashboard, label:'Бош саҳифа' },
+        { id:'cases', icon: SVG.cases, label:'Кейслар', badge: DB.cases.length },
+        { id:'create-case', icon: SVG.create, label:'Кейс яратиш' },
+        { id:'students', icon: SVG.students, label:'Талабалар' },
+        { id:'reports', icon: SVG.reports, label:'Ҳисоботлар' },
+        { id:'group-analysis', icon: SVG.results, label:'Гуруҳ таҳлили' },
+      ]},
+      { section: 'Билим базаси', items: [
+        { id:'knowledge-base', icon: SVG.kb, label:'Клиник қоидалар' },
+        { id:'drug-interactions', icon: SVG.interactions, label:'Дори таъсирлари' },
+      ]},
+      { section: 'Профиль', items: [{ id:'profile', icon: SVG.profile, label:'Менинг профилим' }]}
+    ],
+    admin: [
+      { section: 'Бошқарув', items: [
+        { id:'dashboard', icon: SVG.dashboard, label:'Бош саҳифа' },
+        { id:'cases', icon: SVG.cases, label:'Кейслар', badge: DB.cases.length },
+        { id:'create-case', icon: SVG.create, label:'Кейс яратиш' },
+        { id:'students', icon: SVG.students, label:'Фойдаланувчилар' },
+        { id:'reports', icon: SVG.reports, label:'Ҳисоботлар' },
+        { id:'group-analysis', icon: SVG.results, label:'Гуруҳ таҳлили' },
+      ]},
+      { section: 'Контент', items: [
+        { id:'knowledge-base', icon: SVG.kb, label:'Билим базаси' },
+        { id:'drug-interactions', icon: SVG.interactions, label:'Дори таъсирлари' },
+        { id:'settings', icon: SVG.settings, label:'Созламалар' },
+      ]},
+    ]
+  };
+
+  let html = '';
+  (menus[u.role] || menus.student).forEach(sec => {
+    html += `<div class="nav-section"><div class="nav-section-title">${sec.section}</div>`;
+    sec.items.forEach(item => {
+      html += `<button class="nav-item${DB.currentPage===item.id?' active':''}" onclick="navigateTo('${item.id}')">
+        ${item.icon} <span>${item.label}</span>${item.badge?`<span class="nav-badge">${item.badge}</span>`:''}
+      </button>`;
+    });
+    html += '</div>';
+  });
+  document.getElementById('sidebarNav').innerHTML = html;
+}
+
+// ============================================================
+// ROUTER
+// ============================================================
+function navigateTo(page) {
+  DB.currentPage = page;
+  buildSidebar();
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  const mc = document.getElementById('mainContent');
+  mc.scrollTop = 0;
+  const pages = {
+    'dashboard': pgDashboard, 'cases': pgCases, 'results': pgResults,
+    'ai-help': pgAIHelp, 'profile': pgProfile, 'create-case': pgCreateCase,
+    'students': pgStudents, 'reports': pgReports, 'settings': pgSettings,
+    'group-analysis': pgGroupAnalysis, 'knowledge-base': pgKnowledgeBase,
+    'drug-interactions': pgDrugInteractions, 'errors-analysis': pgErrorsAnalysis,
+    'bookmarks': pgBookmarks,
+  };
+  if (pages[page]) { mc.innerHTML = ''; pages[page](mc); }
+}
+
+// ============================================================
+// PAGE: DASHBOARD
+// ============================================================
+function pgDashboard(el) {
+  const u = DB.currentUser, isS = u.role==='student';
+  const myR = DB.results.filter(r => r.userId === u.id);
+  const avg = myR.length ? Math.round(myR.reduce((a,b)=>a+b.score,0)/myR.length) : 0;
+  const activeCases = DB.cases.filter(c => c.status === 'active');
+  const allStudents = DB.users.filter(x => x.role === 'student');
+
+  el.innerHTML = `
+    <div class="page-header">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <div><div class="page-title">Хуш келибсиз, ${u.name.split(' ')[0]}! 👋</div>
+        <div class="page-desc">${isS?'Билимингизни синаб кўринг':'Платформа ҳолати ва бошқарув'}</div></div>
+        <div class="flex gap-1">
+          ${!isS?'<button class="btn btn-primary btn-sm" onclick="navigateTo(\'create-case\')">+ Янги кейс</button>':''}
+          ${isS?'<button class="btn btn-primary btn-sm" onclick="navigateTo(\'cases\')">🎯 Кейс ечиш</button>':''}
+        </div>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="grid-4 stagger mb-3">
+        <div class="stat-card"><div class="stat-value" style="color:var(--accent)">${isS?myR.length:activeCases.length}</div><div class="stat-label">${isS?'Ечилган кейслар':'Фаол кейслар'}</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--accent-secondary)">${isS?avg+'%':allStudents.length}</div><div class="stat-label">${isS?'Ўртача балл':'Талабалар'}</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--accent-warm)">${isS?activeCases.length:DB.results.length}</div><div class="stat-label">${isS?'Мавжуд кейслар':'Жами уринишлар'}</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--accent-success)">${isS?(myR.length?Math.max(...myR.map(r=>r.score))+'%':'—'):DB.groups.length}</div><div class="stat-label">${isS?'Энг яхши натижа':'Гуруҳлар'}</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">📋 Сўнгги кейслар</div><button class="btn btn-secondary btn-sm" onclick="navigateTo('cases')">Барчаси →</button></div>
+          <div class="stagger">${activeCases.slice(0,4).map(c => `
+            <div style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--bg-primary);border-radius:var(--radius-sm);margin-bottom:6px;cursor:pointer" onclick="openCase(${c.id})">
+              <div style="width:36px;height:36px;border-radius:10px;background:var(--accent-glow);display:flex;align-items:center;justify-content:center;font-size:16px">💊</div>
+              <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600" class="truncate">${c.title}</div><div style="font-size:11px;color:var(--text-muted)">${c.category} • ${c.difficulty}</div></div>
+              <span class="badge badge-${getDifficultyClass(c.difficulty)}">${c.difficulty}</span>
+            </div>`).join('')}</div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">${isS?'📊 Натижалар':'📊 Статистика'}</div></div>
+          ${isS ? (myR.length ? `
+            <div class="text-center" style="padding:16px">
+              <div class="result-score-circle" style="background:conic-gradient(var(--accent) ${avg*3.6}deg, var(--bg-primary) 0)">
+                <div class="result-score-inner"><div class="result-score-value" style="color:var(--accent)">${avg}%</div><div class="result-score-label">Ўртача балл</div></div>
+              </div>
+            </div>
+            <div style="margin-top:12px">${myR.slice(-3).reverse().map(r => `
+              <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">
+                <span class="truncate" style="flex:1">${r.caseTitle}</span>
+                <span class="badge badge-${getScoreClass(r.score)}">${r.score}%</span>
+              </div>`).join('')}</div>
+          ` : '<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-title">Ҳали натижа йўқ</div><button class="btn btn-primary btn-sm mt-2" onclick="navigateTo(\'cases\')">Бошлаш</button></div>') : `
+            <div>${DB.categories.slice(0,6).map(cat => {
+              const cnt = DB.cases.filter(c=>c.category===cat).length;
+              return `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px"><span>${cat}</span><span class="badge badge-purple">${cnt}</span></div>`;
+            }).join('')}</div>
+          `}
+        </div>
+      </div>
+      ${!isS ? `<div class="card mt-3">
+        <div class="card-header"><div class="card-title">📈 Кўп учрайдиган хатолар</div></div>
+        <div class="grid-3">${[
+          {label:'Контраиндикация', pct:38, color:'var(--accent-danger)'},
+          {label:'Доза хатоси', pct:28, color:'var(--accent-warm)'},
+          {label:'Мониторинг ёзилмаган', pct:22, color:'var(--accent-info)'}
+        ].map(e => `<div><div style="font-size:13px;margin-bottom:6px">${e.label}</div><div class="progress-bar"><div class="progress-fill" style="width:${e.pct}%;background:${e.color}"></div></div><div style="font-size:12px;color:var(--text-muted);margin-top:4px">${e.pct}% уринишларда</div></div>`).join('')}</div>
+      </div>` : ''}
+    </div>`;
+}
+
+// ============================================================
+// PAGE: CASES
+// ============================================================
+function pgCases(el) {
+  const isS = DB.currentUser.role === 'student';
+  const f = DB.caseFilters;
+  let cases = DB.cases.filter(c => isS ? c.status==='active' : true);
+  if (f.category) cases = cases.filter(c => c.category === f.category);
+  if (f.difficulty) cases = cases.filter(c => c.difficulty === f.difficulty);
+  if (f.topic) cases = cases.filter(c => c.topic === f.topic);
+  if (f.search) cases = cases.filter(c => c.title.toLowerCase().includes(f.search.toLowerCase()) || c.description.toLowerCase().includes(f.search.toLowerCase()));
+
+  el.innerHTML = `
+    <div class="page-header"><div class="flex items-center justify-between flex-wrap gap-2">
+      <div><div class="page-title">Кейслар базаси</div><div class="page-desc">${cases.length} та кейс топилди</div></div>
+      <div class="flex gap-1">${!isS?'<button class="btn btn-primary btn-sm" onclick="navigateTo(\'create-case\')">+ Янги кейс</button>':''}</div>
+    </div></div>
+    <div class="page-body">
+      <div class="flex gap-2 mb-3 flex-wrap">
+        <div class="search-box" style="min-width:200px;flex:1;max-width:350px">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input placeholder="Кейс қидириш..." value="${f.search}" oninput="DB.caseFilters.search=this.value;navigateTo('cases')">
+        </div>
+        <select class="form-select" style="width:180px" onchange="DB.caseFilters.category=this.value;navigateTo('cases')">
+          <option value="">Барча категориялар</option>${DB.categories.map(c=>`<option ${f.category===c?'selected':''}>${c}</option>`).join('')}
+        </select>
+        <select class="form-select" style="width:150px" onchange="DB.caseFilters.difficulty=this.value;navigateTo('cases')">
+          <option value="">Барча даражалар</option>${['Осон','Ўрта','Қийин'].map(d=>`<option ${f.difficulty===d?'selected':''}>${d}</option>`).join('')}
+        </select>
+        <select class="form-select" style="width:180px" onchange="DB.caseFilters.topic=this.value;navigateTo('cases')">
+          <option value="">Барча мавзулар</option>${DB.topics.map(t=>`<option ${f.topic===t?'selected':''}>${t}</option>`).join('')}
+        </select>
+        ${(f.category||f.difficulty||f.topic||f.search)?`<button class="btn btn-ghost btn-sm" onclick="DB.caseFilters={category:'',difficulty:'',topic:'',search:''};navigateTo('cases')">✕ Тозалаш</button>`:''}
+      </div>
+      ${cases.length ? `<div class="grid-auto stagger">${cases.map(c => {
+        const isBookmarked = DB.bookmarks.includes(c.id);
+        return `<div class="case-card" onclick="openCase(${c.id})">
+          <div class="case-card-top case-card-top-${c.difficulty==='Осон'?'easy':c.difficulty==='Ўрта'?'medium':'hard'}"></div>
+          <div class="case-card-body">
+            <div class="flex justify-between items-start">
+              <span class="badge badge-${getDifficultyClass(c.difficulty)}">${c.difficulty}</span>
+              <div class="flex gap-05">
+                ${!isS?`<button class="btn-ghost" onclick="event.stopPropagation();editCase(${c.id})" data-tooltip="Таҳрирлаш">✏️</button>
+                <button class="btn-ghost" onclick="event.stopPropagation();deleteCase(${c.id})" data-tooltip="Ўчириш">🗑️</button>`:''}
+                ${isS?`<button class="btn-ghost" onclick="event.stopPropagation();toggleBookmark(${c.id})" data-tooltip="${isBookmarked?'Ўчириш':'Сақлаш'}">${isBookmarked?'⭐':'☆'}</button>`:''}
+              </div>
+            </div>
+            <h3 style="font-size:15px;font-weight:700;margin:8px 0 6px">${c.title}</h3>
+            <p style="font-size:12px;color:var(--text-secondary);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${c.description}</p>
+            <div class="case-card-meta"><span class="badge badge-purple">${c.category}</span><span class="badge badge-accent">${c.topic}</span></div>
+          </div>
+          <div class="case-card-footer"><span>👤 ${c.patient.age} ёш, ${c.patient.gender}</span><span>📊 Ўрт: ${c.avgScore}%</span></div>
+        </div>`;
+      }).join('')}</div>` : '<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">Кейс топилмади</div><div class="empty-desc">Филтрларни ўзгартириб кўринг</div></div>'}
+    </div>`;
+}
+
+function toggleBookmark(id) {
+  const i = DB.bookmarks.indexOf(id);
+  if (i > -1) { DB.bookmarks.splice(i,1); showToast('Сақланганлардан ўчирилди'); }
+  else { DB.bookmarks.push(id); showToast('Сақланганларга қўшилди'); }
+  navigateTo(DB.currentPage);
+}
+
+function deleteCase(id) {
+  openModal(`<div class="modal-header"><div class="modal-title">🗑️ Кейсни ўчириш</div><button class="btn-icon btn-icon-sm" onclick="closeModal()">✕</button></div>
+    <p style="color:var(--text-secondary);margin-bottom:20px">Ҳақиқатдан ҳам бу кейсни ўчирмоқчимисиз? Бу амални қайтариб бўлмайди.</p>
+    <div class="flex gap-2 justify-between">
+      <button class="btn btn-secondary" onclick="closeModal()">Бекор қилиш</button>
+      <button class="btn btn-danger" onclick="confirmDeleteCase(${id})">Ўчириш</button>
+    </div>`, 'sm');
+}
+function confirmDeleteCase(id) {
+  DB.cases = DB.cases.filter(c => c.id !== id);
+  closeModal(); showToast('Кейс ўчирилди'); navigateTo('cases');
+}
+
+// ============================================================
+// OPEN & SOLVE CASE
+// ============================================================
+function openCase(id) {
+  const c = DB.cases.find(x => x.id === id);
+  if (!c) return;
+  DB.currentPage = 'solve-case'; buildSidebar();
+  const mc = document.getElementById('mainContent');
+
+  mc.innerHTML = `
+    <div class="page-header"><div class="flex items-center justify-between flex-wrap gap-2">
+      <div class="flex items-center gap-2"><button class="btn-icon btn-icon-sm" onclick="navigateTo('cases')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+        <div><div class="page-title">${c.title}</div><div class="page-desc">${c.category} • ${c.difficulty} • ${c.topic}</div></div>
+      </div>
+      <span class="badge badge-${getDifficultyClass(c.difficulty)} badge-lg">${c.difficulty}</span>
+    </div></div>
+    <div class="page-body">
+      <div class="case-solver">
+        <div class="case-info-panel">
+          <div style="font-size:15px;font-weight:700;margin-bottom:10px">🏥 Бемор маълумотлари</div>
+          <div class="info-section"><div class="info-section-title">👤 Демографик</div>
+            <div class="info-row"><span class="info-label">Ёши:</span><span class="info-value">${c.patient.age} ёш</span></div>
+            <div class="info-row"><span class="info-label">Жинси:</span><span class="info-value">${c.patient.gender}</span></div>
+            ${c.patient.weight?`<div class="info-row"><span class="info-label">Вазни:</span><span class="info-value">${c.patient.weight} кг</span></div>`:''}
+            <div class="info-row"><span class="info-label">Оғирлик:</span><span class="info-value">${c.patient.severity}</span></div>
+          </div>
+          <div class="info-section"><div class="info-section-title">🩺 Шикоятлар</div><p style="font-size:13px;line-height:1.6;color:var(--text-secondary)">${c.patient.complaints}</p></div>
+          <div class="info-section"><div class="info-section-title">📝 Анамнез</div><p style="font-size:13px;line-height:1.6;color:var(--text-secondary)">${c.patient.anamnesis}</p></div>
+          <div class="info-section"><div class="info-section-title">⚕️ Ҳамроҳ ҳолатлар</div>
+            <div class="info-row"><span class="info-label">Касалликлар:</span><span class="info-value">${c.patient.comorbidities}</span></div>
+            <div class="info-row"><span class="info-label">Ҳомиладорлик:</span><span class="info-value ${c.patient.pregnancy!=='Тегишли эмас'&&c.patient.pregnancy!=='Йўқ'?'info-value-danger':''}">${c.patient.pregnancy}</span></div>
+            <div class="info-row"><span class="info-label">Аллергия:</span><span class="info-value ${c.patient.allergy!=='Йўқ'?'info-value-danger':''}">${c.patient.allergy}</span></div>
+          </div>
+          <div class="info-section"><div class="info-section-title">🫀 Аъзолар</div>
+            <div class="info-row"><span class="info-label">Жигар:</span><span class="info-value">${c.patient.liver}</span></div>
+            <div class="info-row"><span class="info-label">Буйрак:</span><span class="info-value">${c.patient.kidney}</span></div>
+          </div>
+          <div class="info-section"><div class="info-section-title">💊 Мавжуд дорилар</div><p style="font-size:13px;color:var(--text-secondary);line-height:1.6">${c.patient.currentMeds}</p></div>
+          <div class="info-section"><div class="info-section-title">🔬 Лаборатория</div><p style="font-size:12px;color:var(--text-secondary);line-height:1.7;font-family:var(--font-mono)">${c.patient.labs}</p></div>
+          <div class="info-section"><div class="info-section-title">📷 Текширувлар</div><p style="font-size:13px;color:var(--text-secondary);line-height:1.6">${c.patient.imaging}</p></div>
+        </div>
+        <div class="case-work-panel">
+          <div style="font-size:15px;font-weight:700;margin-bottom:14px">📋 Фармакотерапия қарори</div>
+          <div class="decision-step"><div class="step-header"><div class="step-number">1</div><div class="step-title">Дори танлаш</div></div>
+            <div class="form-row"><div class="form-group"><label class="form-label">Асосий дори</label><input class="form-input" id="ans_mainDrug" placeholder="Масалан: Амоксициллин"></div>
+            <div class="form-group"><label class="form-label">Альтернатив дори</label><input class="form-input" id="ans_altDrug" placeholder="Масалан: Азитромицин"></div></div>
+          </div>
+          <div class="decision-step"><div class="step-header"><div class="step-number">2</div><div class="step-title">Дозалаш</div></div>
+            <div class="form-row"><div class="form-group"><label class="form-label">Бир марталик доза</label><input class="form-input" id="ans_singleDose" placeholder="Масалан: 500 мг"></div>
+            <div class="form-group"><label class="form-label">Суткалик доза</label><input class="form-input" id="ans_dailyDose" placeholder="Масалан: 1500 мг/сут"></div></div>
+          </div>
+          <div class="decision-step"><div class="step-header"><div class="step-number">3</div><div class="step-title">Қўллаш усули ва давомийлик</div></div>
+            <div class="form-row"><div class="form-group"><label class="form-label">Қабул йўли</label><select class="form-select" id="ans_route"><option value="">Танланг...</option><option>Оғиз орқали</option><option>Оғиз орқали (суспензия)</option><option>Мушак ичига</option><option>Вена ичига</option><option>Тери остига</option><option>Маҳаллий</option><option>Ингаляцион</option><option>Ректал</option></select></div>
+            <div class="form-group"><label class="form-label">Даволаш давомийлиги</label><input class="form-input" id="ans_duration" placeholder="Масалан: 7 кун"></div></div>
+          </div>
+          <div class="decision-step"><div class="step-header"><div class="step-number">4</div><div class="step-title">Комбинация ва мониторинг</div></div>
+            <div class="form-group mb-2"><label class="form-label">Дорилар комбинацияси</label><input class="form-input" id="ans_combination" placeholder="Масалан: Амоксициллин + Кларитромицин"></div>
+            <div class="form-group mb-2"><label class="form-label">Мониторинг режаси</label><textarea class="form-textarea" id="ans_monitoring" placeholder="Қайси кўрсаткичларни, қанча вақт оралиғида кузатиш керак..."></textarea></div>
+            <div class="form-group"><label class="form-label">Ножўя таъсирларни олдини олиш</label><textarea class="form-textarea" id="ans_sideEffects" placeholder="Қандай хавфлар бор, уларни қандай олдини олиш мумкин..."></textarea></div>
+          </div>
+          <div class="flex gap-2"><button class="btn btn-primary btn-lg" onclick="submitCase(${c.id})" style="flex:1">✅ Жавобни юбориш</button><button class="btn btn-secondary btn-lg" onclick="navigateTo('cases')">Бекор қилиш</button></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function submitCase(caseId) {
+  const c = DB.cases.find(x => x.id === caseId);
+  const fields = ['mainDrug','altDrug','singleDose','dailyDose','route','duration','combination','monitoring','sideEffects'];
+  const answers = {};
+  fields.forEach(f => answers[f] = document.getElementById('ans_'+f)?.value?.trim() || '');
+  if (!answers.mainDrug) return showToast('Камида асосий дорини киритинг!', 'error');
+  const result = evaluateAnswers(c, answers);
+  c.attempts++;
+  const newResult = { id: DB.results.length+1, userId: DB.currentUser.id, caseId: c.id, caseTitle: c.title, answers, ...result, date: formatDate() };
+  DB.results.push(newResult);
+  const caseResults = DB.results.filter(r => r.caseId === c.id);
+  c.avgScore = Math.round(caseResults.reduce((a,b) => a+b.score, 0) / caseResults.length);
+  showCaseResults(c, answers, result);
+}
+
+function evaluateAnswers(c, answers) {
+  const correct = c.correctAnswers, ev = c.evaluation;
+  let scores = {}, total = 0, maxTotal = 0;
+  const drugOk = similar(answers.mainDrug, correct.mainDrug) || similar(answers.mainDrug, correct.altDrug);
+  scores.drugChoice = { earned: drugOk ? ev.drugChoice.max : Math.round(ev.drugChoice.max*0.2), max: ev.drugChoice.max, correct: drugOk, label: 'Дори танлаш' };
+  const doseOk = similar(answers.singleDose, correct.singleDose) || similar(answers.dailyDose, correct.dailyDose);
+  scores.doseCorrect = { earned: doseOk ? ev.doseCorrect.max : Math.round(ev.doseCorrect.max*0.15), max: ev.doseCorrect.max, correct: doseOk, label: 'Доза тўғрилиги' };
+  const contraOk = checkContra(c, answers);
+  scores.contraindication = { earned: contraOk ? ev.contraindication.max : 0, max: ev.contraindication.max, correct: contraOk, label: 'Контраиндикация' };
+  const interOk = answers.combination.length > 5;
+  scores.interaction = { earned: interOk ? ev.interaction.max : Math.round(ev.interaction.max*0.3), max: ev.interaction.max, correct: interOk, label: 'Дори ўзаро таъсири' };
+  const durOk = similar(answers.duration, correct.duration);
+  scores.duration = { earned: durOk ? ev.duration.max : Math.round(ev.duration.max*0.2), max: ev.duration.max, correct: durOk, label: 'Давомийлик' };
+  const monOk = answers.monitoring.length > 15;
+  scores.monitoring = { earned: monOk ? ev.monitoring.max : Math.round(ev.monitoring.max*0.2), max: ev.monitoring.max, correct: monOk, label: 'Мониторинг' };
+  const safeOk = answers.sideEffects.length > 15;
+  scores.safety = { earned: safeOk ? ev.safety.max : Math.round(ev.safety.max*0.2), max: ev.safety.max, correct: safeOk, label: 'Хавфсизлик' };
+  Object.values(scores).forEach(s => { total += s.earned; maxTotal += s.max; });
+  return { scores, total, maxTotal, score: Math.round((total/maxTotal)*100) };
+}
+
+function checkContra(c, answers) {
+  const drug = answers.mainDrug.toLowerCase();
+  if (c.patient.allergy.toLowerCase().includes('пенициллин') && (drug.includes('амоксициллин')||drug.includes('ампициллин')||drug.includes('пенициллин'))) return false;
+  if (c.patient.pregnancy.includes('Ҳомиладор') && (drug.includes('эналаприл')||drug.includes('лизиноприл')||drug.includes('валсартан')||drug.includes('варфарин'))) return false;
+  const gfr = parseInt((c.patient.kidney.match(/GFR[:\s]*(\d+)/i)||[])[1]) || 100;
+  if (gfr < 30 && (drug.includes('ибупрофен')||drug.includes('диклофенак')||drug.includes('метформин'))) return false;
+  return true;
+}
+
+function showCaseResults(c, answers, result) {
+  const mc = document.getElementById('mainContent');
+  const sc = result.score >= 80 ? 'var(--accent-success)' : result.score >= 60 ? 'var(--accent-warm)' : 'var(--accent-danger)';
+  const em = result.score >= 80 ? '🎉' : result.score >= 60 ? '👍' : '📚';
+  const gr = result.score >= 80 ? 'Аъло натижа!' : result.score >= 60 ? 'Яхши уриниш!' : 'Қайта ўқиш тавсия этилади';
+
+  mc.innerHTML = `
+    <div class="page-header"><div class="flex items-center justify-between flex-wrap gap-2">
+      <div><div class="page-title">${em} Натижалар</div><div class="page-desc">${c.title} — ${gr}</div></div>
+      <div class="flex gap-1"><button class="btn btn-secondary btn-sm" onclick="navigateTo('cases')">← Кейсларга</button><button class="btn btn-info btn-sm" onclick="openCase(${c.id})">🔄 Қайта ечиш</button></div>
+    </div></div>
+    <div class="page-body fade-in">
+      <div class="grid-2 mb-3">
+        <div class="card text-center" style="padding:32px">
+          <div class="result-score-circle" style="background:conic-gradient(${sc} ${result.score*3.6}deg, var(--bg-primary) 0)">
+            <div class="result-score-inner"><div class="result-score-value" style="color:${sc}">${result.score}%</div><div class="result-score-label">${result.total}/${result.maxTotal}</div></div>
+          </div>
+          <div style="margin-top:14px;font-size:18px;font-weight:700;color:${sc}">${gr}</div>
+        </div>
+        <div class="card">
+          <div class="card-title mb-2">📊 Баҳолаш</div>
+          ${Object.values(result.scores).map(s => `<div class="result-item">
+            <div class="result-check ${s.correct?'correct':'wrong'}">${s.correct?'✓':'✗'}</div>
+            <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">${s.label}</div><div class="progress-bar mt-1"><div class="progress-fill${s.correct?'':' progress-fill-danger'}" style="width:${(s.earned/s.max)*100}%"></div></div></div>
+            <div style="font-size:13px;font-weight:700;color:${s.correct?'var(--accent-success)':'var(--accent-danger)'}">${s.earned}/${s.max}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div class="grid-2 mb-3">
+        <div class="card"><div class="card-title mb-2">📝 Сизнинг жавобингиз</div>
+          ${Object.entries(answers).map(([k,v]) => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--text-secondary)">${getFieldLabel(k)}</span><span style="font-weight:600;max-width:60%;text-align:right">${v||'—'}</span></div>`).join('')}
+        </div>
+        <div class="card"><div class="card-title mb-2">✅ Тўғри жавоб</div>
+          ${Object.entries(c.correctAnswers).map(([k,v]) => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--text-secondary)">${getFieldLabel(k)}</span><span style="font-weight:600;color:var(--accent);max-width:60%;text-align:right">${v}</span></div>`).join('')}
+        </div>
+      </div>
+      <div class="ai-feedback"><div class="ai-feedback-text" id="aiFB"><div class="flex items-center gap-2"><div class="spinner spinner-sm"></div><span>AI таҳлил қилмоқда...</span></div></div></div>
+    </div>`;
+
+  setTimeout(() => generateAIFeedback(c, answers, result), 600);
+}
+
+function getFieldLabel(k) {
+  return {mainDrug:'Асосий дори',altDrug:'Альтернатив',singleDose:'Бир марта доза',dailyDose:'Суткалик доза',route:'Қабул йўли',duration:'Давомийлик',combination:'Комбинация',monitoring:'Мониторинг',sideEffects:'Ножўя таъсирлар'}[k]||k;
+}
+
+function generateAIFeedback(c, answers, result) {
+  const el = document.getElementById('aiFB');
+  let fb = result.score >= 80 ? '<strong>🎉 Табриклаймиз! Жуда яхши натижа!</strong><br><br>' :
+           result.score >= 60 ? '<strong>👍 Яхши уриниш! Аммо яна яхшилаш мумкин.</strong><br><br>' :
+           '<strong>📚 Бу мавзуни қайта ўқиш тавсия этилади.</strong><br><br>';
+
+  Object.entries(result.scores).forEach(([key, s]) => {
+    if (!s.correct) {
+      fb += `⚠️ <strong>${s.label}:</strong> `;
+      if (key === 'drugChoice') {
+        fb += `Сиз "${answers.mainDrug}" танладингиз. Тўғри жавоб: <strong>${c.correctAnswers.mainDrug}</strong>. `;
+        if (c.patient.allergy !== 'Йўқ') fb += `Эътибор: бемор <strong>${c.patient.allergy}</strong> аллергияси бор! `;
+        if (c.patient.pregnancy.includes('Ҳомиладор')) fb += `Ҳомиладорликда дори хавфсизлиги муҳим! `;
+      } else if (key === 'doseCorrect') {
+        fb += `Сизнинг дозангиз тўғри жавобдан фарқ қилади. Тўғри: <strong>${c.correctAnswers.singleDose}</strong> (суткалик: ${c.correctAnswers.dailyDose}). `;
+        const gfr = parseInt((c.patient.kidney.match(/GFR[:\s]*(\d+)/i)||[])[1]) || 100;
+        if (gfr < 60) fb += `Буйрак GFR: ${gfr} — доза мослаштириш зарур! `;
+      } else if (key === 'contraindication') {
+        fb += `<span style="color:var(--accent-danger)">Сиз танлаган дори контраиндикацияга эга!</span> Бемор маълумотларини диққат билан текширинг. `;
+      } else if (key === 'monitoring') {
+        fb += `Мониторинг режаси етарли эмас. Тавсия: <strong>${c.correctAnswers.monitoring}</strong> `;
+      } else if (key === 'safety') {
+        fb += `Ножўя таъсирларни олдини олиш чораларини кўрсатинг: <strong>${c.correctAnswers.sideEffects}</strong> `;
+      }
+      fb += '<br><br>';
+    }
+  });
+
+  fb += `📖 <strong>Тавсиялар:</strong><br>`;
+  fb += `• <strong>${c.topic}</strong> мавзусини қайта ўқинг<br>`;
+  fb += `• Ҳар доим аллергик анамнезни текширинг<br>`;
+  fb += `• Ҳамроҳ касалликлар ва дори ўзаро таъсирини ҳисобга олинг<br>`;
+  fb += `• Мониторинг режасини тузишни унутманг<br>`;
+  fb += `• Ёш, жигар ва буйрак функциясини доимо баҳоланг`;
+
+  el.innerHTML = fb;
+}
+
+// ============================================================
+// EDIT CASE
+// ============================================================
+function editCase(id) {
+  const c = DB.cases.find(x => x.id === id);
+  if (!c) return;
+  openModal(`
+    <div class="modal-header"><div class="modal-title">✏️ Кейсни таҳрирлаш</div><button class="btn-icon btn-icon-sm" onclick="closeModal()">✕</button></div>
+    <div class="form-group mb-2"><label class="form-label">Кейс номи</label><input class="form-input" id="ec_title" value="${c.title}"></div>
+    <div class="form-group mb-2"><label class="form-label">Тавсиф</label><textarea class="form-textarea" id="ec_desc">${c.description}</textarea></div>
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Категория</label><select class="form-select" id="ec_cat">${DB.categories.map(x=>`<option ${x===c.category?'selected':''}>${x}</option>`).join('')}</select></div>
+      <div class="form-group"><label class="form-label">Қийинлик</label><select class="form-select" id="ec_diff">${['Осон','Ўрта','Қийин'].map(x=>`<option ${x===c.difficulty?'selected':''}>${x}</option>`).join('')}</select></div>
+    </div>
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Мавзу</label><select class="form-select" id="ec_topic">${DB.topics.map(x=>`<option ${x===c.topic?'selected':''}>${x}</option>`).join('')}</select></div>
+      <div class="form-group"><label class="form-label">Ҳолат</label><select class="form-select" id="ec_status"><option ${c.status==='active'?'selected':''} value="active">Фаол</option><option ${c.status==='draft'?'selected':''} value="draft">Қоралама</option><option ${c.status==='archived'?'selected':''} value="archived">Архив</option></select></div>
+    </div>
+    <div class="form-group mb-3"><label class="form-label">Асосий тўғри дори</label><input class="form-input" id="ec_mainDrug" value="${c.correctAnswers.mainDrug}"></div>
+    <div class="flex gap-2 justify-between">
+      <button class="btn btn-secondary" onclick="closeModal()">Бекор қилиш</button>
+      <button class="btn btn-primary" onclick="saveEditCase(${id})">💾 Сақлаш</button>
+    </div>
+  `, 'lg');
+}
+
+function saveEditCase(id) {
+  const c = DB.cases.find(x => x.id === id);
+  c.title = document.getElementById('ec_title').value;
+  c.description = document.getElementById('ec_desc').value;
+  c.category = document.getElementById('ec_cat').value;
+  c.difficulty = document.getElementById('ec_diff').value;
+  c.topic = document.getElementById('ec_topic').value;
+  c.status = document.getElementById('ec_status').value;
+  c.correctAnswers.mainDrug = document.getElementById('ec_mainDrug').value;
+  c.updatedAt = formatDate();
+  closeModal(); showToast('Кейс янгиланди!'); navigateTo('cases');
+}
+
+// ============================================================
+// CREATE CASE
+// ============================================================
+function pgCreateCase(el) {
+  el.innerHTML = `
+    <div class="page-header"><div class="page-title">➕ Янги кейс яратиш</div><div class="page-desc">Виртуал бемор кейси тузинг</div></div>
+    <div class="page-body" style="max-width:900px">
+      <div class="card mb-3"><div class="card-title mb-2">📋 Асосий маълумотлар</div>
+        <div class="form-row mb-2"><div class="form-group"><label class="form-label">Кейс номи *</label><input class="form-input" id="nc_title" placeholder="Масалан: Пневмонияда антибиотик танлаш"></div><div class="form-group"><label class="form-label">Категория</label><select class="form-select" id="nc_category">${DB.categories.map(c=>`<option>${c}</option>`).join('')}</select></div></div>
+        <div class="form-row-3 mb-2"><div class="form-group"><label class="form-label">Қийинлик</label><select class="form-select" id="nc_difficulty"><option>Осон</option><option selected>Ўрта</option><option>Қийин</option></select></div><div class="form-group"><label class="form-label">Мавзу</label><select class="form-select" id="nc_topic">${DB.topics.map(t=>`<option>${t}</option>`).join('')}</select></div><div class="form-group"><label class="form-label">Ҳолат</label><select class="form-select" id="nc_status"><option value="active">Фаол</option><option value="draft">Қоралама</option></select></div></div>
+        <div class="form-group"><label class="form-label">Тавсиф</label><textarea class="form-textarea" id="nc_desc" placeholder="Кейс ҳақида қисқа тавсиф..."></textarea></div>
+      </div>
+      <div class="card mb-3"><div class="card-title mb-2">🏥 Бемор маълумотлари</div>
+        <div class="form-row-3 mb-2"><div class="form-group"><label class="form-label">Ёши *</label><input class="form-input" id="nc_age" type="number" placeholder="45"></div><div class="form-group"><label class="form-label">Жинси</label><select class="form-select" id="nc_gender"><option>Эркак</option><option>Аёл</option></select></div><div class="form-group"><label class="form-label">Вазни (кг)</label><input class="form-input" id="nc_weight" type="number" placeholder="75"></div></div>
+        <div class="form-group mb-2"><label class="form-label">Шикоятлар *</label><textarea class="form-textarea" id="nc_complaints"></textarea></div>
+        <div class="form-group mb-2"><label class="form-label">Анамнез *</label><textarea class="form-textarea" id="nc_anamnesis"></textarea></div>
+        <div class="form-row mb-2"><div class="form-group"><label class="form-label">Ҳамроҳ касалликлар</label><input class="form-input" id="nc_comorbidities" placeholder="Масалан: Гипертония, ҚД"></div><div class="form-group"><label class="form-label">Ҳомиладорлик</label><input class="form-input" id="nc_pregnancy" placeholder="Тегишли эмас"></div></div>
+        <div class="form-row mb-2"><div class="form-group"><label class="form-label">Жигар ҳолати</label><input class="form-input" id="nc_liver" placeholder="Норма"></div><div class="form-group"><label class="form-label">Буйрак ҳолати</label><input class="form-input" id="nc_kidney" placeholder="GFR: 85 мл/мин"></div></div>
+        <div class="form-row mb-2"><div class="form-group"><label class="form-label">Аллергик анамнез</label><input class="form-input" id="nc_allergy" placeholder="Йўқ"></div><div class="form-group"><label class="form-label">Қабул қилаётган дорилар</label><input class="form-input" id="nc_meds"></div></div>
+        <div class="form-group mb-2"><label class="form-label">Лаборатор таҳлиллар</label><textarea class="form-textarea" id="nc_labs"></textarea></div>
+        <div class="form-group mb-2"><label class="form-label">Инструментал текширувлар</label><textarea class="form-textarea" id="nc_imaging"></textarea></div>
+        <div class="form-group"><label class="form-label">Оғирлик даражаси</label><select class="form-select" id="nc_severity"><option>Енгил</option><option selected>Ўрта оғир</option><option>Оғир</option></select></div>
+      </div>
+      <div class="card mb-3"><div class="card-title mb-2">✅ Тўғри жавоблар ва баҳолаш мезонлари</div>
+        <div class="form-row mb-2"><div class="form-group"><label class="form-label">Асосий дори *</label><input class="form-input" id="nc_mainDrug"></div><div class="form-group"><label class="form-label">Альтернатив дори</label><input class="form-input" id="nc_altDrug"></div></div>
+        <div class="form-row mb-2"><div class="form-group"><label class="form-label">Бир марталик доза</label><input class="form-input" id="nc_singleDose"></div><div class="form-group"><label class="form-label">Суткалик доза</label><input class="form-input" id="nc_dailyDose"></div></div>
+        <div class="form-row mb-2"><div class="form-group"><label class="form-label">Қабул йўли</label><input class="form-input" id="nc_route" placeholder="Оғиз орқали"></div><div class="form-group"><label class="form-label">Давомийлик</label><input class="form-input" id="nc_duration" placeholder="7 кун"></div></div>
+        <div class="form-group mb-2"><label class="form-label">Комбинация</label><input class="form-input" id="nc_combination"></div>
+        <div class="form-group mb-2"><label class="form-label">Мониторинг режаси</label><textarea class="form-textarea" id="nc_monitoring"></textarea></div>
+        <div class="form-group mb-2"><label class="form-label">Ножўя таъсирлар</label><textarea class="form-textarea" id="nc_sideEffects"></textarea></div>
+        <div style="margin-top:16px;padding:16px;background:var(--bg-primary);border-radius:var(--radius-sm)">
+          <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px">⚖️ Баҳолаш мезонлари (макс балл)</div>
+          <div class="form-row-3 mb-1">${['drugChoice:Дори танлаш:20','doseCorrect:Доза:15','contraindication:Контраиндикация:15'].map(x=>{const[id,l,v]=x.split(':');return`<div class="form-group"><label class="form-label">${l}</label><input class="form-input" id="nc_ev_${id}" type="number" value="${v}" min="0" max="30"></div>`;}).join('')}</div>
+          <div class="form-row-3">${['interaction:Дори таъсири:10','duration:Давомийлик:10','monitoring:Мониторинг:15','safety:Хавфсизлик:15'].map(x=>{const[id,l,v]=x.split(':');return`<div class="form-group"><label class="form-label">${l}</label><input class="form-input" id="nc_ev_${id}" type="number" value="${v}" min="0" max="30"></div>`;}).join('')}</div>
+        </div>
+      </div>
+      <div class="flex gap-2"><button class="btn btn-primary btn-lg" onclick="saveNewCase()" style="flex:1">💾 Кейсни сақлаш</button><button class="btn btn-secondary btn-lg" onclick="navigateTo('cases')">Бекор қилиш</button></div>
+    </div>`;
+}
+
+function saveNewCase() {
+  const title = document.getElementById('nc_title').value.trim();
+  if (!title) return showToast('Кейс номини киритинг!', 'error');
+  const g = id => document.getElementById(id)?.value || '';
+  const newCase = {
+    id: DB.cases.length + 1, title, description: g('nc_desc'), category: g('nc_category'), difficulty: g('nc_difficulty'), topic: g('nc_topic'),
+    author: DB.currentUser.name, authorId: DB.currentUser.id, createdAt: formatDate(), updatedAt: formatDate(), status: g('nc_status') || 'active',
+    patient: { age: parseInt(g('nc_age'))||0, gender: g('nc_gender'), weight: parseInt(g('nc_weight'))||0, complaints: g('nc_complaints'), anamnesis: g('nc_anamnesis'),
+      comorbidities: g('nc_comorbidities')||'Йўқ', pregnancy: g('nc_pregnancy')||'Тегишли эмас', liver: g('nc_liver')||'Норма', kidney: g('nc_kidney')||'Норма',
+      allergy: g('nc_allergy')||'Йўқ', currentMeds: g('nc_meds'), labs: g('nc_labs'), imaging: g('nc_imaging'), severity: g('nc_severity') },
+    correctAnswers: { mainDrug: g('nc_mainDrug'), altDrug: g('nc_altDrug'), singleDose: g('nc_singleDose'), dailyDose: g('nc_dailyDose'), route: g('nc_route'), duration: g('nc_duration'), combination: g('nc_combination'), monitoring: g('nc_monitoring'), sideEffects: g('nc_sideEffects') },
+    evaluation: { drugChoice:{max:parseInt(g('nc_ev_drugChoice'))||20}, doseCorrect:{max:parseInt(g('nc_ev_doseCorrect'))||15}, contraindication:{max:parseInt(g('nc_ev_contraindication'))||15}, interaction:{max:parseInt(g('nc_ev_interaction'))||10}, duration:{max:parseInt(g('nc_ev_duration'))||10}, monitoring:{max:parseInt(g('nc_ev_monitoring'))||15}, safety:{max:parseInt(g('nc_ev_safety'))||15} },
+    attempts: 0, avgScore: 0
+  };
+  DB.cases.push(newCase);
+  showToast('Кейс муваффақиятли сақланди!'); navigateTo('cases');
+}
+
+// ============================================================
+// RESULTS
+// ============================================================
+function pgResults(el) {
+  const myR = DB.results.filter(r => r.userId === DB.currentUser.id);
+  const avg = myR.length ? Math.round(myR.reduce((a,b)=>a+b.score,0)/myR.length) : 0;
+  el.innerHTML = `
+    <div class="page-header"><div class="flex items-center justify-between"><div><div class="page-title">📊 Менинг натижаларим</div><div class="page-desc">${myR.length} та уриниш</div></div>
+      ${myR.length?`<button class="btn btn-secondary btn-sm" onclick="exportResults()">📥 Экспорт (CSV)</button>`:''}
+    </div></div>
+    <div class="page-body">
+      ${myR.length ? `
+        <div class="grid-4 stagger mb-3">
+          <div class="stat-card"><div class="stat-value" style="color:var(--accent)">${myR.length}</div><div class="stat-label">Жами уринишлар</div></div>
+          <div class="stat-card"><div class="stat-value" style="color:var(--accent-secondary)">${avg}%</div><div class="stat-label">Ўртача балл</div></div>
+          <div class="stat-card"><div class="stat-value" style="color:var(--accent-success)">${Math.max(...myR.map(r=>r.score))}%</div><div class="stat-label">Энг яхши</div></div>
+          <div class="stat-card"><div class="stat-value" style="color:var(--accent-danger)">${Math.min(...myR.map(r=>r.score))}%</div><div class="stat-label">Энг паст</div></div>
+        </div>
+        <div class="card"><div class="data-table-wrapper"><table class="data-table"><thead><tr><th>Кейс</th><th>Балл</th><th>Прогресс</th><th>Сана</th><th>Амал</th></tr></thead><tbody>
+          ${myR.slice().reverse().map(r => `<tr>
+            <td style="font-weight:600;max-width:250px" class="truncate">${r.caseTitle}</td>
+            <td><span class="badge badge-${getScoreClass(r.score)}">${r.score}%</span></td>
+            <td><div class="progress-bar" style="width:120px"><div class="progress-fill${r.score<60?' progress-fill-danger':r.score<80?' progress-fill-amber':''}" style="width:${r.score}%"></div></div></td>
+            <td style="color:var(--text-muted);font-size:13px">${r.date}</td>
+            <td><button class="btn btn-secondary btn-xs" onclick="openCase(${r.caseId})">Қайта</button></td>
+          </tr>`).join('')}
+        </tbody></table></div></div>
+      ` : '<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-title">Ҳали натижалар йўқ</div><div class="empty-desc">Биринчи кейсни ечиб кўринг!</div><button class="btn btn-primary" onclick="navigateTo(\'cases\')">Кейсларга ўтиш</button></div>'}
+    </div>`;
+}
+
+function exportResults() {
+  const myR = DB.results.filter(r => r.userId === DB.currentUser.id);
+  exportToCSV(myR.map(r => ({Кейс: r.caseTitle, Балл: r.score+'%', Сана: r.date})), 'natijalar.csv');
+}
+
+// ============================================================
+// ERRORS ANALYSIS (Student)
+// ============================================================
+function pgErrorsAnalysis(el) {
+  const myR = DB.results.filter(r => r.userId === DB.currentUser.id && r.scores);
+  const errorCounts = {};
+  myR.forEach(r => {
+    Object.entries(r.scores || {}).forEach(([key, s]) => {
+      if (!s.correct) { errorCounts[s.label || key] = (errorCounts[s.label || key] || 0) + 1; }
+    });
+  });
+  const sorted = Object.entries(errorCounts).sort((a,b) => b[1]-a[1]);
+  const topicResults = {};
+  myR.forEach(r => {
+    const c = DB.cases.find(x => x.id === r.caseId);
+    if (c) { if (!topicResults[c.topic]) topicResults[c.topic] = []; topicResults[c.topic].push(r.score); }
+  });
+
+  el.innerHTML = `
+    <div class="page-header"><div class="page-title">⚠️ Хатолар таҳлили</div><div class="page-desc">Қаерда кўп хато қилаяпсиз</div></div>
+    <div class="page-body">
+      ${myR.length ? `
+        <div class="grid-2 mb-3">
+          <div class="card"><div class="card-title mb-2">🔴 Кўп учрайдиган хатолар</div>
+            ${sorted.length ? sorted.map(([label, cnt]) => `<div class="chart-bar-h"><div class="chart-bar-label">${label}</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:${(cnt/myR.length)*100}%;background:linear-gradient(90deg,var(--accent-danger),#f87171)">${cnt}</div></div></div>`).join('') : '<p style="color:var(--text-muted);padding:20px;text-align:center">Хатолар топилмади — аъло!</p>'}
+          </div>
+          <div class="card"><div class="card-title mb-2">📚 Мавзулар бўйича натижа</div>
+            ${Object.entries(topicResults).map(([topic, scores]) => {
+              const avg = Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+              return `<div style="margin-bottom:12px"><div class="flex justify-between mb-1" style="font-size:13px"><span>${topic}</span><span class="badge badge-${getScoreClass(avg)}">${avg}%</span></div><div class="progress-bar"><div class="progress-fill${avg<60?' progress-fill-danger':avg<80?' progress-fill-amber':''}" style="width:${avg}%"></div></div></div>`;
+            }).join('')}
+          </div>
+        </div>
+        <div class="card"><div class="card-title mb-2">💡 AI тавсиялар</div>
+          <div style="font-size:14px;line-height:1.8;color:var(--text-secondary)">
+            ${sorted.slice(0,3).map(([label]) => `• <strong>${label}</strong> бўйича кўпроқ хато қиляпсиз — бу мавзуни қайта ўқинг<br>`).join('')}
+            ${Object.entries(topicResults).filter(([,s]) => Math.round(s.reduce((a,b)=>a+b,0)/s.length) < 60).map(([t]) => `• <strong>${t}</strong> мавзусида натижа паст — алоҳида эътибор беринг<br>`).join('')}
+          </div>
+        </div>
+      ` : '<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-title">Таҳлил учун маълумот йўқ</div><div class="empty-desc">Аввал бир нечта кейс ечинг</div></div>'}
+    </div>`;
+}
+
+// ============================================================
+// BOOKMARKS
+// ============================================================
+function pgBookmarks(el) {
+  const bookmarkedCases = DB.cases.filter(c => DB.bookmarks.includes(c.id));
+  el.innerHTML = `
+    <div class="page-header"><div class="page-title">⭐ Сақланган кейслар</div><div class="page-desc">${bookmarkedCases.length} та кейс</div></div>
+    <div class="page-body">
+      ${bookmarkedCases.length ? `<div class="grid-auto stagger">${bookmarkedCases.map(c => `
+        <div class="case-card" onclick="openCase(${c.id})"><div class="case-card-top case-card-top-${c.difficulty==='Осон'?'easy':c.difficulty==='Ўрта'?'medium':'hard'}"></div><div class="case-card-body">
+          <div class="flex justify-between"><span class="badge badge-${getDifficultyClass(c.difficulty)}">${c.difficulty}</span><button class="btn-ghost" onclick="event.stopPropagation();toggleBookmark(${c.id})">⭐</button></div>
+          <h3 style="font-size:15px;font-weight:700;margin:8px 0">${c.title}</h3><div class="case-card-meta"><span class="badge badge-purple">${c.category}</span></div>
+        </div></div>`).join('')}</div>` : '<div class="empty-state"><div class="empty-icon">⭐</div><div class="empty-title">Сақланган кейслар йўқ</div><div class="empty-desc">Кейсларда ⭐ тугмасини босинг</div></div>'}
+    </div>`;
+}
+
+// ============================================================
+// AI HELP
+// ============================================================
+function pgAIHelp(el) {
+  el.innerHTML = `
+    <div class="page-header"><div class="page-title">🤖 AI Ёрдамчи</div><div class="page-desc">Клиник фармакология бўйича саволларга жавоб</div></div>
+    <div class="page-body"><div class="card" style="max-width:800px;margin:0 auto">
+      <div id="aiChat" style="min-height:400px;max-height:500px;overflow-y:auto;padding:16px;background:var(--bg-primary);border-radius:var(--radius-md);margin-bottom:16px">
+        <div style="display:flex;gap:10px;margin-bottom:16px"><div style="width:32px;height:32px;border-radius:50%;background:var(--accent-glow);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">🤖</div>
+          <div style="background:var(--bg-card);padding:12px 16px;border-radius:12px;border-top-left-radius:4px;max-width:80%;font-size:14px;line-height:1.7">Салом! Мен ClinPharm AI ёрдамчисиман. Саволларингизга жавоб бера оламан:<br>• Дори ўзаро таъсири<br>• Дозалаш принциплари<br>• Контраиндикациялар<br>• Ҳомиладорликда дори хавфсизлиги<br>• Буйрак/жигарда доза мослаштириш</div></div>
+      </div>
+      <div class="flex gap-1"><input class="form-input" id="aiInput" placeholder="Саволингизни ёзинг..." style="flex:1" onkeydown="if(event.key==='Enter')sendAI()"><button class="btn btn-primary" onclick="sendAI()">↗</button></div>
+      <div class="flex gap-1 mt-2 flex-wrap">${['Пенициллин аллергияда нима берамиз?','Ҳомиладорликда ман этилган дорилар','GFR 30 да доза мослаштириш','Варфарин ўзаро таъсирлари'].map(q=>`<button class="btn btn-secondary btn-xs" onclick="document.getElementById('aiInput').value='${q}';sendAI()">${q}</button>`).join('')}</div>
+    </div></div>`;
+}
+
+function sendAI() {
+  const input = document.getElementById('aiInput'), msg = input.value.trim();
+  if (!msg) return; input.value = '';
+  const chat = document.getElementById('aiChat');
+  chat.innerHTML += `<div style="display:flex;gap:10px;margin-bottom:16px;justify-content:flex-end"><div style="background:var(--accent-glow);padding:12px 16px;border-radius:12px;border-top-right-radius:4px;max-width:80%;font-size:14px">${msg}</div><div style="width:32px;height:32px;border-radius:50%;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">👤</div></div>`;
+  const typingId = 'typing_'+Date.now();
+  chat.innerHTML += `<div style="display:flex;gap:10px;margin-bottom:16px" id="${typingId}"><div style="width:32px;height:32px;border-radius:50%;background:var(--accent-glow);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">🤖</div><div style="background:var(--bg-card);padding:12px 16px;border-radius:12px;border-top-left-radius:4px;font-size:14px"><div class="spinner spinner-sm"></div></div></div>`;
+  chat.scrollTop = chat.scrollHeight;
+  setTimeout(() => {
+    const resp = getAIResp(msg);
+    const el = document.getElementById(typingId);
+    if (el) el.innerHTML = `<div style="width:32px;height:32px;border-radius:50%;background:var(--accent-glow);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">🤖</div><div style="background:var(--bg-card);padding:12px 16px;border-radius:12px;border-top-left-radius:4px;max-width:80%;font-size:14px;line-height:1.7">${resp}</div>`;
+    chat.scrollTop = chat.scrollHeight;
+  }, 1000);
+}
+
+function getAIResp(msg) {
+  const m = msg.toLowerCase();
+  // Check knowledge base
+  const matchedRules = DB.knowledgeBase.filter(r => m.includes(r.category.toLowerCase()) || r.rule.toLowerCase().split(' ').some(w => w.length > 4 && m.includes(w.toLowerCase())));
+  if (matchedRules.length) {
+    return `Билим базасидан топилди:<br><br>${matchedRules.map(r => `📌 <strong>${r.category}:</strong> ${r.rule} <em style="color:var(--text-muted)">(${r.source})</em>`).join('<br><br>')}`;
+  }
+  // Check drug interactions
+  const matchedInt = DB.drugInteractions.filter(i => m.includes(i.drug1.toLowerCase()) || m.includes(i.drug2.toLowerCase()));
+  if (matchedInt.length) {
+    return `Дори ўзаро таъсирлари:<br><br>${matchedInt.map(i => `⚠️ <strong>${i.drug1} + ${i.drug2}</strong> (${i.severity}): ${i.effect}`).join('<br><br>')}`;
+  }
+  if (m.includes('пенициллин') || m.includes('аллерги')) return `Пенициллин аллергиясида альтернативлар:<br><br><strong>1. Макролидлар:</strong> Азитромицин, Кларитромицин<br><strong>2. Фторхинолонлар:</strong> Левофлоксацин<br><strong>3. Цефалоспоринлар:</strong> 3-4 авлод (кросс-аллергия 1-2%)<br><br>⚠️ Анафилаксия тарихи бўлса цефалоспоринлар ҳам ман этилади!`;
+  if (m.includes('ҳомиладор')) return `Ҳомиладорликда ман этилган дорилар:<br><br>🚫 АКЕИ/АРБ — тератоген<br>🚫 Варфарин — 1-триместрда тератоген<br>🚫 Метотрексат — абортив<br>🚫 Тетрациклинлар — суяк/тиш<br>🚫 Статинлар<br><br>✅ Хавфсиз: Метилдопа, Парацетамол, Амоксициллин`;
+  if (m.includes('буйрак') || m.includes('gfr')) return `Буйрак етишмовчилигида доза мослаштириш:<br><br>• GFR > 60: Одатдаги доза<br>• GFR 30-60: 25-50% камайтириш<br>• GFR 15-30: 50-75% камайтириш<br>• GFR < 15: Индивидуал<br><br>⚠️ НСТЯД — ман этилган!<br>⚠️ Метформин GFR < 30 да ман этилган`;
+  return `Яхши савол! Аниқроқ жавоб бериш учун қуйидагиларни аниқлаштиринг:<br><br>• Қайси дори гуруҳи ҳақида?<br>• Бемор ёши, ҳомиладорлик, буйрак/жигар?<br>• Қандай касаллик?<br><br>Ёки тайёр саволлардан бирини танланг 👇`;
+}
+
+// ============================================================
+// STUDENTS / USERS
+// ============================================================
+function pgStudents(el) {
+  const isAdmin = DB.currentUser.role === 'admin';
+  const users = isAdmin ? DB.users : DB.users.filter(u => u.role === 'student');
+  el.innerHTML = `
+    <div class="page-header"><div class="flex items-center justify-between flex-wrap gap-2">
+      <div><div class="page-title">👥 ${isAdmin?'Фойдаланувчилар':'Талабалар'}</div><div class="page-desc">${users.length} та</div></div>
+      <div class="flex gap-1">
+        <button class="btn btn-secondary btn-sm" onclick="exportUsers()">📥 Экспорт</button>
+        ${isAdmin?'<button class="btn btn-primary btn-sm" onclick="addUserModal()">+ Фойдаланувчи</button>':''}
+      </div>
+    </div></div>
+    <div class="page-body">
+      <div class="card"><div class="data-table-wrapper"><table class="data-table"><thead><tr><th>Исм</th><th>Email</th><th>Роль</th><th>Гуруҳ</th><th>Уринишлар</th><th>Ўртача</th><th>Амал</th></tr></thead><tbody>
+        ${users.map(u => {
+          const ur = DB.results.filter(r => r.userId === u.id);
+          const avg = ur.length ? Math.round(ur.reduce((a,b)=>a+b.score,0)/ur.length) : 0;
+          return `<tr>
+            <td><div class="flex items-center gap-2"><div class="user-avatar" style="width:30px;height:30px;font-size:11px">${getInitials(u.name)}</div><span style="font-weight:600;font-size:13px">${u.name}</span></div></td>
+            <td style="color:var(--text-muted);font-size:13px">${u.email}</td>
+            <td><span class="badge badge-${u.role==='admin'?'danger':u.role==='teacher'?'purple':'accent'}">${getRoleName(u.role)}</span></td>
+            <td style="font-size:13px">${u.group||'—'}</td>
+            <td>${ur.length}</td>
+            <td>${ur.length?`<span class="badge badge-${getScoreClass(avg)}">${avg}%</span>`:'—'}</td>
+            <td><div class="flex gap-05">
+              <button class="btn btn-secondary btn-xs" onclick="viewStudentDetail(${u.id})">👁️</button>
+              ${isAdmin?`<button class="btn btn-warning btn-xs" onclick="editUserModal(${u.id})">✏️</button>
+              ${u.id!==DB.currentUser.id?`<button class="btn btn-danger btn-xs" onclick="toggleUserStatus(${u.id})">${u.status==='active'?'🔒':'🔓'}</button>`:''}`:''}</div></td>
+          </tr>`;
+        }).join('')}
+      </tbody></table></div></div>
+    </div>`;
+}
+
+function viewStudentDetail(uid) {
+  const u = DB.users.find(x => x.id === uid);
+  const ur = DB.results.filter(r => r.userId === uid);
+  const avg = ur.length ? Math.round(ur.reduce((a,b)=>a+b.score,0)/ur.length) : 0;
+  openModal(`
+    <div class="modal-header"><div class="modal-title">👤 ${u.name}</div><button class="btn-icon btn-icon-sm" onclick="closeModal()">✕</button></div>
+    <div class="grid-3 mb-3"><div class="stat-card"><div class="stat-value" style="color:var(--accent);font-size:24px">${ur.length}</div><div class="stat-label">Уринишлар</div></div><div class="stat-card"><div class="stat-value" style="color:var(--accent-secondary);font-size:24px">${avg}%</div><div class="stat-label">Ўртача</div></div><div class="stat-card"><div class="stat-value" style="color:var(--accent-success);font-size:24px">${ur.length?Math.max(...ur.map(r=>r.score))+'%':'—'}</div><div class="stat-label">Энг яхши</div></div></div>
+    ${ur.length?`<table class="data-table"><thead><tr><th>Кейс</th><th>Балл</th><th>Сана</th></tr></thead><tbody>${ur.map(r=>`<tr><td style="font-size:13px">${r.caseTitle}</td><td><span class="badge badge-${getScoreClass(r.score)}">${r.score}%</span></td><td style="font-size:13px;color:var(--text-muted)">${r.date}</td></tr>`).join('')}</tbody></table>`:'<p style="color:var(--text-muted);text-align:center;padding:20px">Ҳали натижалар йўқ</p>'}
+  `, 'lg');
+}
+
+function editUserModal(uid) {
+  const u = DB.users.find(x => x.id === uid);
+  openModal(`
+    <div class="modal-header"><div class="modal-title">✏️ Фойдаланувчини таҳрирлаш</div><button class="btn-icon btn-icon-sm" onclick="closeModal()">✕</button></div>
+    <div class="form-group mb-2"><label class="form-label">Исм</label><input class="form-input" id="eu_name" value="${u.name}"></div>
+    <div class="form-group mb-2"><label class="form-label">Email</label><input class="form-input" id="eu_email" value="${u.email}"></div>
+    <div class="form-row mb-2"><div class="form-group"><label class="form-label">Роль</label><select class="form-select" id="eu_role">${['student','teacher','admin'].map(r=>`<option value="${r}" ${u.role===r?'selected':''}>${getRoleName(r)}</option>`).join('')}</select></div><div class="form-group"><label class="form-label">Гуруҳ</label><input class="form-input" id="eu_group" value="${u.group||''}"></div></div>
+    <div class="form-group mb-3"><label class="form-label">Янги парол (бўш қолдирса ўзгармайди)</label><input class="form-input" type="password" id="eu_pass"></div>
+    <div class="flex gap-2 justify-between"><button class="btn btn-secondary" onclick="closeModal()">Бекор</button><button class="btn btn-primary" onclick="saveEditUser(${uid})">💾 Сақлаш</button></div>
+  `, 'sm');
+}
+
+function saveEditUser(uid) {
+  const u = DB.users.find(x => x.id === uid);
+  u.name = document.getElementById('eu_name').value;
+  u.email = document.getElementById('eu_email').value;
+  u.role = document.getElementById('eu_role').value;
+  u.group = document.getElementById('eu_group').value;
+  const pass = document.getElementById('eu_pass').value;
+  if (pass) u.password = pass;
+  closeModal(); showToast('Фойдаланувчи янгиланди!'); navigateTo('students');
+}
+
+function toggleUserStatus(uid) {
+  const u = DB.users.find(x => x.id === uid);
+  u.status = u.status === 'active' ? 'blocked' : 'active';
+  showToast(u.status === 'active' ? 'Фойдаланувчи фаоллаштирилди' : 'Фойдаланувчи блокланди', 'info');
+  navigateTo('students');
+}
+
+function addUserModal() {
+  openModal(`
+    <div class="modal-header"><div class="modal-title">➕ Янги фойдаланувчи</div><button class="btn-icon btn-icon-sm" onclick="closeModal()">✕</button></div>
+    <div class="form-group mb-2"><label class="form-label">Исм</label><input class="form-input" id="au_name"></div>
+    <div class="form-group mb-2"><label class="form-label">Email</label><input class="form-input" id="au_email"></div>
+    <div class="form-group mb-2"><label class="form-label">Парол</label><input class="form-input" id="au_pass" type="password"></div>
+    <div class="form-row mb-3"><div class="form-group"><label class="form-label">Роль</label><select class="form-select" id="au_role"><option value="student">Талаба</option><option value="teacher">Ўқитувчи</option><option value="admin">Админ</option></select></div><div class="form-group"><label class="form-label">Гуруҳ</label><input class="form-input" id="au_group"></div></div>
+    <button class="btn btn-primary w-full" onclick="saveNewUser()">💾 Қўшиш</button>
+  `, 'sm');
+}
+
+function saveNewUser() {
+  const g = id => document.getElementById(id).value;
+  if (!g('au_name')||!g('au_email')||!g('au_pass')) return showToast('Барча майдонларни тўлдиринг!','error');
+  DB.users.push({id:DB.users.length+1, name:g('au_name'), email:g('au_email'), password:g('au_pass'), role:g('au_role'), group:g('au_group'), createdAt:formatDate(), status:'active'});
+  closeModal(); showToast('Фойдаланувчи қўшилди!'); navigateTo('students');
+}
+
+function exportUsers() {
+  const users = (DB.currentUser.role==='admin'?DB.users:DB.users.filter(u=>u.role==='student')).map(u => {
+    const ur = DB.results.filter(r=>r.userId===u.id); const avg = ur.length?Math.round(ur.reduce((a,b)=>a+b.score,0)/ur.length):0;
+    return {Исм:u.name, Email:u.email, Роль:getRoleName(u.role), Гуруҳ:u.group||'', Уринишлар:ur.length, Ўртача_балл:avg+'%'};
+  });
+  exportToCSV(users, 'foydalanuvchilar.csv');
+}
+
+// ============================================================
+// REPORTS
+// ============================================================
+function pgReports(el) {
+  const allR = DB.results, allS = DB.users.filter(u=>u.role==='student');
+  const avg = allR.length ? Math.round(allR.reduce((a,b)=>a+b.score,0)/allR.length) : 0;
+  el.innerHTML = `
+    <div class="page-header"><div class="flex items-center justify-between flex-wrap gap-2">
+      <div><div class="page-title">📈 Ҳисоботлар</div><div class="page-desc">Умумий статистика ва таҳлил</div></div>
+      <div class="flex gap-1"><button class="btn btn-secondary btn-sm" onclick="exportFullReport()">📥 Тўлиқ ҳисобот</button><button class="btn btn-secondary btn-sm" onclick="printPage()">🖨️ Чоп этиш</button></div>
+    </div></div>
+    <div class="page-body">
+      <div class="grid-4 stagger mb-3">
+        <div class="stat-card"><div class="stat-value" style="color:var(--accent)">${DB.cases.length}</div><div class="stat-label">Кейслар</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--accent-secondary)">${allR.length}</div><div class="stat-label">Уринишлар</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--accent-warm)">${allS.length}</div><div class="stat-label">Талабалар</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--accent-success)">${avg}%</div><div class="stat-label">Ўртача балл</div></div>
+      </div>
+      <div class="grid-2 mb-3">
+        <div class="card"><div class="card-title mb-2">📊 Кейслар бўйича</div>
+          ${DB.cases.map(c => {const cr=allR.filter(r=>r.caseId===c.id);const a=cr.length?Math.round(cr.reduce((x,y)=>x+y.score,0)/cr.length):0;return`<div style="margin-bottom:10px"><div class="flex justify-between mb-1" style="font-size:13px"><span class="truncate" style="flex:1">${c.title}</span><div class="flex gap-1"><span class="badge badge-accent">${cr.length}</span><span style="font-weight:600;color:var(--accent)">${a}%</span></div></div><div class="progress-bar"><div class="progress-fill${a<60?' progress-fill-danger':a<80?' progress-fill-amber':''}" style="width:${a}%"></div></div></div>`;}).join('')}
+        </div>
+        <div class="card"><div class="card-title mb-2">🏆 Энг яхши талабалар</div>
+          ${allS.map(u=>{const ur=allR.filter(r=>r.userId===u.id);const a=ur.length?Math.round(ur.reduce((x,y)=>x+y.score,0)/ur.length):0;return{...u,avg:a,cnt:ur.length};}).sort((a,b)=>b.avg-a.avg).slice(0,8).map((u,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="width:20px;text-align:center;font-weight:700;color:${i<3?'var(--accent-warm)':'var(--text-muted)'}">${i+1}</span><span style="flex:1;font-weight:600">${u.name}</span><span style="color:var(--text-muted)">${u.group||''}</span><span class="badge badge-${getScoreClass(u.avg)}">${u.avg}%</span></div>`).join('')}
+        </div>
+      </div>
+      <div class="card"><div class="card-title mb-2">📋 Кўп учрайдиган хатолар (барча талабалар)</div>
+        <div class="grid-3">${[{l:'Контраиндикация',p:38},{l:'Доза тўғрилиги',p:28},{l:'Мониторинг',p:22},{l:'Дори ўзаро таъсири',p:18},{l:'Давомийлик',p:15},{l:'Хавфсизлик',p:12}].map(e=>`<div class="chart-bar-h"><div class="chart-bar-label">${e.l}</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:${e.p}%;background:linear-gradient(90deg,${e.p>25?'var(--accent-danger),#f87171':e.p>15?'var(--accent-warm),#fbbf24':'var(--accent-info),#60a5fa'})">${e.p}%</div></div></div>`).join('')}</div>
+      </div>
+    </div>`;
+}
+
+function exportFullReport() {
+  const data = DB.results.map(r => {
+    const u = DB.users.find(x=>x.id===r.userId);
+    return { Талаба: u?.name||'', Гуруҳ: u?.group||'', Кейс: r.caseTitle, Балл: r.score+'%', Сана: r.date };
+  });
+  exportToCSV(data, 'clinpharm_hisobot.csv');
+}
+
+// ============================================================
+// GROUP ANALYSIS
+// ============================================================
+function pgGroupAnalysis(el) {
+  const groupData = DB.groups.map(g => {
+    const students = DB.users.filter(u => u.group === g && u.role === 'student');
+    const results = DB.results.filter(r => students.some(s => s.id === r.userId));
+    const avg = results.length ? Math.round(results.reduce((a,b)=>a+b.score,0)/results.length) : 0;
+    return { name: g, students: students.length, results: results.length, avg };
+  });
+
+  el.innerHTML = `
+    <div class="page-header"><div class="page-title">👥 Гуруҳ бўйича таҳлил</div><div class="page-desc">${DB.groups.length} та гуруҳ</div></div>
+    <div class="page-body">
+      <div class="grid-3 stagger mb-3">${groupData.map(g => `
+        <div class="card card-hover cursor-pointer" onclick="viewGroupDetail('${g.name}')">
+          <div class="flex justify-between items-center mb-2"><div class="card-title">${g.name}</div><span class="badge badge-${getScoreClass(g.avg)}">${g.avg}%</span></div>
+          <div class="flex gap-2 mb-2" style="font-size:13px;color:var(--text-secondary)"><span>👤 ${g.students} талаба</span><span>📝 ${g.results} уриниш</span></div>
+          <div class="progress-bar"><div class="progress-fill${g.avg<60?' progress-fill-danger':g.avg<80?' progress-fill-amber':''}" style="width:${g.avg}%"></div></div>
+        </div>`).join('')}</div>
+      <div class="card"><div class="card-title mb-2">📊 Гуруҳлар солиштирмаси</div>
+        ${groupData.map(g => `<div class="chart-bar-h"><div class="chart-bar-label">${g.name}</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:${g.avg}%;background:linear-gradient(90deg,var(--accent),var(--accent-bright))">${g.avg}%</div></div><div class="chart-bar-value">${g.students} нафар</div></div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function viewGroupDetail(groupName) {
+  const students = DB.users.filter(u => u.group === groupName && u.role === 'student');
+  openModal(`
+    <div class="modal-header"><div class="modal-title">👥 ${groupName}</div><button class="btn-icon btn-icon-sm" onclick="closeModal()">✕</button></div>
+    <table class="data-table"><thead><tr><th>Талаба</th><th>Уринишлар</th><th>Ўртача</th><th>Энг яхши</th></tr></thead><tbody>
+      ${students.map(s => {
+        const ur = DB.results.filter(r=>r.userId===s.id);
+        const avg = ur.length?Math.round(ur.reduce((a,b)=>a+b.score,0)/ur.length):0;
+        const best = ur.length?Math.max(...ur.map(r=>r.score)):0;
+        return `<tr><td style="font-weight:600">${s.name}</td><td>${ur.length}</td><td><span class="badge badge-${getScoreClass(avg)}">${avg}%</span></td><td>${best?best+'%':'—'}</td></tr>`;
+      }).join('')}
+    </tbody></table>
+  `, 'lg');
+}
+
+// ============================================================
+// KNOWLEDGE BASE
+// ============================================================
+function pgKnowledgeBase(el) {
+  const grouped = {};
+  DB.knowledgeBase.forEach(r => { if (!grouped[r.category]) grouped[r.category] = []; grouped[r.category].push(r); });
+  el.innerHTML = `
+    <div class="page-header"><div class="flex items-center justify-between flex-wrap gap-2">
+      <div><div class="page-title">📚 Клиник қоидалар базаси</div><div class="page-desc">${DB.knowledgeBase.length} та қоида</div></div>
+      <button class="btn btn-primary btn-sm" onclick="addKBModal()">+ Қоида қўшиш</button>
+    </div></div>
+    <div class="page-body">
+      ${Object.entries(grouped).map(([cat, rules]) => `
+        <div class="card mb-2">
+          <div class="accordion-header" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('.accordion-arrow').classList.toggle('open')">
+            <div class="flex items-center gap-2"><span class="badge badge-purple">${cat}</span><span style="font-weight:600">${rules.length} та қоида</span></div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-body open">
+            ${rules.map(r => `<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">
+              <span style="color:var(--accent);font-size:16px;flex-shrink:0">📌</span>
+              <div style="flex:1"><div style="font-size:14px;line-height:1.6">${r.rule}</div><div style="font-size:12px;color:var(--text-muted);margin-top:4px">Манба: ${r.source}</div></div>
+              <div class="flex gap-05"><button class="btn-ghost btn-xs" onclick="editKB(${r.id})">✏️</button><button class="btn-ghost btn-xs" onclick="deleteKB(${r.id})">🗑️</button></div>
+            </div>`).join('')}
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function addKBModal() {
+  openModal(`
+    <div class="modal-header"><div class="modal-title">➕ Янги қоида</div><button class="btn-icon btn-icon-sm" onclick="closeModal()">✕</button></div>
+    <div class="form-group mb-2"><label class="form-label">Категория</label><select class="form-select" id="kb_cat">${[...new Set(DB.knowledgeBase.map(r=>r.category)),...DB.topics].filter((v,i,a)=>a.indexOf(v)===i).map(c=>`<option>${c}</option>`).join('')}</select></div>
+    <div class="form-group mb-2"><label class="form-label">Қоида</label><textarea class="form-textarea" id="kb_rule" placeholder="Клиник қоида матнини ёзинг..."></textarea></div>
+    <div class="form-group mb-3"><label class="form-label">Манба</label><input class="form-input" id="kb_source" placeholder="Масалан: NICE Guidelines 2024"></div>
+    <button class="btn btn-primary w-full" onclick="saveKB()">💾 Сақлаш</button>
+  `, 'sm');
+}
+
+function saveKB() {
+  const rule = document.getElementById('kb_rule').value.trim();
+  if (!rule) return showToast('Қоида матнини киритинг!','error');
+  DB.knowledgeBase.push({id: DB.knowledgeBase.length+1, category: document.getElementById('kb_cat').value, rule, source: document.getElementById('kb_source').value});
+  closeModal(); showToast('Қоида қўшилди!'); navigateTo('knowledge-base');
+}
+
+function editKB(id) {
+  const r = DB.knowledgeBase.find(x=>x.id===id);
+  openModal(`
+    <div class="modal-header"><div class="modal-title">✏️ Қоидани таҳрирлаш</div><button class="btn-icon btn-icon-sm" onclick="closeModal()">✕</button></div>
+    <div class="form-group mb-2"><label class="form-label">Қоида</label><textarea class="form-textarea" id="ekb_rule">${r.rule}</textarea></div>
+    <div class="form-group mb-3"><label class="form-label">Манба</label><input class="form-input" id="ekb_source" value="${r.source}"></div>
+    <button class="btn btn-primary w-full" onclick="DB.knowledgeBase.find(x=>x.id===${id}).rule=document.getElementById('ekb_rule').value;DB.knowledgeBase.find(x=>x.id===${id}).source=document.getElementById('ekb_source').value;closeModal();showToast('Янгиланди!');navigateTo('knowledge-base')">💾 Сақлаш</button>
+  `, 'sm');
+}
+
+function deleteKB(id) {
+  DB.knowledgeBase = DB.knowledgeBase.filter(x=>x.id!==id);
+  showToast('Қоида ўчирилди'); navigateTo('knowledge-base');
+}
+
+// ============================================================
+// DRUG INTERACTIONS
+// ============================================================
+function pgDrugInteractions(el) {
+  el.innerHTML = `
+    <div class="page-header"><div class="flex items-center justify-between flex-wrap gap-2">
+      <div><div class="page-title">⚡ Дори ўзаро таъсирлари</div><div class="page-desc">${DB.drugInteractions.length} та таъсир</div></div>
+      <button class="btn btn-primary btn-sm" onclick="addInteractionModal()">+ Қўшиш</button>
+    </div></div>
+    <div class="page-body">
+      <div class="card"><div class="data-table-wrapper"><table class="data-table"><thead><tr><th>Дори 1</th><th>Дори 2</th><th>Даража</th><th>Таъсир</th><th>Амал</th></tr></thead><tbody>
+        ${DB.drugInteractions.map((d,i) => `<tr>
+          <td style="font-weight:600">${d.drug1}</td><td style="font-weight:600">${d.drug2}</td>
+          <td><span class="badge badge-${d.severity==='Юқори'?'danger':d.severity==='Ўрта'?'amber':'success'}">${d.severity}</span></td>
+          <td style="font-size:13px;max-width:300px">${d.effect}</td>
+          <td><button class="btn btn-danger btn-xs" onclick="DB.drugInteractions.splice(${i},1);navigateTo('drug-interactions')">🗑️</button></td>
+        </tr>`).join('')}
+      </tbody></table></div></div>
+    </div>`;
+}
+
+function addInteractionModal() {
+  openModal(`
+    <div class="modal-header"><div class="modal-title">➕ Янги дори таъсири</div><button class="btn-icon btn-icon-sm" onclick="closeModal()">✕</button></div>
+    <div class="form-row mb-2"><div class="form-group"><label class="form-label">Дори 1</label><input class="form-input" id="di_d1"></div><div class="form-group"><label class="form-label">Дори 2</label><input class="form-input" id="di_d2"></div></div>
+    <div class="form-group mb-2"><label class="form-label">Даража</label><select class="form-select" id="di_sev"><option>Юқори</option><option selected>Ўрта</option><option>Паст</option></select></div>
+    <div class="form-group mb-3"><label class="form-label">Таъсир тавсифи</label><textarea class="form-textarea" id="di_eff"></textarea></div>
+    <button class="btn btn-primary w-full" onclick="saveInteraction()">💾 Сақлаш</button>
+  `, 'sm');
+}
+
+function saveInteraction() {
+  const d1=document.getElementById('di_d1').value, d2=document.getElementById('di_d2').value;
+  if (!d1||!d2) return showToast('Иккала дорини киритинг!','error');
+  DB.drugInteractions.push({drug1:d1, drug2:d2, severity:document.getElementById('di_sev').value, effect:document.getElementById('di_eff').value});
+  closeModal(); showToast('Қўшилди!'); navigateTo('drug-interactions');
+}
+
+// ============================================================
+// PROFILE
+// ============================================================
+function pgProfile(el) {
+  const u = DB.currentUser;
+  const myR = DB.results.filter(r=>r.userId===u.id);
+  const avg = myR.length?Math.round(myR.reduce((a,b)=>a+b.score,0)/myR.length):0;
+  el.innerHTML = `
+    <div class="page-header"><div class="page-title">👤 Менинг профилим</div></div>
+    <div class="page-body" style="max-width:700px">
+      <div class="card text-center mb-3" style="padding:32px">
+        <div class="user-avatar" style="width:72px;height:72px;font-size:26px;margin:0 auto 12px">${getInitials(u.name)}</div>
+        <h2 style="font-size:20px;font-weight:800">${u.name}</h2>
+        <p style="color:var(--text-secondary);margin-top:4px;font-size:13px">${u.email}</p>
+        <div class="flex gap-1 justify-center mt-2"><span class="badge badge-accent badge-lg">${getRoleName(u.role)}</span>${u.group?`<span class="badge badge-purple badge-lg">${u.group}</span>`:''}</div>
+      </div>
+      ${u.role==='student'?`<div class="grid-3 stagger mb-3"><div class="stat-card"><div class="stat-value" style="color:var(--accent);font-size:28px">${myR.length}</div><div class="stat-label">Ечилган</div></div><div class="stat-card"><div class="stat-value" style="color:var(--accent-secondary);font-size:28px">${avg}%</div><div class="stat-label">Ўртача</div></div><div class="stat-card"><div class="stat-value" style="color:var(--accent-success);font-size:28px">${myR.length?Math.max(...myR.map(r=>r.score)):0}%</div><div class="stat-label">Энг яхши</div></div></div>`:''}
+      <div class="card mb-3"><div class="card-title mb-2">⚙️ Профиль маълумотлари</div>
+        <div class="form-group mb-2"><label class="form-label">Тўлиқ исм</label><input class="form-input" value="${u.name}" id="pf_name"></div>
+        <div class="form-group mb-2"><label class="form-label">Email</label><input class="form-input" value="${u.email}" id="pf_email"></div>
+        ${u.role==='student'?`<div class="form-group mb-2"><label class="form-label">Гуруҳ</label><input class="form-input" value="${u.group||''}" id="pf_group"></div>`:''}
+        <button class="btn btn-primary" onclick="saveProfile()">💾 Сақлаш</button>
+      </div>
+      <div class="card"><div class="card-title mb-2">🔐 Парол ўзгартириш</div>
+        <div class="form-group mb-2"><label class="form-label">Ҳозирги парол</label><input class="form-input" type="password" id="pf_oldPass"></div>
+        <div class="form-group mb-2"><label class="form-label">Янги парол</label><input class="form-input" type="password" id="pf_newPass"></div>
+        <div class="form-group mb-2"><label class="form-label">Тасдиқлаш</label><input class="form-input" type="password" id="pf_confirmPass"></div>
+        <button class="btn btn-warning" onclick="changePassword()">🔑 Паролни ўзгартириш</button>
+      </div>
+      <div class="mt-3"><button class="btn btn-danger w-full" onclick="handleLogout()">🚪 Тизимдан чиқиш</button></div>
+    </div>`;
+}
+
+function renderProfileModal() {
+  return `<div class="modal-header"><div class="modal-title">👤 Профиль</div><button class="btn-icon btn-icon-sm" onclick="closeModal()">✕</button></div>
+    <div class="text-center mb-3"><div class="user-avatar" style="width:56px;height:56px;font-size:20px;margin:0 auto 8px">${getInitials(DB.currentUser.name)}</div>
+    <div style="font-weight:700">${DB.currentUser.name}</div><div style="font-size:13px;color:var(--text-muted)">${DB.currentUser.email}</div></div>
+    <button class="btn btn-secondary w-full mb-2" onclick="closeModal();navigateTo('profile')">⚙️ Профиль созламалари</button>
+    <button class="btn btn-danger w-full" onclick="closeModal();handleLogout()">🚪 Чиқиш</button>`;
+}
+
+function saveProfile() {
+  DB.currentUser.name = document.getElementById('pf_name').value;
+  DB.currentUser.email = document.getElementById('pf_email').value;
+  if (document.getElementById('pf_group')) DB.currentUser.group = document.getElementById('pf_group').value;
+  buildSidebar(); showToast('Профиль янгиланди!');
+}
+
+function changePassword() {
+  const old = document.getElementById('pf_oldPass').value;
+  const newP = document.getElementById('pf_newPass').value;
+  const conf = document.getElementById('pf_confirmPass').value;
+  if (old !== DB.currentUser.password) return showToast('Ҳозирги парол хато!','error');
+  if (newP.length < 6) return showToast('Янги парол камида 6 белги!','error');
+  if (newP !== conf) return showToast('Паролни тасдиқлаш мос эмас!','error');
+  DB.currentUser.password = newP;
+  showToast('Парол ўзгартирилди!');
+  document.getElementById('pf_oldPass').value = '';
+  document.getElementById('pf_newPass').value = '';
+  document.getElementById('pf_confirmPass').value = '';
+}
+
+// ============================================================
+// SETTINGS (Admin)
+// ============================================================
+function pgSettings(el) {
+  el.innerHTML = `
+    <div class="page-header"><div class="page-title">⚙️ Платформа созламалари</div></div>
+    <div class="page-body" style="max-width:800px">
+      <div class="tab-bar" id="settingsTabs">
+        <button class="tab-btn active" onclick="showSettingsTab('categories')">📂 Категориялар</button>
+        <button class="tab-btn" onclick="showSettingsTab('topics')">📚 Мавзулар</button>
+        <button class="tab-btn" onclick="showSettingsTab('groups')">👥 Гуруҳлар</button>
+        <button class="tab-btn" onclick="showSettingsTab('system')">🔧 Тизим</button>
+      </div>
+      <div id="settingsContent"></div>
+    </div>`;
+  showSettingsTab('categories');
+}
+
+function showSettingsTab(tab) {
+  document.querySelectorAll('#settingsTabs .tab-btn').forEach(b => b.classList.remove('active'));
+  event?.target?.classList?.add('active');
+  const el = document.getElementById('settingsContent');
+  if (tab === 'categories') {
+    el.innerHTML = `<div class="card">${DB.categories.map((c,i)=>`<div class="flex items-center justify-between" style="padding:10px 0;border-bottom:1px solid var(--border)"><span>${c}</span><div class="flex gap-05"><button class="btn btn-danger btn-xs" onclick="DB.categories.splice(${i},1);showSettingsTab('categories')">🗑️</button></div></div>`).join('')}
+      <div class="flex gap-1 mt-2"><input class="form-input" id="newCat" placeholder="Янги категория" style="flex:1"><button class="btn btn-primary btn-sm" onclick="if(document.getElementById('newCat').value.trim()){DB.categories.push(document.getElementById('newCat').value.trim());showSettingsTab('categories');showToast('Қўшилди')}">Қўшиш</button></div></div>`;
+  } else if (tab === 'topics') {
+    el.innerHTML = `<div class="card">${DB.topics.map((t,i)=>`<div class="flex items-center justify-between" style="padding:10px 0;border-bottom:1px solid var(--border)"><span>${t}</span><button class="btn btn-danger btn-xs" onclick="DB.topics.splice(${i},1);showSettingsTab('topics')">🗑️</button></div>`).join('')}
+      <div class="flex gap-1 mt-2"><input class="form-input" id="newTopic" placeholder="Янги мавзу" style="flex:1"><button class="btn btn-primary btn-sm" onclick="if(document.getElementById('newTopic').value.trim()){DB.topics.push(document.getElementById('newTopic').value.trim());showSettingsTab('topics');showToast('Қўшилди')}">Қўшиш</button></div></div>`;
+  } else if (tab === 'groups') {
+    el.innerHTML = `<div class="card">${DB.groups.map((g,i)=>{const cnt=DB.users.filter(u=>u.group===g).length;return`<div class="flex items-center justify-between" style="padding:10px 0;border-bottom:1px solid var(--border)"><span>${g} <span class="badge badge-accent">${cnt} нафар</span></span><button class="btn btn-danger btn-xs" onclick="DB.groups.splice(${i},1);showSettingsTab('groups')">🗑️</button></div>`;}).join('')}
+      <div class="flex gap-1 mt-2"><input class="form-input" id="newGroup" placeholder="Янги гуруҳ" style="flex:1"><button class="btn btn-primary btn-sm" onclick="if(document.getElementById('newGroup').value.trim()){DB.groups.push(document.getElementById('newGroup').value.trim());showSettingsTab('groups');showToast('Қўшилди')}">Қўшиш</button></div></div>`;
+  } else {
+    el.innerHTML = `<div class="card">
+      <div style="padding:12px 0;border-bottom:1px solid var(--border)" class="flex justify-between"><span>Жами фойдаланувчилар</span><span class="badge badge-accent">${DB.users.length}</span></div>
+      <div style="padding:12px 0;border-bottom:1px solid var(--border)" class="flex justify-between"><span>Жами кейслар</span><span class="badge badge-purple">${DB.cases.length}</span></div>
+      <div style="padding:12px 0;border-bottom:1px solid var(--border)" class="flex justify-between"><span>Жами уринишлар</span><span class="badge badge-amber">${DB.results.length}</span></div>
+      <div style="padding:12px 0;border-bottom:1px solid var(--border)" class="flex justify-between"><span>Билим базаси қоидалари</span><span class="badge badge-info">${DB.knowledgeBase.length}</span></div>
+      <div style="padding:12px 0" class="flex justify-between"><span>Дори таъсирлари</span><span class="badge badge-info">${DB.drugInteractions.length}</span></div>
+      <div class="mt-3"><button class="btn btn-danger w-full" onclick="if(confirm('Барча натижаларни ўчирмоқчимисиз?')){DB.results=[];showToast('Натижалар тозаланди','warning');showSettingsTab('system')}">🗑️ Барча натижаларни тозалаш</button></div>
+    </div>`;
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('loginEmail').value = 'student@mail.uz';
+  document.getElementById('loginPassword').value = 'student123';
+});
+</script>
+</body>
+</html>
