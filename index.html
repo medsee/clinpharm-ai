@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClinPharm AI – Klinik Farmakologiya Simulatori</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050d1a;
+    --surface: #0a1628;
+    --surface2: #0f1f38;
+    --border: #1a3050;
+    --accent: #00c8ff;
+    --accent2: #0090c8;
+    --green: #00e5a0;
+    --red: #ff4d6d;
+    --yellow: #ffd166;
+    --text: #e2eeff;
+    --muted: #6b8aaa;
+    --card: #0d1e35;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; position: relative; z-index: 1; }
+  .screen.active { display: block; }
+
+  /* ===== INTRO ===== */
+  #intro {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    animation: fadeIn .6s ease;
+  }
+
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #0a1f3a, #0f2d50);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 8px 20px;
+    margin-bottom: 36px;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .logo-badge svg { width: 16px; height: 16px; }
+
+  h1.brand {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 52px;
+  }
+
+  .dept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    max-width: 780px;
+    width: 100%;
+    margin-bottom: 40px;
+  }
+
+  .dept-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    cursor: pointer;
+    transition: all .25s ease;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dept-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    opacity: 0;
+    transition: opacity .25s;
+  }
+
+  .dept-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0,200,255,0.12);
+  }
+
+  .dept-card:hover::before { opacity: 1; }
+
+  .dept-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .dept-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .dept-sub {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ===== CASE SELECTOR ===== */
+  #cases {
+    min-height: 100vh;
+    padding: 40px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    animation: slideIn .4s ease;
+  }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    margin-bottom: 32px;
+    transition: color .2s;
+  }
+
+  .back-btn:hover { color: var(--accent); }
+
+  .section-header {
+    margin-bottom: 32px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .section-title {
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .case-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .case-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .case-item:hover {
+    border-color: var(--accent);
+    background: #0f2240;
+  }
+
+  .case-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    min-width: 28px;
+  }
+
+  .case-text { font-size: 15px; font-weight: 500; }
+  .case-meta { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  .case-arrow { margin-left: auto; color: var(--muted); font-size: 18px; }
+
+  /* ===== PATIENT SCREEN ===== */
+  #patient {
+    min-height: 100vh;
+    padding: 0;
+    animation: slideIn .4s ease;
+  }
+
+  .top-nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .patient-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+  }
+
+  .badge-pill {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .badge-age { background: rgba(0,200,255,0.12); color: var(--accent); border: 1px solid rgba(0,200,255,0.3); }
+  .badge-sex { background: rgba(0,229,160,0.12); color: var(--green); border: 1px solid rgba(0,229,160,0.3); }
+  .badge-warn { background: rgba(255,77,109,0.12); color: var(--red); border: 1px solid rgba(255,77,109,0.3); }
+
+  .patient-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: calc(100vh - 57px);
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+  }
+
+  .sidebar-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--muted);
+    border-left: 3px solid transparent;
+    position: relative;
+  }
+
+  .sidebar-item:hover { background: rgba(0,200,255,0.05); color: var(--text); }
+
+  .sidebar-item.active {
+    background: rgba(0,200,255,0.08);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+
+  .sidebar-icon { font-size: 16px; }
+
+  /* CONTENT */
+  .content-area {
+    padding: 32px 40px;
+    overflow-y: auto;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeIn .3s ease; }
+
+  /* Info Cards */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .info-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .info-card h4 {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 13px;
+  }
+
+  .info-row:last-child { border-bottom: none; }
+  .info-label { color: var(--muted); }
+  .info-val { color: var(--text); font-weight: 500; text-align: right; max-width: 60%; }
+
+  .allergy-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,77,109,0.12);
+    border: 1px solid rgba(255,77,109,0.3);
+    color: var(--red);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    margin-top: 8px;
+  }
+
+  /* DAVOLASH VARAQASI */
+  .rx-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+  }
+
+  .rx-table th {
+    background: var(--surface2);
+    padding: 12px 16px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    font-weight: 500;
+  }
+
+  .rx-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 13px;
+    vertical-align: top;
+  }
+
+  .rx-table tr:hover td { background: rgba(0,200,255,0.03); }
+
+  .rx-num {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    font-size: 13px;
+  }
+
+  .rx-name { font-weight: 600; margin-bottom: 4px; }
+  .rx-sig { color: var(--muted); font-size: 12px; line-height: 1.5; }
+
+  /* Analysis buttons */
+  .analysis-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .atab-btn {
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: 'Sora', sans-serif;
+  }
+
+  .atab-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .atab-btn.active {
+    background: rgba(0,200,255,0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .analysis-panel { display: none; }
+  .analysis-panel.active { display: block; animation: fadeIn .3s ease; }
+
+  /* Drug analysis */
+  .drug-row {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .drug-row-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+  }
+
+  .drug-verdict {
+    margin-left: auto;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .verdict-wrong { background: rgba(255,77,109,0.15); color: var(--red); border: 1px solid rgba(255,77,109,0.3); }
+  .verdict-ok { background: rgba(0,229,160,0.15); color: var(--green); border: 1px solid rgba(0,229,160,0.3); }
+  .verdict-warn { background: rgba(255,209,102,0.15); color: var(--yellow); border: 1px solid rgba(255,209,102,0.3); }
+
+  .drug-analysis-body {
+    padding: 0 20px 16px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    display: none;
+  }
+
+  .drug-analysis-body.open { display: block; }
+
+  /* Score cards */
+  .score-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .score-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .score-val {
+    font-size: 32px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .score-label { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+  .score-low { color: var(--red); }
+  .score-mid { color: var(--yellow); }
+  .score-high { color: var(--green); }
+
+  /* Progress bar */
+  .prog-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .prog-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width .6s ease;
+  }
+
+  /* Monitoring table */
+  .monitor-grid {
+    display: grid;
+    grid-template-columns: auto repeat(24, 1fr);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 11px;
+    margin-bottom: 24px;
+  }
+
+  .monitor-cell {
+    padding: 8px 4px;
+    border-right: 1px solid rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .monitor-cell.header {
+    background: var(--surface2);
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 10px 4px;
+  }
+
+  .monitor-cell.row-label {
+    background: var(--surface2);
+    color: var(--muted);
+    font-size: 11px;
+    padding: 8px 12px;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .monitor-cell.filled { background: rgba(0,200,255,0.08); color: var(--accent); }
+  .monitor-cell.alert { background: rgba(255,77,109,0.08); color: var(--red); }
+
+  /* Correction section */
+  .correction-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 12px;
+  }
+
+  .correction-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--yellow);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .input-field {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border .2s;
+    margin-bottom: 8px;
+  }
+
+  .input-field:focus { border-color: var(--accent); }
+
+  .btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all .2s;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+  }
+
+  .btn-primary:hover {
+    background: #33d4ff;
+    transform: translateY(-1px);
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Alert box */
+  .alert-day {
+    background: rgba(255,77,109,0.08);
+    border: 1px solid rgba(255,77,109,0.25);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .alert-day strong { color: var(--red); }
+
+  /* Shimmer loader */
+  .shimmer {
+    background: linear-gradient(90deg, var(--surface2) 25%, var(--card) 50%, var(--surface2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 8px;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .patient-layout { grid-template-columns: 1fr; }
+    .sidebar { display: flex; overflow-x: auto; padding: 0; border-right: none; border-bottom: 1px solid var(--border); }
+    .sidebar-item { flex-direction: column; gap: 4px; font-size: 10px; padding: 12px 14px; border-left: none; border-bottom: 3px solid transparent; white-space: nowrap; }
+    .sidebar-item.active { border-left: none; border-bottom-color: var(--accent); }
+    .content-area { padding: 20px; }
+    .monitor-grid { font-size: 9px; }
+    .dept-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+
+  .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+
+  /* Notification toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface2);
+    border: 1px solid var(--green);
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-size: 13px;
+    color: var(--green);
+    z-index: 999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all .3s ease;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* Divider */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 20px 0;
+  }
+
+  .text-accent { color: var(--accent); }
+  .text-green { color: var(--green); }
+  .text-red { color: var(--red); }
+  .text-yellow { color: var(--yellow); }
+  .text-muted { color: var(--muted); }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ============= SCREEN 1: INTRO ============= -->
+<div class="screen active" id="intro">
+  <div style="position:fixed;top:0;left:0;right:0;z-index:10;background:var(--surface);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;gap:12px;">
+    <span style="font-size:20px;">⚕️</span>
+    <span style="font-weight:700;font-size:16px;">ClinPharm <span class="text-accent">AI</span></span>
+    <span style="margin-left:auto;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v2.0 · Klinik Farmakologiya</span>
+  </div>
+
+  <div style="padding-top:80px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 20px 40px;">
+    <div class="logo-badge">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 2a5 5 0 1 1 0 10A5 5 0 0 1 8 3zm-.5 2v3.5l3 1.5-.5 1-3.5-1.75V5h1z"/></svg>
+      Klinik Simulyator
+    </div>
+
+    <h1 class="brand">ClinPharm AI</h1>
+    <p class="subtitle">Farmakoterapiyani o'rganing — real klinik holatlar, intellektual tahlil va individual korektsiya tizimi.</p>
+
+    <div style="font-size:12px;color:var(--muted);margin-bottom:24px;font-family:'JetBrains Mono',monospace;">KERAKLI BO'LIMNI TANLANG</div>
+
+    <div class="dept-grid">
+      <div class="dept-card" onclick="showCases('cardiology')">
+        <span class="dept-icon">🫀</span>
+        <div class="dept-name">Kardiologiya</div>
+        <div class="dept-sub">Yurak-qon tomir kasalliklari</div>
+      </div>
+      <div class="dept-card" onclick="showCases('pulmonology')">
+        <span class="dept-icon">🫁</span>
+        <div class="dept-name">Pulmonologiya</div>
+        <div class="dept-sub">Nafas yo'llari kasalliklari</div>
+      </div>
+      <div class="dept-card" onclick="showCases('gastro')">
+        <span class="dept-icon">🏥</span>
+        <div class="dept-name">Gastroenterologiya</div>
+        <div class="dept-sub">Hazm tizimi kasalliklari</div>
+      </div>
+      <div class="dept-card" style="border-color:rgba(107,138,170,0.3);opacity:.5;cursor:not-allowed;" onclick="showToast('Tez kunda qo\'shiladi...')">
+        <span class="dept-icon">🧠</span>
+        <div class="dept-name">Nevrologiya</div>
+        <div class="dept-sub" style="color:rgba(107,138,170,0.5)">Tez kunda...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============= SCREEN 2: CASE SELECTOR ============= -->
+<div class="screen" id="cases">
+  <div style="max-width:860px;margin:0 auto;padding:40px 24px;">
+    <button class="back-btn" onclick="goTo('intro')">← Orqaga</button>
+
+    <div class="section-header">
+      <div class="section-label" id="dept-label">Pulmonologiya</div>
+      <div class="section-title">Klinik holat tanlang</div>
+    </div>
+
+    <div class="case-list" id="case-list"></div>
+  </div>
+</div>
+
+<!-- ============= SCREEN 3: PATIENT ============= -->
+<div class="screen" id="patient">
+  <div class="top-nav">
+    <button class="back-btn" style="margin:0" onclick="goTo('cases')">← Orqaga</button>
+    <span style="font-size:13px;font-weight:600;" id="nav-title">Bemorning holati</span>
+    <div class="patient-badge">
+      <span class="badge-pill badge-age" id="b-age">52 yosh</span>
+      <span class="badge-pill badge-sex" id="b-sex">♀ Ayol</span>
+      <span class="badge-pill badge-warn" id="b-allergy">⚠ Ampicillin</span>
+    </div>
+  </div>
+
+  <div class="patient-layout">
+    <div class="sidebar">
+      <div class="sidebar-item active" onclick="switchTab('passport')" data-tab="passport">
+        <span class="sidebar-icon">👤</span> Pasport kismi
+      </div>
+      <div class="sidebar-item" onclick="switchTab('complaints')" data-tab="complaints">
+        <span class="sidebar-icon">📋</span> Shikoyatlari
+      </div>
+      <div class="sidebar-item" onclick="switchTab('anamnez')" data-tab="anamnez">
+        <span class="sidebar-icon">📖</span> Anamnez
+      </div>
+      <div class="sidebar-item" onclick="switchTab('objective')" data-tab="objective">
+        <span class="sidebar-icon">🩺</span> Ob'ektiv ma'lumotlar
+      </div>
+      <div class="sidebar-item" onclick="switchTab('lab')" data-tab="lab">
+        <span class="sidebar-icon">🔬</span> Laborator tekshiruvlar
+      </div>
+      <div class="sidebar-item" onclick="switchTab('instrument')" data-tab="instrument">
+        <span class="sidebar-icon">📡</span> Instrumental tekshiruvlar
+      </div>
+      <div class="sidebar-item" onclick="switchTab('davo')" data-tab="davo" style="margin-top:8px;border-top:1px solid var(--border);padding-top:16px;">
+        <span class="sidebar-icon">💊</span> Davolash varaqa
+      </div>
+    </div>
+
+    <div class="content-area">
+
+      <!-- PASSPORT -->
+      <div class="tab-panel active" id="tab-passport">
+        <div class="section-label">PASPORT KISMI</div>
+        <div style="font-size:22px;font-weight:700;margin-bottom:24px;" id="diag-title">Asosiy tashxis</div>
+
+        <div class="info-grid">
+          <div class="info-card">
+            <h4>Bemor ma'lumotlari</h4>
+            <div class="info-row"><span class="info-label">Yoshi</span><span class="info-val" id="p-age">52 yosh</span></div>
+            <div class="info-row"><span class="info-label">Jinsi</span><span class="info-val" id="p-sex">Ayol</span></div>
+          </div>
+          <div class="info-card">
+            <h4>Asosiy tashxis</h4>
+            <div style="font-size:13px;line-height:1.7;color:var(--text);" id="p-diag"></div>
+          </div>
+          <div class="info-card">
+            <h4>Qo'shimcha kasalliklar</h4>
+            <div style="font-size:13px;line-height:1.7;color:var(--text);" id="p-comor"></div>
+          </div>
+          <div class="info-card">
+            <h4>Allergologik anamnez</h4>
+            <div id="allergy-section"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPLAINTS -->
+      <div class="tab-panel" id="tab-complaints">
+        <div class="section-label">SHIKOYATLARI</div>
+        <div style="font-size:22px;font-weight:700;margin-bottom:24px;">Bemor shikoyatlari</div>
+        <div class="info-card" id="complaints-content" style="line-height:1.8;font-size:14px;"></div>
+      </div>
+
+      <!-- ANAMNEZ -->
+      <div class="tab-panel" id="tab-anamnez">
+        <div class="section-label">ANAMNEZ (VITAE ET MORBI)</div>
+        <div style="font-size:22px;font-weight:700;margin-bottom:24px;">Kasallik tarixi</div>
+        <div class="info-card" style="margin-bottom:16px;" id="morbi-content"></div>
+        <div class="info-card" id="vitae-content"></div>
+      </div>
+
+      <!-- OBJECTIVE -->
+      <div class="tab-panel" id="tab-objective">
+        <div class="section-label">OB'EKTIV MA'LUMOTLAR</div>
+        <div style="font-size:22px;font-weight:700;margin-bottom:24px;">Ob'ektiv ko'rik natijalari</div>
+        <div class="info-grid" id="objective-content"></div>
+      </div>
+
+      <!-- LAB -->
+      <div class="tab-panel" id="tab-lab">
+        <div class="section-label">LABORATOR TEKSHIRUVLAR</div>
+        <div style="font-size:22px;font-weight:700;margin-bottom:24px;">Laboratoriya natijalari</div>
+        <table class="rx-table" id="lab-table">
+          <thead><tr>
+            <th>Tekshiruv</th>
+            <th>Natija</th>
+            <th>Me'yor</th>
+            <th>Baho</th>
+          </tr></thead>
+          <tbody id="lab-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- INSTRUMENTAL -->
+      <div class="tab-panel" id="tab-instrument">
+        <div class="section-label">INSTRUMENTAL TEKSHIRUVLAR</div>
+        <div style="font-size:22px;font-weight:700;margin-bottom:24px;">Instrumental tekshiruv natijalari</div>
+        <div id="instrument-content"></div>
+      </div>
+
+      <!-- DAVOLASH VARAQASI -->
+      <div class="tab-panel" id="tab-davo">
+        <div class="section-label">DAVOLASH VARAQASI</div>
+        <div style="font-size:22px;font-weight:700;margin-bottom:8px;">Tayinlangan dorilar</div>
+
+        <table class="rx-table" style="margin-bottom:32px;">
+          <thead><tr>
+            <th style="width:40px;">#</th>
+            <th>Retsept</th>
+            <th>Yo'riqnoma</th>
+          </tr></thead>
+          <tbody id="rx-tbody"></tbody>
+        </table>
+
+        <hr class="divider">
+        <div style="font-size:16px;font-weight:700;margin-bottom:16px;">🔍 Tahlil bo'limlari</div>
+
+        <div class="analysis-tabs">
+          <button class="atab-btn active" onclick="switchAnalysis('drug')">Har bir dori bo'yicha</button>
+          <button class="atab-btn" onclick="switchAnalysis('general')">Umumiy tahlil</button>
+          <button class="atab-btn" onclick="switchAnalysis('efficacy')">Samaradorlik</button>
+          <button class="atab-btn" onclick="switchAnalysis('safety')">Xavfsizlik</button>
+          <button class="atab-btn" onclick="switchAnalysis('monitor')">Monitoring</button>
+          <button class="atab-btn" onclick="switchAnalysis('correction')">Korektsiya</button>
+        </div>
+
+        <!-- Drug analysis -->
+        <div class="analysis-panel active" id="ap-drug">
+          <div id="drug-rows"></div>
+        </div>
+
+        <!-- General -->
+        <div class="analysis-panel" id="ap-general">
+          <div class="score-grid">
+            <div class="score-card">
+              <div class="score-val score-low">10%</div>
+              <div class="score-label">Dori to'g'riligi</div>
+              <div class="prog-bar"><div class="prog-fill" style="width:10%;background:var(--red);"></div></div>
+            </div>
+            <div class="score-card">
+              <div class="score-val score-mid">30%</div>
+              <div class="score-label">Kombinatsiya to'g'riligi</div>
+              <div class="prog-bar"><div class="prog-fill" style="width:30%;background:var(--yellow);"></div></div>
+            </div>
+            <div class="score-card">
+              <div class="score-val score-low">10%</div>
+              <div class="score-label">Samaradorlik</div>
+              <div class="prog-bar"><div class="prog-fill" style="width:10%;background:var(--red);"></div></div>
+            </div>
+            <div class="score-card">
+              <div class="score-val score-low">10%</div>
+              <div class="score-label">Xavfsizlik</div>
+              <div class="prog-bar"><div class="prog-fill" style="width:10%;background:var(--red);"></div></div>
+            </div>
+          </div>
+          <div class="info-card">
+            <h4>Umumiy xulosa</h4>
+            <p style="font-size:13px;line-height:1.8;color:var(--text);">
+              Tayinlangan farmakoterapiya bir qator xatolarni o'z ichiga oladi. Digoksin ushbu tashxis uchun ko'rsatma emas. Homiladorlik va buyrak kasalligi mavjudligi ko'p dorilarni cheklaydi. Ampicillinga allergiya hisobga olinmagan. Korektsiya tavsiya etiladi.
+            </p>
+          </div>
+        </div>
+
+        <!-- Efficacy -->
+        <div class="analysis-panel" id="ap-efficacy">
+          <div class="section-label" style="margin-bottom:16px;">SAMARADORLIK MONITORINGI</div>
+          <div class="monitor-grid" id="efficacy-monitor"></div>
+          <div class="alert-day">
+            <strong>⚠ Davolashning 6-kunida</strong> bemor ahvoli og'irlashadi, chunki tayinlangan antibiotiklarning tanlovi noto'g'ri va allergologik anamnez hisobga olinmagan.
+          </div>
+        </div>
+
+        <!-- Safety -->
+        <div class="analysis-panel" id="ap-safety">
+          <div class="section-label" style="margin-bottom:16px;">XAVFSIZLIK MONITORINGI</div>
+          <div class="monitor-grid" id="safety-monitor"></div>
+          <div style="margin-top:16px;">
+            <div class="info-card">
+              <h4>Nojo'ya ta'sirlar xavfi</h4>
+              <div class="info-row"><span class="info-label">Digoksin intoksikatsiyasi</span><span class="info-val text-red">Yuqori</span></div>
+              <div class="info-row"><span class="info-label">Buyrak funksiyasi yomonlashuvi</span><span class="info-val text-yellow">O'rta</span></div>
+              <div class="info-row"><span class="info-label">Allergik reaktsiya xavfi</span><span class="info-val text-red">Juda yuqori</span></div>
+              <div class="info-row"><span class="info-label">Homilaga ta'sir</span><span class="info-val text-red">Kritik</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monitor -->
+        <div class="analysis-panel" id="ap-monitor">
+          <div style="font-size:14px;font-weight:600;margin-bottom:16px;">📊 Kliniko-farmakologik monitoring jadvali</div>
+          <div style="overflow-x:auto;">
+            <div class="monitor-grid" id="full-monitor" style="min-width:700px;grid-template-columns:auto repeat(12,1fr);"></div>
+          </div>
+        </div>
+
+        <!-- Correction -->
+        <div class="analysis-panel" id="ap-correction">
+          <div class="alert-day">
+            <strong>⚠ 6-kunda ahvol og'irlashdi.</strong> Sabab: noto'g'ri antibiotik tanlovi, allergologik anamnez hisobga olinmagan, Digoksin nomuvofiq tayinlangan.
+          </div>
+          <div style="font-size:14px;font-weight:600;margin-bottom:16px;">✏️ Korektsiya — yangi dorilar tayinlang</div>
+          <div class="correction-box">
+            <div class="correction-title">💊 Samaradorlik bo'yicha korektsiya</div>
+            <input class="input-field" type="text" placeholder="1-dori: retsept kiriting (Rp.: ...)">
+            <input class="input-field" type="text" placeholder="2-dori: retsept kiriting (Rp.: ...)">
+            <input class="input-field" type="text" placeholder="3-dori: retsept kiriting (Rp.: ...)">
+          </div>
+          <div class="correction-box">
+            <div class="correction-title" style="color:var(--accent);">🛡️ Xavfsizlik bo'yicha korektsiya</div>
+            <input class="input-field" type="text" placeholder="1-dori: retsept kiriting (Rp.: ...)">
+            <input class="input-field" type="text" placeholder="2-dori: retsept kiriting (Rp.: ...)">
+            <input class="input-field" type="text" placeholder="3-dori: retsept kiriting (Rp.: ...)">
+          </div>
+          <button class="btn btn-primary" onclick="submitCorrection()">Korektsiyani tasdiqlash</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const cases = {
+  pulmonology: {
+    label: 'Pulmonologiya',
+    items: [
+      {
+        id: 'bronchitis',
+        title: 'Bronxit',
+        subtitle: 'O\'tkir bronxit, engil kechishi',
+        age: 38, sex: 'Erkak', allergy: null
+      },
+      {
+        id: 'pneumonia1',
+        title: 'Pnevmoniya (engil)',
+        subtitle: 'O\'tkir o\'ng tomonlama pastki bo\'lak pnevmoniyasi, engil kechishi',
+        age: 45, sex: 'Ayol', allergy: 'Penicilin'
+      },
+      {
+        id: 'pneumonia2',
+        title: 'Pnevmoniya (o\'rta og\'ir)',
+        subtitle: 'O\'tkir o\'ng tomonlama pastki bo\'lak pnevmoniyasi, o\'rta og\'ir kechishi',
+        age: 52, sex: 'Ayol', allergy: 'Ampicillin',
+        isMain: true
+      }
+    ]
+  },
+  cardiology: {
+    label: 'Kardiologiya',
+    items: [
+      { id: 'hypertension', title: 'Gipertenziya', subtitle: 'Arterial gipertenziya II daraja', age: 58, sex: 'Erkak', allergy: null },
+      { id: 'ihd', title: 'IYuK', subtitle: 'Ishemik yurak kasalligi, barqaror stenokardiya', age: 63, sex: 'Ayol', allergy: 'Aspirin' }
+    ]
+  },
+  gastro: {
+    label: 'Gastroenterologiya',
+    items: [
+      { id: 'gastritis', title: 'Gastrit', subtitle: 'O\'tkir gastrit, kuchayish davri', age: 32, sex: 'Erkak', allergy: null },
+      { id: 'ulcer', title: 'Oshqozon yarasi', subtitle: 'Oshqozon yarasi kasalligi, kuchayish', age: 44, sex: 'Erkak', allergy: 'NSAID' }
+    ]
+  }
+};
+
+const patientData = {
+  pneumonia2: {
+    diag: "O'tkir o'ng tomonlama pastki bo'lak pnevmoniyasi, o'rta og'ir kechishi",
+    complications: "Nafas yetishmovchiligi I darajasi",
+    comorbidities: "Surunkali pielonefrit, kuzg'alish davri. Surunkali temir yetishmovchiligi anemiyasi, II darajasi. Homiladorlik 14 haftalik",
+    allergy: "Ampicillinга allergik reaktsiya kuzatilgan (04.11.2025)",
+    age: 52, sex: 'Ayol',
+    complaints: `Bemor quyidagi shikoyatlarni bildirmoqda:
+• Harorat 38.6°C gacha ko'tarilishi
+• O'ng ko'krak sohasida og'riq (nafas olganda kuchayadi)
+• Yo'tal — qovoq rangli balg'am bilan
+• Nafas qisishi (dam olganda ham)
+• Umumiy holsizlik va ishtahaning yo'qligi
+• Bosh aylanishi`,
+    drugs: [
+      {
+        num: 1,
+        rp: "Rp.: Sol. Digoxini 0.025% - 1 ml №5",
+        sig: "1 ta ampulani 0.9% - 9 ml natriy xloridga eritib vena ichiga kuniga 1 mahal yuborilsin 5 kun davomida",
+        verdict: "wrong",
+        analysis: "Digoksin o'rta qutbli yurak glikozidi bo'lib, O'tkir o'ng tomonlama pastki bo'lak pnevmoniyasida qo'llashga ko'rsatma emas. Nefas yetishmovchiligi I darajasida ham, Surunkali pielonefrit va Homiladorlik 14 haftalikda ham qo'llashga ko'rsatma yo'q. NOTO'G'RI tayinlangan."
+      },
+      {
+        num: 2,
+        rp: "Rp.: Sol. NaCl 0.9% - 500 ml №7",
+        sig: "Vena ichiga tomchilatib, kuniga 1 mahal, 7 kun davomida",
+        verdict: "ok",
+        analysis: "Infuzion terapiya maqsadida 0.9% NaCl eritmasi qo'llanishi to'g'ri. Homiladorlikda xavfsiz (FDA kategoriyasi A). Doza va qo'llash yo'li to'g'ri."
+      },
+      {
+        num: 3,
+        rp: "Rp.: Tab. Ampicillini 0.5 №28",
+        sig: "Og'iz orqali 0.5 g dan kuniga 4 mahal, 7 kun davomida",
+        verdict: "wrong",
+        analysis: "JIDDIY XATO: Bemorning allergologik anamnezida Ampicillinга allergik reaktsiya qayd etilgan (04.11.2025). Bu dori tayinlash mumkin emas. Anafilaktik shok xavfi mavjud."
+      },
+      {
+        num: 4,
+        rp: "Rp.: Tab. Ferri sulfatis 0.05 №60",
+        sig: "Og'iz orqali 1 tabletadan kuniga 3 mahal, ovqat vaqtida, 1 oy davomida",
+        verdict: "ok",
+        analysis: "Temir sulfat — surunkali temir yetishmovchiligi anemiyasini davolash uchun to'g'ri tanlangan. Homiladorlikda xavfsiz. Ovqat vaqtida qabul qilish oshqozonni muhofaza qiladi."
+      }
+    ]
+  }
+};
+
+let currentDept = '';
+let currentCase = null;
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function goTo(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screen).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function showCases(dept) {
+  currentDept = dept;
+  const data = cases[dept];
+  document.getElementById('dept-label').textContent = data.label;
+
+  const list = document.getElementById('case-list');
+  list.innerHTML = '';
+
+  data.items.forEach((c, i) => {
+    const div = document.createElement('div');
+    div.className = 'case-item';
+    div.innerHTML = `
+      <span class="case-num">0${i+1}</span>
+      <div>
+        <div class="case-text">${c.title}</div>
+        <div class="case-meta">${c.subtitle} · ${c.age} yosh · ${c.sex}${c.allergy ? ' · ⚠ ' + c.allergy : ''}</div>
+      </div>
+      <span class="case-arrow">→</span>
+    `;
+    div.onclick = () => openCase(c.id, c);
+    list.appendChild(div);
+  });
+
+  goTo('cases');
+}
+
+function openCase(id, caseInfo) {
+  const data = patientData[id] || patientData.pneumonia2;
+  currentCase = data;
+
+  // Nav badges
+  document.getElementById('nav-title').textContent = caseInfo.subtitle || caseInfo.title;
+  document.getElementById('b-age').textContent = data.age + ' yosh';
+  document.getElementById('b-sex').textContent = (data.sex === 'Ayol' ? '♀' : '♂') + ' ' + data.sex;
+
+  const allergyBadge = document.getElementById('b-allergy');
+  if (data.allergy) {
+    allergyBadge.textContent = '⚠ ' + data.allergy.split(' ')[0];
+    allergyBadge.style.display = 'inline-block';
+  } else {
+    allergyBadge.style.display = 'none';
+  }
+
+  // Passport
+  document.getElementById('diag-title').textContent = data.diag;
+  document.getElementById('p-age').textContent = data.age + ' yosh';
+  document.getElementById('p-sex').textContent = data.sex;
+  document.getElementById('p-diag').innerHTML = `<strong>${data.diag}</strong><br><span style="color:var(--muted)">${data.complications || ''}</span>`;
+  document.getElementById('p-comor').innerHTML = data.comorbidities || '—';
+  document.getElementById('allergy-section').innerHTML = data.allergy
+    ? `<div class="allergy-tag">⚠ ${data.allergy}</div>`
+    : '<span style="color:var(--muted);font-size:13px;">Aniqlanmagan</span>';
+
+  // Complaints
+  document.getElementById('complaints-content').innerHTML = `<p style="white-space:pre-line;font-size:13px;line-height:1.8;">${data.complaints}</p>`;
+
+  // Anamnez
+  document.getElementById('morbi-content').innerHTML = `
+    <h4 style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:12px;font-family:'JetBrains Mono',monospace;">KASALLIK TARIXI (MORBI)</h4>
+    <p style="font-size:13px;line-height:1.8;color:var(--text);">Bemor 3 kun avval kasalxonaga yotqizildi. Kasallik 5 kun oldin boshlangan — harorat ko'tarilishi, yo'tal va nafas qisishi bilan. Uy sharoitida davolash samarasiz bo'lgani uchun SMP chaqirilgan.</p>`;
+  document.getElementById('vitae-content').innerHTML = `
+    <h4 style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:12px;font-family:'JetBrains Mono',monospace;">HAYOT TARIXI (VITAE)</h4>
+    <p style="font-size:13px;line-height:1.8;color:var(--text);">Tug'ilgan, o'sgan va yashaydi. Surunkali pielonefrit bilan 5 yildan beri kasallangan. Homiladorlik 14 haftalik. O'tkazilgan kasalliklar: bolalikda to'sariq, 2020 yil COVID-19.</p>`;
+
+  // Objective
+  document.getElementById('objective-content').innerHTML = `
+    <div class="info-card">
+      <h4>Umumiy holat</h4>
+      <div class="info-row"><span class="info-label">Holat og'irligi</span><span class="info-val text-yellow">O'rta og'ir</span></div>
+      <div class="info-row"><span class="info-label">Tana harorati</span><span class="info-val text-red">38.6°C</span></div>
+      <div class="info-row"><span class="info-label">SpO₂</span><span class="info-val text-yellow">93%</span></div>
+      <div class="info-row"><span class="info-label">Nafas tezligi</span><span class="info-val text-red">26/min</span></div>
+    </div>
+    <div class="info-card">
+      <h4>Yurak-tomir tizimi</h4>
+      <div class="info-row"><span class="info-label">Qon bosimi</span><span class="info-val">118/76 mm Hg</span></div>
+      <div class="info-row"><span class="info-label">Puls</span><span class="info-val">96 urish/min</span></div>
+      <div class="info-row"><span class="info-label">Ritm</span><span class="info-val text-green">To'g'ri</span></div>
+    </div>
+    <div class="info-card">
+      <h4>Nafas tizimi</h4>
+      <div class="info-row"><span class="info-label">Perkussiya</span><span class="info-val text-red">O'ng pastda — to'mtoq tovush</span></div>
+      <div class="info-row"><span class="info-label">Auskultatsiya</span><span class="info-val text-red">Mayda pufakli xirillash</span></div>
+      <div class="info-row"><span class="info-label">Bronxofiya</span><span class="info-val text-red">Kuchaygan</span></div>
+    </div>
+    <div class="info-card">
+      <h4>Qorin bo'shlig'i</h4>
+      <div class="info-row"><span class="info-label">Jigar</span><span class="info-val">Ko'tarilmagan</span></div>
+      <div class="info-row"><span class="info-label">Buyrak sohasida og'riq</span><span class="info-val text-yellow">O'ng tomonda</span></div>
+    </div>`;
+
+  // Lab
+  const labData = [
+    ['Leykositlar', '14.2 × 10⁹/L', '4–9', 'red'],
+    ['Neyrofillar', '88%', '45–75%', 'red'],
+    ['ESR', '48 mm/soat', '< 20', 'red'],
+    ['Gemoglobin', '98 g/L', '120–160', 'yellow'],
+    ['Eritrositlar', '3.2 × 10¹²/L', '3.8–5.0', 'yellow'],
+    ['Serum temir', '5.2 mkMol/L', '10–30', 'red'],
+    ['Kreatinin', '108 mkMol/L', '53–97', 'yellow'],
+    ['CRP', '98 mg/L', '< 5', 'red'],
+    ['Prokalsitonin', '1.2 ng/mL', '< 0.5', 'yellow'],
+  ];
+
+  const tbody = document.getElementById('lab-tbody');
+  tbody.innerHTML = '';
+  labData.forEach(([name, val, norm, status]) => {
+    const colors = { red: 'var(--red)', yellow: 'var(--yellow)', green: 'var(--green)' };
+    tbody.innerHTML += `<tr>
+      <td>${name}</td>
+      <td style="color:${colors[status]};font-family:'JetBrains Mono',monospace;font-weight:600;">${val}</td>
+      <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;">${norm}</td>
+      <td>${status === 'red' ? '<span style="color:var(--red)">↑ Yuqori</span>' : status === 'yellow' ? '<span style="color:var(--yellow)">↓ Past</span>' : '<span style="color:var(--green)">Norma</span>'}</td>
+    </tr>`;
+  });
+
+  // Instrument
+  document.getElementById('instrument-content').innerHTML = `
+    <div class="info-card" style="margin-bottom:12px;">
+      <h4>Ko'krak qafasi rentgenografiyasi</h4>
+      <p style="font-size:13px;line-height:1.8;color:var(--text);">
+        O'ng o'pkaning pastki bo'lagida intensiv gomogen qorong'ilashuv aniqlandi. O'ng tomonli kosto-frenik burchak suyuqlashgan. O'ng tomonlama plevrit belgilari mavjud.
+      </p>
+    </div>
+    <div class="info-card" style="margin-bottom:12px;">
+      <h4>EKG</h4>
+      <p style="font-size:13px;line-height:1.8;color:var(--text);">
+        Sinusli taxikardiya, puls 96 ur/min. O'tkir o'zgarishlar aniqlanmadi. ST segmenti o'zgarmagan.
+      </p>
+    </div>
+    <div class="info-card">
+      <h4>O'pka ultratovushi</h4>
+      <p style="font-size:13px;line-height:1.8;color:var(--text);">
+        O'ng tomondan plevral suyuqlik aniqlandi (~120 ml). Konsolidatsiya belgisi mavjud.
+      </p>
+    </div>`;
+
+  // RX table
+  const rxTbody = document.getElementById('rx-tbody');
+  rxTbody.innerHTML = '';
+  data.drugs.forEach(d => {
+    rxTbody.innerHTML += `<tr>
+      <td class="rx-num">${d.num}</td>
+      <td><div class="rx-name mono">${d.rp}</div></td>
+      <td><div class="rx-sig">${d.sig}</div></td>
+    </tr>`;
+  });
+
+  // Drug analysis
+  const drugRows = document.getElementById('drug-rows');
+  drugRows.innerHTML = '';
+  data.drugs.forEach(d => {
+    const labels = { wrong: 'NOTO\'G\'RI', ok: 'TO\'G\'RI', warn: 'EHTIYOT' };
+    const cls = { wrong: 'verdict-wrong', ok: 'verdict-ok', warn: 'verdict-warn' };
+    drugRows.innerHTML += `
+      <div class="drug-row">
+        <div class="drug-row-header" onclick="toggleDrug(this)">
+          <span class="rx-num mono">${d.num}</span>
+          <span style="font-size:13px;font-weight:600;">${d.rp.replace('Rp.: ', '')}</span>
+          <span class="drug-verdict ${cls[d.verdict]}">${labels[d.verdict]}</span>
+          <span style="color:var(--muted);margin-left:8px;">▼</span>
+        </div>
+        <div class="drug-analysis-body">
+          ${d.analysis}
+        </div>
+      </div>`;
+  });
+
+  // Monitoring grids
+  buildMonitor('efficacy-monitor', ['Harorat', 'SpO₂', 'Nafas tezligi', 'Yo\'tal'], 24, false);
+  buildMonitor('safety-monitor', ['QT interval', 'Buyrak funkt.', 'Kaliy', 'Digoksin darajasi'], 24, true);
+  buildMonitor('full-monitor', ['Harorat', 'SpO₂', 'Puls', 'Qon bosimi', 'Leykositlar', 'CRP'], 12, false);
+
+  // Switch to passport tab
+  switchTab('passport');
+  goTo('patient');
+}
+
+function buildMonitor(containerId, rows, cols, safety) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.style.gridTemplateColumns = `auto repeat(${cols},1fr)`;
+
+  let html = '<div class="monitor-cell header row-label">Ko\'rsatkich</div>';
+  for (let i = 1; i <= cols; i++) html += `<div class="monitor-cell header">${i}</div>`;
+
+  rows.forEach((row, ri) => {
+    html += `<div class="monitor-cell row-label">${row}</div>`;
+    for (let i = 1; i <= cols; i++) {
+      const filled = i <= Math.floor(cols * 0.4);
+      const alert = safety && ri === 3 && i >= 3 && i <= 6;
+      html += `<div class="monitor-cell ${alert ? 'alert' : filled ? 'filled' : ''}">${filled ? (alert ? '⚠' : '✓') : ''}</div>`;
+    }
+  });
+
+  el.innerHTML = html;
+}
+
+function toggleDrug(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+  const arrow = header.querySelector('span:last-child');
+  arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+}
+
+function switchAnalysis(panel) {
+  document.querySelectorAll('.analysis-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.atab-btn').forEach(b => b.classList.remove('active'));
+
+  document.getElementById('ap-' + panel).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function submitCorrection() {
+  showToast('✅ Korektsiya saqlandi! Natija hisoblanmoqda...');
+}
+</script>
+</body>
+</html>
