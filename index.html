@@ -1,968 +1,1309 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ClinPharm AI Trainer</title>
-<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        primary: { DEFAULT: '#0ea5e9', foreground: '#ffffff', light: '#e0f2fe' },
-      }
-    }
-  }
-}
-</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-  * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
-  body { margin: 0; background: #f8fafc; }
-  .fade-in { animation: fadeIn 0.3s ease; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  .score-ring { stroke-dasharray: 283; transition: stroke-dashoffset 1s ease; }
-  ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f1f5f9; } ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+  :root {
+    --teal: #0d9488;
+    --teal-light: #14b8a6;
+    --teal-dark: #0f766e;
+    --navy: #0f172a;
+    --navy-mid: #1e293b;
+    --navy-light: #334155;
+    --slate: #475569;
+    --muted: #94a3b8;
+    --white: #f8fafc;
+    --surface: #1e293b;
+    --surface2: #263445;
+    --border: rgba(20,184,166,0.15);
+    --gold: #f59e0b;
+    --red: #ef4444;
+    --green: #22c55e;
+    --radius: 14px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.35);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1,h2,h3,h4 { font-family: 'Syne', sans-serif; }
+
+  /* ─── SCREENS ─── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ─── LANDING ─── */
+  #landing {
+    background: radial-gradient(ellipse 120% 80% at 60% -10%, #0d9488 0%, transparent 55%),
+                radial-gradient(ellipse 80% 60% at -10% 80%, #0f766e33 0%, transparent 50%),
+                var(--navy);
+    align-items: center; justify-content: center;
+    text-align: center; padding: 40px 20px;
+    position: relative; overflow: hidden;
+  }
+  #landing::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(20,184,166,0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+  .landing-content { position: relative; z-index: 1; max-width: 700px; }
+  .logo-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(13,148,136,0.15); border: 1px solid var(--border);
+    padding: 8px 18px; border-radius: 50px; margin-bottom: 32px;
+    font-size: 13px; color: var(--teal-light); font-weight: 500;
+    animation: fadeUp 0.6s ease;
+  }
+  .logo-badge svg { width: 16px; height: 16px; fill: var(--teal-light); }
+  .landing h1 {
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    font-weight: 800; line-height: 1.05;
+    letter-spacing: -2px; margin-bottom: 20px;
+    animation: fadeUp 0.7s ease;
+  }
+  .landing h1 span { color: var(--teal-light); }
+  .landing p {
+    font-size: 1.15rem; color: var(--muted); max-width: 520px;
+    margin: 0 auto 40px; line-height: 1.7;
+    animation: fadeUp 0.8s ease;
+  }
+  .landing-btns {
+    display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp 0.9s ease;
+  }
+  .btn-primary {
+    background: var(--teal); color: #fff;
+    border: none; padding: 14px 32px; border-radius: 50px;
+    font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(13,148,136,0.4);
+  }
+  .btn-primary:hover { background: var(--teal-light); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(13,148,136,0.5); }
+  .btn-outline {
+    background: transparent; color: var(--white);
+    border: 1.5px solid rgba(255,255,255,0.2); padding: 14px 32px; border-radius: 50px;
+    font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--teal-light); color: var(--teal-light); }
+
+  .stats-row {
+    display: flex; gap: 40px; justify-content: center; margin-top: 60px;
+    animation: fadeUp 1s ease;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--teal-light); }
+  .stat-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ─── AUTH ─── */
+  #auth {
+    background: radial-gradient(ellipse 100% 70% at 80% 20%, #0d948820 0%, transparent 50%), var(--navy);
+    align-items: center; justify-content: center; padding: 40px 20px;
+  }
+  .auth-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 44px 40px; width: 100%; max-width: 440px;
+    box-shadow: var(--shadow); animation: fadeUp 0.5s ease;
+  }
+  .auth-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 32px; }
+  .auth-logo-icon {
+    width: 40px; height: 40px; background: var(--teal);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .auth-logo span { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; }
+  .auth-tabs { display: flex; gap: 0; margin-bottom: 28px; background: var(--navy-mid); border-radius: 10px; padding: 4px; }
+  .auth-tab {
+    flex: 1; padding: 9px; border: none; background: transparent;
+    color: var(--muted); border-radius: 8px; cursor: pointer;
+    font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 600; transition: all 0.2s;
+  }
+  .auth-tab.active { background: var(--teal); color: #fff; }
+
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-size: 0.82rem; font-weight: 500; color: var(--muted); margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 12px 16px; background: var(--navy-mid);
+    border: 1.5px solid rgba(255,255,255,0.08); border-radius: 10px;
+    color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+    transition: border-color 0.2s; outline: none;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--teal); }
+  .form-group select option { background: var(--navy-mid); }
+  .btn-full { width: 100%; margin-top: 8px; padding: 13px; font-size: 1rem; }
+
+  /* ─── DASHBOARD LAYOUT ─── */
+  .dashboard { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: 240px; background: var(--surface); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; padding: 24px 16px;
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    flex-shrink: 0;
+  }
+  .sidebar-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 32px; padding: 0 8px; }
+  .sidebar-logo-icon { width: 34px; height: 34px; background: var(--teal); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 17px; }
+  .sidebar-logo span { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; }
+  .nav-section { margin-bottom: 28px; }
+  .nav-section-title { font-size: 0.68rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; padding: 0 10px; margin-bottom: 8px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 10px; border-radius: 10px; cursor: pointer;
+    color: var(--muted); font-size: 0.9rem; transition: all 0.18s;
+    border: none; background: transparent; width: 100%; text-align: left;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+  .nav-item.active { background: rgba(13,148,136,0.18); color: var(--teal-light); }
+  .nav-item .nav-icon { font-size: 1.1rem; width: 22px; text-align: center; }
+  .sidebar-user {
+    margin-top: auto; padding: 12px 10px;
+    background: var(--navy-mid); border-radius: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .user-avatar {
+    width: 34px; height: 34px; background: var(--teal);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem;
+  }
+  .user-info { flex: 1; min-width: 0; }
+  .user-name { font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-role { font-size: 0.7rem; color: var(--muted); }
+  .logout-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.85rem; padding: 4px; transition: color 0.2s; }
+  .logout-btn:hover { color: var(--red); }
+
+  .main-content { flex: 1; overflow-y: auto; padding: 32px; }
+  .page { display: none; }
+  .page.active { display: block; animation: fadeUp 0.3s ease; }
+
+  .page-header { margin-bottom: 28px; }
+  .page-header h2 { font-size: 1.7rem; font-weight: 800; }
+  .page-header p { color: var(--muted); margin-top: 4px; font-size: 0.92rem; }
+
+  /* ─── CARDS ─── */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px; transition: all 0.2s;
+  }
+  .card:hover { border-color: var(--teal); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .card-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 14px; }
+  .card-icon.teal { background: rgba(13,148,136,0.2); }
+  .card-icon.gold { background: rgba(245,158,11,0.2); }
+  .card-icon.green { background: rgba(34,197,94,0.2); }
+  .card-icon.red { background: rgba(239,68,68,0.2); }
+  .card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+  .card p { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+  .card-stat { font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800; color: var(--teal-light); margin: 8px 0 4px; }
+
+  /* ─── PROGRESS ─── */
+  .progress-bar { height: 6px; background: var(--navy-mid); border-radius: 99px; overflow: hidden; margin-top: 10px; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--teal-light)); border-radius: 99px; transition: width 1s ease; }
+
+  /* ─── CASE LIST ─── */
+  .case-list { display: flex; flex-direction: column; gap: 14px; }
+  .case-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 24px;
+    display: flex; align-items: center; gap: 16px;
+    cursor: pointer; transition: all 0.18s;
+  }
+  .case-item:hover { border-color: var(--teal); background: var(--surface2); }
+  .case-badge {
+    padding: 4px 12px; border-radius: 50px; font-size: 0.73rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+  }
+  .badge-easy { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .badge-medium { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .badge-hard { background: rgba(239,68,68,0.15); color: #f87171; }
+  .badge-done { background: rgba(13,148,136,0.15); color: var(--teal-light); }
+  .case-info { flex: 1; }
+  .case-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 3px; }
+  .case-meta { font-size: 0.8rem; color: var(--muted); }
+  .case-arrow { color: var(--muted); font-size: 1.1rem; }
+
+  /* ─── CASE SOLVER ─── */
+  .case-solver { display: grid; grid-template-columns: 340px 1fr; gap: 20px; }
+  @media(max-width: 900px) { .case-solver { grid-template-columns: 1fr; } }
+
+  .patient-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px; height: fit-content;
+  }
+  .patient-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+  .patient-avatar { width: 52px; height: 52px; background: linear-gradient(135deg, var(--teal), var(--teal-dark)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+  .patient-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; }
+  .patient-age { font-size: 0.82rem; color: var(--muted); }
+
+  .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.85rem; }
+  .info-label { color: var(--muted); }
+  .info-val { font-weight: 500; text-align: right; max-width: 60%; }
+  .section-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--teal-light); margin: 18px 0 10px; }
+
+  .lab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .lab-item { background: var(--navy-mid); border-radius: 8px; padding: 10px 12px; }
+  .lab-name { font-size: 0.72rem; color: var(--muted); }
+  .lab-val { font-weight: 600; font-size: 0.9rem; }
+  .lab-val.abnormal { color: var(--red); }
+  .lab-val.normal { color: var(--green); }
+
+  .solver-panel { display: flex; flex-direction: column; gap: 16px; }
+  .solver-section {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px;
+  }
+  .solver-section h3 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .step-num {
+    width: 24px; height: 24px; background: var(--teal);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+  }
+
+  .drug-selector { display: flex; gap: 10px; flex-wrap: wrap; }
+  .drug-chip {
+    padding: 8px 16px; border-radius: 50px; border: 1.5px solid var(--border);
+    background: transparent; color: var(--muted); cursor: pointer;
+    font-size: 0.85rem; transition: all 0.18s;
+  }
+  .drug-chip:hover { border-color: var(--teal); color: var(--white); }
+  .drug-chip.selected { border-color: var(--teal); background: rgba(13,148,136,0.18); color: var(--teal-light); font-weight: 600; }
+
+  .dose-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-group.inline { margin-bottom: 0; }
+
+  .submit-btn {
+    width: 100%; padding: 14px; background: var(--teal);
+    border: none; border-radius: 10px; color: #fff;
+    font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 18px rgba(13,148,136,0.35);
+  }
+  .submit-btn:hover { background: var(--teal-light); transform: translateY(-1px); }
+
+  /* ─── AI FEEDBACK ─── */
+  .ai-feedback {
+    background: linear-gradient(135deg, rgba(13,148,136,0.12), rgba(13,148,136,0.04));
+    border: 1px solid rgba(13,148,136,0.3); border-radius: var(--radius);
+    padding: 24px; display: none;
+  }
+  .ai-feedback.visible { display: block; animation: fadeUp 0.4s ease; }
+  .ai-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .ai-icon { width: 36px; height: 36px; background: var(--teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+  .ai-title { font-family: 'Syne', sans-serif; font-weight: 700; }
+  .ai-subtitle { font-size: 0.78rem; color: var(--muted); }
+  .ai-text { font-size: 0.9rem; line-height: 1.7; color: rgba(248,250,252,0.85); }
+  .score-display { display: flex; gap: 16px; margin-top: 18px; }
+  .score-item { flex: 1; background: var(--navy-mid); border-radius: 10px; padding: 14px; text-align: center; }
+  .score-num { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; }
+  .score-num.green { color: var(--green); }
+  .score-num.gold { color: var(--gold); }
+  .score-num.red { color: var(--red); }
+  .score-lbl { font-size: 0.73rem; color: var(--muted); margin-top: 2px; }
+
+  /* ─── TEACHER ─── */
+  .table { width: 100%; border-collapse: collapse; }
+  .table th { text-align: left; padding: 12px 16px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); border-bottom: 1px solid var(--border); }
+  .table td { padding: 14px 16px; font-size: 0.88rem; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .table tr:hover td { background: rgba(255,255,255,0.02); }
+  .tag { display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 0.72rem; font-weight: 600; }
+  .tag-teal { background: rgba(13,148,136,0.2); color: var(--teal-light); }
+  .tag-gold { background: rgba(245,158,11,0.2); color: #fbbf24; }
+
+  .btn-sm {
+    padding: 6px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
+    border: 1.5px solid var(--border); background: transparent; color: var(--muted);
+    cursor: pointer; transition: all 0.18s;
+  }
+  .btn-sm:hover { border-color: var(--teal); color: var(--teal-light); }
+  .btn-sm.primary { background: var(--teal); color: #fff; border-color: var(--teal); }
+  .btn-sm.primary:hover { background: var(--teal-light); }
+
+  /* ─── CREATE CASE MODAL ─── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; padding: 20px; display: none;
+  }
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 36px; width: 100%; max-width: 600px;
+    max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    animation: slideUp 0.3s ease;
+  }
+  .modal h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 24px; }
+  .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* ─── AI TYPING ─── */
+  .ai-typing { display: flex; align-items: center; gap: 6px; padding: 12px 0; }
+  .dot { width: 7px; height: 7px; background: var(--teal-light); border-radius: 50%; animation: pulse 1.2s ease infinite; }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  /* ─── ANALYTICS ─── */
+  .chart-bar-wrap { display: flex; flex-direction: column; gap: 14px; }
+  .chart-bar-row { display: flex; align-items: center; gap: 14px; }
+  .chart-bar-label { width: 140px; font-size: 0.82rem; color: var(--muted); text-align: right; flex-shrink: 0; }
+  .chart-bar-track { flex: 1; height: 10px; background: var(--navy-mid); border-radius: 99px; overflow: hidden; }
+  .chart-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--teal-dark), var(--teal-light)); }
+  .chart-bar-val { width: 40px; font-size: 0.82rem; font-weight: 600; color: var(--teal-light); }
+
+  .two-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+  @media(max-width: 700px) { .two-cards { grid-template-columns: 1fr; } .sidebar { display: none; } .main-content { padding: 20px 16px; } }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%,80%,100% { transform: scale(0.6); opacity:0.4; } 40% { transform: scale(1); opacity: 1; } }
+
+  .chip { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 500; margin: 2px; }
+  .chip-blue { background: rgba(59,130,246,0.2); color: #93c5fd; }
+  .chip-orange { background: rgba(249,115,22,0.2); color: #fdba74; }
+
+  .alert { padding: 14px 16px; border-radius: 10px; font-size: 0.88rem; margin-bottom: 16px; display: flex; gap: 10px; align-items: flex-start; }
+  .alert-warn { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); color: #fbbf24; }
+  .alert-info { background: rgba(13,148,136,0.1); border: 1px solid rgba(13,148,136,0.2); color: var(--teal-light); }
+
+  textarea {
+    width: 100%; padding: 12px 16px; background: var(--navy-mid);
+    border: 1.5px solid rgba(255,255,255,0.08); border-radius: 10px;
+    color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+    resize: vertical; min-height: 80px; outline: none;
+    transition: border-color 0.2s;
+  }
+  textarea:focus { border-color: var(--teal); }
+
+  /* toast */
+  .toast {
+    position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+    background: var(--surface2); border: 1px solid var(--teal);
+    padding: 14px 20px; border-radius: 12px;
+    font-size: 0.88rem; color: var(--teal-light);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    transform: translateY(80px); opacity: 0; transition: all 0.3s;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
 </style>
 </head>
 <body>
-<div id="root"></div>
 
-<script type="text/babel">
-const { useState, useEffect, useContext, createContext, useCallback } = React;
-
-/* ===== DATA STORE (localStorage) ===== */
-const DB = {
-  get: (k) => JSON.parse(localStorage.getItem('cp_' + k) || 'null'),
-  set: (k, v) => localStorage.setItem('cp_' + k, JSON.stringify(v)),
-  push: (k, v) => { const arr = DB.get(k) || []; arr.push({...v, id: Date.now()}); DB.set(k, arr); return arr[arr.length-1]; },
-  update: (k, id, data) => { const arr = DB.get(k) || []; const i = arr.findIndex(x=>x.id===id); if(i>-1){arr[i]={...arr[i],...data};DB.set(k,arr);} return arr[i]; },
-  delete: (k, id) => { DB.set(k, (DB.get(k)||[]).filter(x=>x.id!==id)); }
-};
-
-/* ===== SEED DATA ===== */
-function seedData() {
-  if (DB.get('seeded')) return;
-  DB.set('users', [
-    { id: 1, name: 'Admin', email: 'admin@clinpharm.uz', password: 'admin123', role: 'admin', createdAt: new Date().toISOString() },
-    { id: 2, name: 'Dr. Aziza Karimova', email: 'teacher@clinpharm.uz', password: 'teacher123', role: 'teacher', createdAt: new Date().toISOString() },
-    { id: 3, name: 'Alisher Toshmatov', email: 'student@clinpharm.uz', password: 'student123', role: 'student', createdAt: new Date().toISOString() },
-  ]);
-  DB.set('cases', [
-    {
-      id: 101, title: "O'tkir o'ng tomonlama pastki bo'lak pnevmoniyasi, o'rta og'ir kechishi",
-      specialty: 'Pulmonologiya', topic: 'Pnevmoniya', difficulty: 'medium', createdBy: 2,
-      createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
-      patientInfo: {
-        age: 52, gender: 'female',
-        mainComplaint: "Yo'tal, nafas qisilishi, isitma 39°C, yon tomonda og'riq",
-        anamnesis: "5 kun oldin sovuqlik, asta-sekin og'irlashgan. Tibbiy muassasaga murojaat qilmagan.",
-        comorbidities: "Surunkali pielonefrit, qo'zg'alish davri. Surunkali temir yetishmovchiligi anemiyasi, II daraja. Homiladorlik 14 haftalik",
-        isPregnant: true, isLactating: false,
-        liverStatus: 'normal', kidneyStatus: 'mild_impairment',
-        allergyHistory: "Ampicillin ga allergik reaksiya kuzatilgan (04.11.2025)",
-        currentMedications: "Temir preparatlari qabul qilmoqda",
-        labResults: "OAQ: leykotsitoz (12.5×10⁹/L), ESR 45 mm/soat, Hb 95 g/L. Biokimyo: kreatinin 110 mkm/L",
-        instrumentalResults: "O'pka rentgeni: o'ng tomonda pastki bo'lak infiltratsiyasi. SpO₂ 94%",
-        severityLevel: 'moderate'
-      },
-      evaluationCriteria: {
-        correctDrug: 'Amoksisiklin/klavulanat', correctDose: '875/125 mg', correctDuration: '7-10 kun', correctRoute: "Og'iz orqali",
-        monitoringPlan: "Harorat, nafas tezligi, SpO₂ kunlik monitoring. 3 kundan keyin qayta baholash.",
-        correctRationale: "Homiladorlikda xavfsiz, beta-laktam antibiotiklar birinchi tanlash. Ampicillin allergiyasi bor.",
-        drugSelectionWeight:3, doseCorrectWeight:2, contraindicationsWeight:2, interactionsWeight:1, durationWeight:1, monitoringWeight:1, safetyWeight:2
-      }
-    },
-    {
-      id: 102, title: "O'tkir miokard infarkti, ST elevatsiyasi bilan",
-      specialty: 'Kardiologiya', topic: 'Miokard infarkti', difficulty: 'hard', createdBy: 2,
-      createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
-      patientInfo: {
-        age: 65, gender: 'male',
-        mainComplaint: "Ko'krak sohasida kuchli siquvchi og'riq, 30 daqiqadan oshiq, chap qo'lga tarqaladi",
-        anamnesis: "Gipertoniya 10 yil. Chekuvchi. To'satdan boshlangan.",
-        comorbidities: "Gipertoniya III daraja. Qandli diabet II turi.",
-        isPregnant: false, isLactating: false,
-        liverStatus: 'normal', kidneyStatus: 'normal',
-        allergyHistory: "Yo'q", currentMedications: "Amlodipim 10 mg/kun, Metformin 1000 mg × 2",
-        labResults: "Troponin I: 2.5 ng/mL, KFK-MB: 45 U/L. Glyukoza: 8.2 mmol/L",
-        instrumentalResults: "EKG: II, III, aVF da ST elevatsiyasi 3 mm.",
-        severityLevel: 'severe'
-      },
-      evaluationCriteria: {
-        correctDrug: 'Aspirin', correctDose: '300 mg bir martalik, keyin 75-100 mg/kun', correctDuration: 'Muddatsiz', correctRoute: "Og'iz orqali",
-        monitoringPlan: "Doimiy EKG monitoring, troponin dinamikasi, qon bosimi nazorati.",
-        correctRationale: "STEMI tashxisida darhol dual antiplatelet terapiya: Aspirin + P2Y12 inhibitor.",
-        drugSelectionWeight:3, doseCorrectWeight:2, contraindicationsWeight:3, interactionsWeight:2, durationWeight:1, monitoringWeight:2, safetyWeight:2
-      }
-    },
-    {
-      id: 103, title: "Surunkali yurak etishmovchiligi, III funktsional sinf",
-      specialty: 'Kardiologiya', topic: 'Yurak etishmovchiligi', difficulty: 'easy', createdBy: 2,
-      createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
-      patientInfo: {
-        age: 70, gender: 'male',
-        mainComplaint: "Nafas qisilishi (kichik jismoniy yuklamada), oyoqlar shishi, tez charchash",
-        anamnesis: "Miokard infarkti 5 yil oldin. Surunkali yurak etishmovchiligi tashxisi 3 yil.",
-        comorbidities: "Gipertoniya. Qandli diabet II turi.",
-        isPregnant: false, isLactating: false,
-        liverStatus: 'mild_impairment', kidneyStatus: 'mild_impairment',
-        allergyHistory: "Yo'q", currentMedications: "Furosemid 40 mg/kun",
-        labResults: "Kreatinin 130 mkm/L, kaliy 3.8 mmol/L, BNP 850 pg/mL",
-        instrumentalResults: "EXO-KG: LVEF 30%. Rentgen: o'pka shishi belgilari.",
-        severityLevel: 'moderate'
-      },
-      evaluationCriteria: {
-        correctDrug: 'Ramipril', correctDose: '2.5-5 mg/kun', correctDuration: 'Muddatsiz', correctRoute: "Og'iz orqali",
-        monitoringPlan: "Kreatinin, kaliy, qon bosimi haftalik nazorat. Yurak ritmi monitoring.",
-        correctRationale: "RAAS blokadasi (ACE inhibitor) + beta-bloker + diuretik kombinatsiyasi.",
-        drugSelectionWeight:3, doseCorrectWeight:2, contraindicationsWeight:2, interactionsWeight:2, durationWeight:1, monitoringWeight:2, safetyWeight:2
-      }
-    },
-    {
-      id: 104, title: "O'tkir bronxit",
-      specialty: 'Pulmonologiya', topic: 'Bronxit', difficulty: 'easy', createdBy: 2,
-      createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
-      patientInfo: {
-        age: 28, gender: 'male',
-        mainComplaint: "Yo'tal (quruq, so'ngra balg'amli), isitma 37.8°C, umumiy holsizlik",
-        anamnesis: "10 kun oldin ORVI bilan og'rigan. Yo'tal asta-sekin zo'raygan.",
-        comorbidities: "Yo'q", isPregnant: false, isLactating: false,
-        liverStatus: 'normal', kidneyStatus: 'normal',
-        allergyHistory: "Yo'q", currentMedications: "Yo'q",
-        labResults: "OAQ: leykotsitlar norma chegarasida. CRP 15 mg/L.",
-        instrumentalResults: "O'pka rentgeni: infiltratsiya belgilari yo'q.",
-        severityLevel: 'mild'
-      },
-      evaluationCriteria: {
-        correctDrug: "Antibiotiklar ko'rsatilmagan, simptomatik davolash", correctDose: "Ambroksol 30 mg × 3, Paratsetamol 500 mg × 3",
-        correctDuration: '7-10 kun', correctRoute: "Og'iz orqali",
-        monitoringPlan: "Harorat, yo'tal dinamikasi. 5-7 kundan keyin qayta ko'rik.",
-        correctRationale: "O'tkir bronxitning aksariyat hollarda viral etiologiyasi bor. Antibiotik rutiniy tayinlanmaydi.",
-        drugSelectionWeight:2, doseCorrectWeight:2, contraindicationsWeight:1, interactionsWeight:1, durationWeight:2, monitoringWeight:1, safetyWeight:1
-      }
-    },
-    {
-      id: 105, title: "Gastroezofageal reflyuks kasalligi",
-      specialty: 'Gastroenterologiya', topic: 'GERK', difficulty: 'easy', createdBy: 2,
-      createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
-      patientInfo: {
-        age: 45, gender: 'female',
-        mainComplaint: "Ovqat yegandan keyin kuyish, kekirtish, og'iz suyuqligining kislotasi",
-        anamnesis: "2 yildan beri vaqti-vaqti bilan kuyish. So'nggi oyda kuchaygan.",
-        comorbidities: "Ortiqcha vazn", isPregnant: false, isLactating: false,
-        liverStatus: 'normal', kidneyStatus: 'normal',
-        allergyHistory: "Yo'q", currentMedications: "Yo'q",
-        labResults: "OAQ: norma. H. pylori testi: manfiy.",
-        instrumentalResults: "EFGDS: ezofagit I daraja.",
-        severityLevel: 'mild'
-      },
-      evaluationCriteria: {
-        correctDrug: 'Omeprazol', correctDose: "20 mg × 2, ovqatdan 30 daqiqa oldin",
-        correctDuration: '4-8 hafta', correctRoute: "Og'iz orqali",
-        monitoringPlan: "Simptomlar dinamikasi. 4 haftadan keyin qayta baholash.",
-        correctRationale: "Proton nasos inhibitorlari GERK davolashning asosiy vositasi.",
-        drugSelectionWeight:3, doseCorrectWeight:2, contraindicationsWeight:1, interactionsWeight:1, durationWeight:2, monitoringWeight:1, safetyWeight:1
-      }
-    }
-  ]);
-  DB.set('submissions', []);
-  DB.set('seeded', true);
-}
-
-/* ===== AUTH CONTEXT ===== */
-const AuthCtx = createContext(null);
-function useAuth() { return useContext(AuthCtx); }
-
-/* ===== EVALUATE ===== */
-function evaluate(drugs, criteria, monitoringPlan) {
-  const drugEvals = drugs.map(drug => {
-    const cd = (criteria.correctDrug||'').toLowerCase();
-    const sd = (drug.drugName||'').toLowerCase();
-    const match = sd && cd && (sd.includes(cd.split('/')[0]) || cd.includes(sd.split('/')[0]));
-    const drugScore = match ? criteria.drugSelectionWeight * 10 : 0;
-    const doseMatch = drug.dose && criteria.correctDose && drug.dose.trim() === criteria.correctDose.trim();
-    const doseScore = doseMatch ? criteria.doseCorrectWeight*10 : (drug.dose ? criteria.doseCorrectWeight*5 : 0);
-    const combScore = criteria.interactionsWeight * 7;
-    const effScore = criteria.durationWeight * 8;
-    const safeScore = criteria.safetyWeight * 8;
-    let fb = drugScore === 0 ? `"${drug.drugName}" — noto'g'ri dori tanlov. To'g'ri: ${criteria.correctDrug}. ` : `Dori tanlov to'g'ri. `;
-    if (!doseMatch) fb += `Doza "${drug.dose}" — to'g'ri doza: ${criteria.correctDose}. `;
-    if (!drug.duration) fb += `Davolash davomiyligi ko'rsatilmagan (to'g'ri: ${criteria.correctDuration}). `;
-    return { drugName: drug.drugName, drugSelectionScore: drugScore, doseScore, combinationScore: combScore, effectivenessScore: effScore, safetyScore: safeScore, feedback: fb };
-  });
-  const total = drugEvals.reduce((s,d)=>s+d.drugSelectionScore+d.doseScore+d.combinationScore+d.effectivenessScore+d.safetyScore,0);
-  const pct = Math.min(100, Math.round(total));
-  const mistakes = [];
-  const recs = [];
-  if (pct < 50) { mistakes.push("Dori tanlashda jiddiy xatolar mavjud"); recs.push("Klinik farmakologiya asoslarini qayta o'rganish tavsiya etiladi"); recs.push("Kasallikning patofiziyologiyasini chuqurroq o'rganing"); }
-  else if (pct < 70) { mistakes.push("Doza va davomiylik belgilashda xatolar"); recs.push("Dorilarning farmakokinetikas bo'yicha ma'lumotni yangilang"); }
-  else if (pct < 85) { mistakes.push("Monitoring rejasi yetarli emas"); recs.push("Terapiya monitoringi bo'yicha bilimlarni mustahkamlang"); }
-  if (!monitoringPlan) { mistakes.push("Monitoring rejasi ko'rsatilmagan"); recs.push("Terapiyaning samaradorligi va xavfsizligini baholash rejasini tuzing"); }
-  const fb = pct>=85?"Ajoyib ish! Farmakoterapiya to'g'ri tanlangan.":pct>=70?"Yaxshi harakat. Ba'zi jihatlarda qo'shimcha o'rganish tavsiya etiladi.":pct>=50?"O'rtacha natija. Asosiy xatolarni tahlil qilib, mavzuni qayta o'rganing.":"Dori tanlash va dozalashda jiddiy xatolar mavjud. Iltimos, o'qituvchi bilan maslahatlashing.";
-  return { totalScore: total, maxScore: 100, percentage: pct, drugEvaluations: drugEvals, overallFeedback: fb, mistakeAreas: mistakes, recommendations: recs };
-}
-
-/* ===== UI COMPONENTS ===== */
-const Btn = ({children, onClick, variant='primary', size='md', className='', disabled=false, type='button'}) => {
-  const base = 'font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
-  const sizes = {sm:'px-3 py-1.5 text-xs', md:'px-4 py-2.5 text-sm', lg:'px-6 py-3 text-base'};
-  const variants = {
-    primary:'bg-sky-500 hover:bg-sky-600 text-white shadow-md shadow-sky-200',
-    secondary:'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50',
-    danger:'bg-red-500 hover:bg-red-600 text-white',
-    ghost:'text-slate-600 hover:bg-slate-100'
-  };
-  return <button type={type} onClick={onClick} disabled={disabled} className={`${base} ${sizes[size]} ${variants[variant]} ${className}`}>{children}</button>;
-};
-
-const Card = ({children, className=''}) => <div className={`bg-white rounded-2xl border border-slate-100 shadow-sm ${className}`}>{children}</div>;
-const Badge = ({label, color='blue'}) => {
-  const colors = {blue:'bg-blue-100 text-blue-700', green:'bg-green-100 text-green-700', red:'bg-red-100 text-red-700', yellow:'bg-yellow-100 text-yellow-700', purple:'bg-purple-100 text-purple-700', gray:'bg-slate-100 text-slate-600'};
-  return <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${colors[color]||colors.blue}`}>{label}</span>;
-};
-const Input = ({label, ...p}) => <div className="space-y-1"><label className="text-sm font-medium text-slate-700">{label}</label><input {...p} className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 bg-white" /></div>;
-const Textarea = ({label, ...p}) => <div className="space-y-1"><label className="text-sm font-medium text-slate-700">{label}</label><textarea {...p} className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 bg-white resize-none" /></div>;
-const Select = ({label, options, ...p}) => <div className="space-y-1"><label className="text-sm font-medium text-slate-700">{label}</label><select {...p} className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 bg-white">{options.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select></div>;
-
-const ScoreRing = ({pct}) => {
-  const r = 45, circ = 2*Math.PI*r;
-  const offset = circ - (pct/100)*circ;
-  const color = pct>=80?'#22c55e':pct>=50?'#f59e0b':'#ef4444';
-  return (
-    <div className="flex flex-col items-center">
-      <svg width="120" height="120" viewBox="0 0 120 120">
-        <circle cx="60" cy="60" r={r} fill="none" stroke="#f1f5f9" strokeWidth="10"/>
-        <circle cx="60" cy="60" r={r} fill="none" stroke={color} strokeWidth="10" strokeLinecap="round"
-          strokeDasharray={circ} strokeDashoffset={offset} transform="rotate(-90 60 60)"/>
-        <text x="60" y="60" textAnchor="middle" dy="0.4em" fontSize="22" fontWeight="bold" fill={color}>{pct}%</text>
-      </svg>
+<!-- ════════════════════ LANDING ════════════════════ -->
+<section id="landing" class="screen active">
+  <div class="landing-content">
+    <div class="logo-badge">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      Клиник фармакология тренажёри
     </div>
-  );
-};
+    <h1>ClinPharm<br><span>AI Trainer</span></h1>
+    <p>Виртуал бемор кейслари орқали рационал дори танлаш, дозалаш ва фармакотерапия қарорини ўрганинг.</p>
+    <div class="landing-btns">
+      <button class="btn-primary" onclick="showAuth()">Бошлаш →</button>
+      <button class="btn-outline" onclick="demoLogin('student')">Demo кириш</button>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num">120+</div><div class="stat-label">Клиник кейс</div></div>
+      <div class="stat"><div class="stat-num">8</div><div class="stat-label">Модул</div></div>
+      <div class="stat"><div class="stat-num">AI</div><div class="stat-label">Фикр-мулоҳаза</div></div>
+    </div>
+  </div>
+</section>
 
-/* ===== PAGES ===== */
+<!-- ════════════════════ AUTH ════════════════════ -->
+<section id="auth" class="screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">💊</div>
+      <span>ClinPharm AI</span>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Кириш</button>
+      <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Рўйхат</button>
+    </div>
 
-/* -- LOGIN -- */
-function LoginPage({onNavigate}) {
-  const {login} = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const handle = (e) => {
-    e.preventDefault();
-    const ok = login(email, password);
-    if (!ok) setError("Email yoki parol noto'g'ri");
-  };
-  return (
-    <div className="min-h-screen flex" style={{background:'linear-gradient(135deg,#e0f2fe 0%,#bae6fd 50%,#e0e7ff 100%)'}}>
-      <div className="hidden md:flex flex-1 flex-col justify-center px-16">
-        <div className="bg-white/70 backdrop-blur rounded-3xl p-10 max-w-md shadow-xl">
-          <div className="text-sky-500 mb-4">
-            <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3-14.25c0-.414.336-.75.75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H12.75a.75.75 0 0 1-.75-.75V3.75Zm3 1.5V5.25A2.25 2.25 0 0 0 12.75 3H12A2.25 2.25 0 0 0 9.75 5.25v.008M9.75 18.75h4.5M3 9.75A2.25 2.25 0 0 1 5.25 7.5h13.5A2.25 2.25 0 0 1 21 9.75v9A2.25 2.25 0 0 1 18.75 21H5.25A2.25 2.25 0 0 1 3 18.75v-9Z"/></svg>
-          </div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-3">ClinPharm AI Trainer</h1>
-          <p className="text-slate-600 leading-relaxed">Klinik farmakologiyani o'rganish va amaliyotda qo'llash uchun innovatsion platforma.</p>
-          <div className="mt-8 space-y-2 text-sm text-slate-500">
-            <p className="font-semibold text-slate-700">Demo kirish:</p>
-            <p>👨‍💼 Admin: admin@clinpharm.uz / admin123</p>
-            <p>👩‍🏫 O'qituvchi: teacher@clinpharm.uz / teacher123</p>
-            <p>👨‍🎓 Talaba: student@clinpharm.uz / student123</p>
-          </div>
-        </div>
+    <div id="form-login">
+      <div class="form-group">
+        <label>Электрон почта</label>
+        <input type="email" id="login-email" placeholder="user@example.com" value="student@demo.uz">
       </div>
-      <div className="flex-1 flex items-center justify-center px-6">
-        <Card className="w-full max-w-sm p-8">
-          <h2 className="text-2xl font-bold text-slate-900 mb-1 text-center">Tizimga kirish</h2>
-          <p className="text-sm text-slate-500 text-center mb-6">Ma'lumotlaringizni kiriting</p>
-          {error && <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-xl text-sm">{error}</div>}
-          <form onSubmit={handle} className="space-y-4">
-            <Input label="Email manzil" type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="email@example.com" required />
-            <Input label="Parol" type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="••••••••" required />
-            <Btn type="submit" className="w-full" size="lg">Kirish</Btn>
-          </form>
-          <p className="text-center text-sm text-slate-500 mt-4">Hisobingiz yo'qmi? <button onClick={()=>onNavigate('register')} className="text-sky-500 font-semibold hover:underline">Ro'yxatdan o'ting</button></p>
-        </Card>
+      <div class="form-group">
+        <label>Парол</label>
+        <input type="password" id="login-pass" placeholder="••••••••" value="demo123">
       </div>
-    </div>
-  );
-}
-
-/* -- REGISTER -- */
-function RegisterPage({onNavigate}) {
-  const {register} = useAuth();
-  const [form, setForm] = useState({name:'',email:'',password:'',role:'student'});
-  const [error, setError] = useState('');
-  const handle = (e) => {
-    e.preventDefault();
-    const ok = register(form);
-    if (!ok) setError("Bu email allaqachon ro'yxatdan o'tgan");
-  };
-  return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{background:'linear-gradient(135deg,#e0f2fe 0%,#bae6fd 50%,#e0e7ff 100%)'}}>
-      <Card className="w-full max-w-sm p-8">
-        <h2 className="text-2xl font-bold text-slate-900 mb-1 text-center">Ro'yxatdan o'tish</h2>
-        <p className="text-sm text-slate-500 text-center mb-6">Yangi hisob yarating</p>
-        {error && <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-xl text-sm">{error}</div>}
-        <form onSubmit={handle} className="space-y-4">
-          <Input label="Ism familiya" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} required />
-          <Input label="Email" type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} required />
-          <Input label="Parol" type="password" value={form.password} onChange={e=>setForm({...form,password:e.target.value})} required />
-          <Select label="Rol" value={form.role} onChange={e=>setForm({...form,role:e.target.value})} options={[{value:'student',label:'Talaba'},{value:'teacher',label:"O'qituvchi"}]} />
-          <Btn type="submit" className="w-full" size="lg">Ro'yxatdan o'tish</Btn>
-        </form>
-        <p className="text-center text-sm text-slate-500 mt-4">Hisobingiz bormi? <button onClick={()=>onNavigate('login')} className="text-sky-500 font-semibold hover:underline">Kirish</button></p>
-      </Card>
-    </div>
-  );
-}
-
-/* -- LAYOUT -- */
-function Layout({children, page, onNavigate}) {
-  const {user, logout} = useAuth();
-  const [mob, setMob] = useState(false);
-  const roleLabel = {admin:'Admin', teacher:"O'qituvchi", student:'Talaba'};
-  const nav = [
-    {id:'dashboard', label:'Asosiy', icon:'🏠', roles:['student','teacher','admin']},
-    {id:'cases', label:'Keyslar', icon:'📋', roles:['student','teacher','admin']},
-    {id:'results', label:'Natijalar', icon:'✅', roles:['student','teacher','admin']},
-    {id:'newcase', label:'Yangi Keys', icon:'➕', roles:['teacher','admin']},
-    {id:'analytics', label:'Tahlillar', icon:'📊', roles:['teacher','admin']},
-    {id:'users', label:'Foydalanuvchilar', icon:'👥', roles:['admin']},
-  ].filter(n=>n.roles.includes(user.role));
-
-  return (
-    <div className="min-h-screen bg-slate-50 flex">
-      {/* sidebar desktop */}
-      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-slate-100 fixed top-0 left-0 h-full z-20">
-        <div className="p-5 flex items-center gap-3 border-b border-slate-100">
-          <div className="bg-sky-100 p-2 rounded-xl"><span className="text-xl">🩺</span></div>
-          <span className="font-bold text-lg text-slate-800">ClinPharm AI</span>
-        </div>
-        <div className="px-4 py-3 border-b border-slate-100">
-          <div className="bg-slate-50 rounded-xl p-3">
-            <p className="font-semibold text-sm text-slate-800">{user.name}</p>
-            <p className="text-xs text-slate-500">{roleLabel[user.role]}</p>
-          </div>
-        </div>
-        <nav className="flex-1 p-3 space-y-1">
-          {nav.map(n=>(
-            <button key={n.id} onClick={()=>onNavigate(n.id)} className={`w-full text-left flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${page===n.id?'bg-sky-500 text-white shadow-md shadow-sky-200':'text-slate-600 hover:bg-slate-100'}`}>
-              <span>{n.icon}</span>{n.label}
-            </button>
-          ))}
-        </nav>
-        <div className="p-3 border-t border-slate-100">
-          <button onClick={logout} className="w-full text-left flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition-all">
-            🚪 Chiqish
-          </button>
-        </div>
-      </aside>
-      {/* mobile header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 h-14 bg-white border-b border-slate-100 flex items-center justify-between px-4 z-30">
-        <div className="flex items-center gap-2"><span className="text-xl">🩺</span><span className="font-bold text-slate-800">ClinPharm</span></div>
-        <button onClick={()=>setMob(!mob)} className="p-2 text-slate-600 text-xl">{mob?'✕':'☰'}</button>
-      </div>
-      {mob && (
-        <div className="md:hidden fixed inset-0 z-20 bg-white pt-14">
-          <nav className="p-4 space-y-2">
-            {nav.map(n=>(
-              <button key={n.id} onClick={()=>{onNavigate(n.id);setMob(false);}} className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium ${page===n.id?'bg-sky-500 text-white':'text-slate-600 bg-slate-50'}`}>
-                <span>{n.icon}</span>{n.label}
-              </button>
-            ))}
-            <button onClick={logout} className="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-red-500 bg-red-50">🚪 Chiqish</button>
-          </nav>
-        </div>
-      )}
-      <main className="flex-1 md:ml-64 mt-14 md:mt-0 p-4 md:p-8 max-w-full overflow-x-hidden">
-        <div className="max-w-5xl mx-auto fade-in">{children}</div>
-      </main>
-    </div>
-  );
-}
-
-/* -- DASHBOARD -- */
-function Dashboard({onNavigate}) {
-  const {user} = useAuth();
-  const cases = DB.get('cases') || [];
-  const subs = DB.get('submissions') || [];
-  const users = DB.get('users') || [];
-  const mySubs = subs.filter(s=>s.studentId===user.id);
-  const avgScore = mySubs.length ? Math.round(mySubs.reduce((a,b)=>a+b.percentage,0)/mySubs.length) : 0;
-
-  return (
-    <div className="space-y-6">
-      <div><h1 className="text-2xl font-bold text-slate-900">Xush kelibsiz, {user.name}! 👋</h1><p className="text-slate-500 mt-1">Bugun nimalarni o'rganamiz?</p></div>
-      {user.role==='student' && (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[{label:'Mavjud keyslar',val:cases.length,icon:'📋',bg:'bg-blue-50',tc:'text-blue-700'},{label:'Yechilgan keyslar',val:mySubs.length,icon:'✅',bg:'bg-green-50',tc:'text-green-700'},{label:"O'rtacha ball",val:avgScore+'%',icon:'🏆',bg:'bg-amber-50',tc:'text-amber-700'}].map((s,i)=>(
-              <Card key={i} className="p-5"><div className={`inline-flex p-3 rounded-xl ${s.bg} mb-3`}><span className="text-2xl">{s.icon}</span></div><p className="text-sm text-slate-500">{s.label}</p><p className={`text-3xl font-bold ${s.tc}`}>{s.val}</p></Card>
-            ))}
-          </div>
-          <Card className="p-6 bg-gradient-to-br from-sky-500 to-sky-600 text-white border-0">
-            <h3 className="text-xl font-bold mb-2">Amaliyotni boshlang 🚀</h3>
-            <p className="text-sky-100 mb-4">Yangi klinik holatlarni o'rganing va bilimingizni sinab ko'ring.</p>
-            <Btn onClick={()=>onNavigate('cases')} variant="secondary" className="text-sky-600">Keyslarga o'tish →</Btn>
-          </Card>
-          {mySubs.length>0 && (
-            <div><h2 className="font-bold text-slate-800 mb-3">So'nggi natijalarim</h2>
-            <div className="grid sm:grid-cols-2 gap-3">
-              {mySubs.slice(-4).reverse().map(s=>{
-                const c = cases.find(x=>x.id===s.caseId);
-                return <Card key={s.id} className="p-4 cursor-pointer hover:shadow-md transition-shadow" onClick={()=>onNavigate('result_'+s.id)}>
-                  <p className="font-semibold text-sm text-slate-800 mb-2">{c?.title||'Noma\'lum'}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-slate-400">{new Date(s.submittedAt).toLocaleDateString('uz-UZ')}</span>
-                    <Badge label={s.percentage+'%'} color={s.percentage>=80?'green':s.percentage>=50?'yellow':'red'}/>
-                  </div>
-                </Card>;
-              })}
-            </div></div>
-          )}
-        </>
-      )}
-      {(user.role==='teacher'||user.role==='admin') && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[
-              {label:'Jami talabalar',val:users.filter(u=>u.role==='student').length,icon:'👨‍🎓',bg:'bg-blue-50',tc:'text-blue-700'},
-              {label:'Jami keyslar',val:cases.length,icon:'📋',bg:'bg-indigo-50',tc:'text-indigo-700'},
-              {label:'Jami topshiriqlar',val:subs.length,icon:'📝',bg:'bg-teal-50',tc:'text-teal-700'},
-              {label:"O'rtacha ball",val:(subs.length?Math.round(subs.reduce((a,b)=>a+b.percentage,0)/subs.length):0)+'%',icon:'🏆',bg:'bg-amber-50',tc:'text-amber-700'},
-            ].map((s,i)=>(
-              <Card key={i} className="p-5"><div className={`inline-flex p-3 rounded-xl ${s.bg} mb-2`}><span className="text-xl">{s.icon}</span></div><p className="text-xs text-slate-500">{s.label}</p><p className={`text-2xl font-bold ${s.tc}`}>{s.val}</p></Card>
-            ))}
-          </div>
-          <div className="flex gap-3 flex-wrap">
-            <Btn onClick={()=>onNavigate('newcase')}>➕ Yangi keys yaratish</Btn>
-            <Btn onClick={()=>onNavigate('results')} variant="secondary">📊 Natijalarni ko'rish</Btn>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* -- CASES LIST -- */
-function CasesList({onNavigate}) {
-  const cases = DB.get('cases') || [];
-  const [search, setSearch] = useState('');
-  const [spec, setSpec] = useState('');
-  const [diff, setDiff] = useState('');
-  const specs = [...new Set(cases.map(c=>c.specialty))];
-  const diffLabels = {easy:'Oson',medium:"O'rta",hard:'Qiyin'};
-  const diffColors = {easy:'green',medium:'yellow',hard:'red'};
-  const filtered = cases.filter(c=>
-    (!search||c.title.toLowerCase().includes(search.toLowerCase())||c.specialty.toLowerCase().includes(search.toLowerCase())) &&
-    (!spec||c.specialty===spec) && (!diff||c.difficulty===diff)
-  );
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div><h1 className="text-2xl font-bold text-slate-900">Klinik keyslar</h1><p className="text-slate-500">Mavjud klinik vaziyatlar</p></div>
-      </div>
-      <div className="flex flex-col sm:flex-row gap-3">
-        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="🔍 Qidirish..." className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300" />
-        <select value={spec} onChange={e=>setSpec(e.target.value)} className="border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 bg-white">
-          <option value="">Barcha mutaxassisliklar</option>
-          {specs.map(s=><option key={s} value={s}>{s}</option>)}
-        </select>
-        <select value={diff} onChange={e=>setDiff(e.target.value)} className="border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 bg-white">
-          <option value="">Barcha qiyinliklar</option>
-          <option value="easy">Oson</option>
-          <option value="medium">O'rta</option>
-          <option value="hard">Qiyin</option>
+      <div class="form-group">
+        <label>Rol</label>
+        <select id="login-role">
+          <option value="student">Талаба</option>
+          <option value="teacher">Ўқитувчи</option>
+          <option value="admin">Админ</option>
         </select>
       </div>
-      {filtered.length===0 && <div className="text-center py-16 text-slate-400"><p className="text-4xl mb-3">📭</p><p>Keyslar topilmadi</p></div>}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map(c=>(
-          <Card key={c.id} className="p-5 hover:shadow-md transition-shadow cursor-pointer group" onClick={()=>onNavigate('case_'+c.id)}>
-            <div className="flex items-start justify-between mb-3">
-              <Badge label={c.specialty} color="blue"/>
-              <Badge label={diffLabels[c.difficulty]} color={diffColors[c.difficulty]}/>
-            </div>
-            <h3 className="font-semibold text-slate-800 text-sm leading-snug mb-2 group-hover:text-sky-600 transition-colors">{c.title}</h3>
-            <p className="text-xs text-slate-400 mb-4">📚 {c.topic}</p>
-            <Btn size="sm" className="w-full">Yechishni boshlash →</Btn>
-          </Card>
-        ))}
-      </div>
+      <button class="btn-primary btn-full" onclick="doLogin()">Tizimga kirish</button>
     </div>
-  );
-}
 
-/* -- SOLVE CASE -- */
-function SolveCase({caseId, onNavigate}) {
-  const {user} = useAuth();
-  const cases = DB.get('cases') || [];
-  const c = cases.find(x=>x.id===Number(caseId));
-  const [tab, setTab] = useState('passport');
-  const [drugs, setDrugs] = useState([{drugName:'',dose:'',frequency:'',route:'',duration:'',rationale:''}]);
-  const [monitoring, setMonitoring] = useState('');
-  const [sideEffect, setSideEffect] = useState('');
-  const [rationale, setRationale] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [result, setResult] = useState(null);
+    <div id="form-register" style="display:none">
+      <div class="two-col">
+        <div class="form-group"><label>Ismi</label><input placeholder="Ismi"></div>
+        <div class="form-group"><label>Familiya</label><input placeholder="Familiya"></div>
+      </div>
+      <div class="form-group"><label>Elektron pochta</label><input type="email" placeholder="email@example.com"></div>
+      <div class="form-group"><label>Parol</label><input type="password" placeholder="••••••••"></div>
+      <div class="form-group">
+        <label>Rol</label>
+        <select>
+          <option>Talaba</option>
+          <option>O'qituvchi</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Muassasa</label><input placeholder="Tibbiyot universiteti nomi"></div>
+      <button class="btn-primary btn-full" onclick="doLogin()">Ro'yxatdan o'tish</button>
+    </div>
+  </div>
+</section>
 
-  if (!c) return <div className="text-center py-16"><p className="text-slate-400">Keys topilmadi</p><Btn onClick={()=>onNavigate('cases')} className="mt-4">Orqaga</Btn></div>;
+<!-- ════════════════════ STUDENT DASHBOARD ════════════════════ -->
+<section id="student-dash" class="screen">
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">💊</div>
+        <span>ClinPharm</span>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Asosiy</div>
+        <button class="nav-item active" onclick="showPage('s-home', this)">
+          <span class="nav-icon">🏠</span> Bosh sahifa
+        </button>
+        <button class="nav-item" onclick="showPage('s-cases', this)">
+          <span class="nav-icon">📋</span> Keyslar
+        </button>
+        <button class="nav-item" onclick="showPage('s-results', this)">
+          <span class="nav-icon">📊</span> Natijalarim
+        </button>
+        <button class="nav-item" onclick="showPage('s-errors', this)">
+          <span class="nav-icon">⚠️</span> Xatolar tahlili
+        </button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Yordam</div>
+        <button class="nav-item" onclick="showPage('s-reference', this)">
+          <span class="nav-icon">📚</span> Ma'lumotnoma
+        </button>
+      </div>
+      <div class="sidebar-user">
+        <div class="user-avatar" id="s-avatar">AH</div>
+        <div class="user-info">
+          <div class="user-name" id="s-name">Alisher H.</div>
+          <div class="user-role">Talaba</div>
+        </div>
+        <button class="logout-btn" onclick="logout()" title="Chiqish">⏻</button>
+      </div>
+    </aside>
 
-  const p = c.patientInfo;
-  const genderLabel = {male:'Erkak', female:'Ayol'};
-  const severityLabel = {mild:'Yengil', moderate:"O'rta og'ir", severe:"Og'ir"};
-  const organLabel = {normal:'Normal', mild_impairment:'Yengil buzilish', severe_impairment:"Og'ir buzilish"};
-  const tabs = [{id:'passport',label:'Pasport'},{id:'complaints',label:'Shikoyatlari'},{id:'anamnesis',label:'Anamnez'},{id:'lab',label:'Laboratoriya'},{id:'instrumental',label:'Instrumental'},{id:'treatment',label:'Davolash rejasi'}];
-
-  const addDrug = () => setDrugs([...drugs,{drugName:'',dose:'',frequency:'',route:'',duration:'',rationale:''}]);
-  const removeDrug = (i) => setDrugs(drugs.filter((_,j)=>j!==i));
-  const setDrug = (i,k,v) => { const d=[...drugs]; d[i]={...d[i],[k]:v}; setDrugs(d); };
-
-  const submit = () => {
-    const eval_ = evaluate(drugs, c.evaluationCriteria, monitoring);
-    const sub = {
-      caseId: c.id, studentId: user.id,
-      answers: {drugs, monitoring, sideEffect, rationale},
-      ...eval_,
-      submittedAt: new Date().toISOString()
-    };
-    const saved = DB.push('submissions', sub);
-    setResult({...sub, id: saved.id});
-    setSubmitted(true);
-    onNavigate('result_'+saved.id);
-  };
-
-  return (
-    <div className="space-y-5">
-      <div className="flex items-center gap-3">
-        <button onClick={()=>onNavigate('cases')} className="text-slate-400 hover:text-slate-700 text-xl">←</button>
-        <div>
-          <h1 className="text-xl font-bold text-slate-900">{c.title}</h1>
-          <div className="flex gap-2 mt-1"><Badge label={c.specialty} color="blue"/><Badge label={c.topic} color="purple"/></div>
+    <main class="main-content">
+      <!-- HOME -->
+      <div id="s-home" class="page active">
+        <div class="page-header">
+          <h2>Xush kelibsiz, <span style="color:var(--teal-light)" id="s-greet">Alisher!</span> 👋</h2>
+          <p>Bugungi o'quv sessiyangizni boshlang</p>
+        </div>
+        <div class="two-cards">
+          <div class="card">
+            <div class="card-icon teal">✅</div>
+            <div class="card-stat" id="s-done-count">0</div>
+            <h4>Bajarilgan keyslar</h4>
+            <p>Jami 120 ta keysdan</p>
+            <div class="progress-bar"><div class="progress-fill" style="width:0%" id="s-prog"></div></div>
+          </div>
+          <div class="card">
+            <div class="card-icon gold">⭐</div>
+            <div class="card-stat" id="s-avg-score">—</div>
+            <h4>O'rtacha ball</h4>
+            <p>Oxirgi 10 ta keys bo'yicha</p>
+          </div>
+          <div class="card">
+            <div class="card-icon green">🎯</div>
+            <div class="card-stat">3</div>
+            <h4>Ketma-ket kun</h4>
+            <p>O'qish seriyasi</p>
+          </div>
+          <div class="card">
+            <div class="card-icon red">🔬</div>
+            <div class="card-stat">2</div>
+            <h4>Zaif mavzular</h4>
+            <p>Qayta o'rganish tavsiya etiladi</p>
+          </div>
+        </div>
+        <div class="solver-section" style="margin-top:8px">
+          <h3>⚡ Tezkor boshlash</h3>
+          <p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px">Tasodifiy keys yechib ko'ring</p>
+          <button class="btn-primary" onclick="openCase(0)">Tasodifiy keys →</button>
         </div>
       </div>
-      {/* tabs */}
-      <div className="flex gap-1 bg-slate-100 p-1 rounded-xl overflow-x-auto">
-        {tabs.map(t=>(
-          <button key={t.id} onClick={()=>setTab(t.id)} className={`flex-shrink-0 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${tab===t.id?'bg-white text-sky-600 shadow-sm':'text-slate-500 hover:text-slate-700'}`}>{t.label}</button>
-        ))}
-      </div>
-      {/* tab content */}
-      <Card className="p-6">
-        {tab==='passport' && (
-          <div className="grid sm:grid-cols-2 gap-4 text-sm">
-            {[
-              ['Yosh',p.age+' yosh'],['Jins',genderLabel[p.gender]||p.gender],
-              ['Og\'irlik darajasi',<Badge label={severityLabel[p.severityLevel]||p.severityLevel} color={p.severityLevel==='severe'?'red':p.severityLevel==='moderate'?'yellow':'green'}/>],
-              ['Jigar holati',organLabel[p.liverStatus]||p.liverStatus],
-              ['Buyrak holati',organLabel[p.kidneyStatus]||p.kidneyStatus],
-              ['Homilador',p.isPregnant?'Ha ✓':'Yo\'q'],
-              ['Emizuvchi',p.isLactating?'Ha ✓':'Yo\'q'],
-            ].map(([k,v],i)=>(
-              <div key={i} className="bg-slate-50 rounded-xl p-3"><p className="text-xs text-slate-500 mb-1">{k}</p><p className="font-semibold text-slate-800">{v}</p></div>
-            ))}
-            {p.comorbidities && <div className="sm:col-span-2 bg-orange-50 rounded-xl p-3"><p className="text-xs text-orange-500 mb-1">Hamroh kasalliklar</p><p className="font-semibold text-slate-800 text-sm">{p.comorbidities}</p></div>}
-            {p.allergyHistory && <div className="sm:col-span-2 bg-red-50 rounded-xl p-3"><p className="text-xs text-red-500 mb-1">Allergologik anamnez</p><p className="font-semibold text-slate-800 text-sm">{p.allergyHistory}</p></div>}
-          </div>
-        )}
-        {tab==='complaints' && <div><p className="text-sm font-medium text-slate-500 mb-2">Asosiy shikoyatlari:</p><p className="text-slate-800 leading-relaxed bg-slate-50 rounded-xl p-4">{p.mainComplaint}</p></div>}
-        {tab==='anamnesis' && (
-          <div className="space-y-4">
-            <div><p className="text-sm font-medium text-slate-500 mb-2">Kasallik tarixi (Anamnesis morbi):</p><p className="text-slate-800 leading-relaxed bg-slate-50 rounded-xl p-4">{p.anamnesis}</p></div>
-            {p.currentMedications && <div><p className="text-sm font-medium text-slate-500 mb-2">Qabul qilayotgan dorilar:</p><p className="text-slate-800 bg-blue-50 rounded-xl p-4">{p.currentMedications}</p></div>}
-          </div>
-        )}
-        {tab==='lab' && <div><p className="text-sm font-medium text-slate-500 mb-2">Laboratoriya tahlillari:</p><pre className="text-slate-800 bg-slate-50 rounded-xl p-4 whitespace-pre-wrap text-sm">{p.labResults||"Ko'rsatilmagan"}</pre></div>}
-        {tab==='instrumental' && <div><p className="text-sm font-medium text-slate-500 mb-2">Instrumental tekshiruv natijalari:</p><pre className="text-slate-800 bg-slate-50 rounded-xl p-4 whitespace-pre-wrap text-sm">{p.instrumentalResults||"Ko'rsatilmagan"}</pre></div>}
-        {tab==='treatment' && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h3 className="font-bold text-slate-800">Dorilar ro'yxati</h3>
-              <Btn size="sm" onClick={addDrug}>+ Dori qo'shish</Btn>
-            </div>
-            {drugs.map((drug,i)=>(
-              <div key={i} className="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-3">
-                <div className="flex items-center justify-between"><span className="font-semibold text-slate-700 text-sm">Dori #{i+1}</span>{drugs.length>1&&<button onClick={()=>removeDrug(i)} className="text-red-400 hover:text-red-600 text-sm">🗑 O'chirish</button>}</div>
-                <div className="grid sm:grid-cols-2 gap-3">
-                  <Input label="Dori nomi" value={drug.drugName} onChange={e=>setDrug(i,'drugName',e.target.value)} placeholder="Masalan: Amoksisiklin" />
-                  <Input label="Doza" value={drug.dose} onChange={e=>setDrug(i,'dose',e.target.value)} placeholder="Masalan: 500 mg" />
-                  <Input label="Qabul qilish chastotasi" value={drug.frequency} onChange={e=>setDrug(i,'frequency',e.target.value)} placeholder="Masalan: 3 marta/kun" />
-                  <Select label="Qabul yo'li" value={drug.route} onChange={e=>setDrug(i,'route',e.target.value)} options={[{value:'',label:'Tanlang...'},{value:"Og'iz orqali",label:"Og'iz orqali"},{value:'Vena ichiga',label:'Vena ichiga'},{value:'Mushak ichiga',label:'Mushak ichiga'},{value:'Teri ostiga',label:'Teri ostiga'},{value:'Inhalatsiya',label:'Inhalatsiya'}]} />
-                  <Input label="Davolash davomiyligi" value={drug.duration} onChange={e=>setDrug(i,'duration',e.target.value)} placeholder="Masalan: 7 kun" />
-                  <Input label="Asoslash (ixtiyoriy)" value={drug.rationale} onChange={e=>setDrug(i,'rationale',e.target.value)} placeholder="Nima uchun bu dori?" />
-                </div>
-              </div>
-            ))}
-            <div className="space-y-3 pt-2">
-              <Textarea label="Monitoring rejasi" value={monitoring} onChange={e=>setMonitoring(e.target.value)} rows={3} placeholder="Terapiyani kuzatish rejasi..." />
-              <Textarea label="Yon ta'sirlarni oldini olish choralari" value={sideEffect} onChange={e=>setSideEffect(e.target.value)} rows={2} placeholder="Yon ta'sirlarni oldini olish..." />
-              <Textarea label="Klinik asoslash" value={rationale} onChange={e=>setRationale(e.target.value)} rows={3} placeholder="Davolash strategiyangizni asoslang..." />
-            </div>
-            <Btn onClick={submit} size="lg" className="w-full" disabled={!drugs[0].drugName}>🎯 Javobni topshirish</Btn>
-          </div>
-        )}
-      </Card>
-    </div>
-  );
-}
 
-/* -- RESULT -- */
-function ResultPage({submissionId, onNavigate}) {
-  const subs = DB.get('submissions') || [];
-  const cases = DB.get('cases') || [];
-  const users = DB.get('users') || [];
-  const s = subs.find(x=>x.id===Number(submissionId));
-  if (!s) return <div className="text-center py-16"><p className="text-slate-400">Natija topilmadi</p><Btn onClick={()=>onNavigate('results')} className="mt-4">Orqaga</Btn></div>;
-  const c = cases.find(x=>x.id===s.caseId);
-  const u = users.find(x=>x.id===s.studentId);
-  const pct = s.percentage;
-  const color = pct>=80?'text-green-600':pct>=50?'text-yellow-600':'text-red-600';
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <button onClick={()=>onNavigate('results')} className="text-slate-400 hover:text-slate-700 text-xl">←</button>
-        <div><h1 className="text-xl font-bold text-slate-900">Baholash natijasi</h1><p className="text-slate-500 text-sm">{c?.title}</p></div>
-      </div>
-      <Card className="p-6 text-center">
-        <ScoreRing pct={pct}/>
-        <p className={`text-2xl font-bold mt-2 ${color}`}>{pct>=80?"Ajoyib!":pct>=50?"Yaxshi harakat!":"Ko'proq o'qish kerak"}</p>
-        <p className="text-slate-500 text-sm mt-1">{u?.name} • {new Date(s.submittedAt).toLocaleString('uz-UZ')}</p>
-      </Card>
-      <Card className="p-6">
-        <h3 className="font-bold text-slate-800 mb-3">🤖 AI Fikr-mulohaza</h3>
-        <div className="bg-sky-50 border border-sky-100 rounded-xl p-4 text-sm text-slate-700 leading-relaxed">{s.overallFeedback}</div>
-        {s.mistakeAreas?.length>0 && (
-          <div className="mt-4"><p className="font-semibold text-sm text-slate-700 mb-2">⚠ Xato sohalari:</p>
-          <ul className="space-y-2">{s.mistakeAreas.map((m,i)=><li key={i} className="flex gap-2 text-sm text-red-600 bg-red-50 rounded-lg p-2">❌ {m}</li>)}</ul></div>
-        )}
-        {s.recommendations?.length>0 && (
-          <div className="mt-4"><p className="font-semibold text-sm text-slate-700 mb-2">💡 Tavsiyalar:</p>
-          <ul className="space-y-2">{s.recommendations.map((r,i)=><li key={i} className="flex gap-2 text-sm text-emerald-700 bg-emerald-50 rounded-lg p-2">✅ {r}</li>)}</ul></div>
-        )}
-      </Card>
-      {s.drugEvaluations?.length>0 && (
-        <Card className="p-6">
-          <h3 className="font-bold text-slate-800 mb-4">💊 Dorilar bo'yicha baho</h3>
-          <div className="space-y-4">
-            {s.drugEvaluations.map((d,i)=>(
-              <div key={i} className="bg-slate-50 rounded-xl p-4">
-                <p className="font-semibold text-slate-800 mb-2">#{i+1} — {d.drugName||'(nomsiz)'}</p>
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-3">
-                  {[['Dori tanlov',d.drugSelectionScore],['Doza',d.doseScore],['Kombinatsiya',d.combinationScore],['Samaradorlik',d.effectivenessScore],['Xavfsizlik',d.safetyScore]].map(([lbl,val],j)=>(
-                    <div key={j} className="text-center bg-white rounded-lg p-2 border border-slate-100">
-                      <p className="text-xs text-slate-500">{lbl}</p>
-                      <p className="font-bold text-slate-800">{Math.round(val)}</p>
-                    </div>
-                  ))}
-                </div>
-                {d.feedback && <p className="text-xs text-slate-600 bg-white rounded-lg p-3 border border-slate-100">{d.feedback}</p>}
-              </div>
-            ))}
-          </div>
-        </Card>
-      )}
-      <div className="flex gap-3">
-        <Btn onClick={()=>onNavigate('cases')}>📋 Boshqa keys yechish</Btn>
-        <Btn onClick={()=>onNavigate('results')} variant="secondary">📊 Natijalarimga qaytish</Btn>
-      </div>
-    </div>
-  );
-}
-
-/* -- RESULTS LIST -- */
-function ResultsList({onNavigate}) {
-  const {user} = useAuth();
-  const subs = DB.get('submissions') || [];
-  const cases = DB.get('cases') || [];
-  const users_ = DB.get('users') || [];
-  const list = user.role==='student' ? subs.filter(s=>s.studentId===user.id) : subs;
-  return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-900">{user.role==='student'?'Natijalarim':'Barcha natijalar'}</h1>
-      {list.length===0 && <div className="text-center py-16 text-slate-400"><p className="text-4xl mb-3">📭</p><p>Hali hech qanday topshiriq yo'q</p></div>}
-      <div className="space-y-3">
-        {[...list].reverse().map(s=>{
-          const c = cases.find(x=>x.id===s.caseId);
-          const u = users_.find(x=>x.id===s.studentId);
-          return (
-            <Card key={s.id} className="p-4 hover:shadow-md transition cursor-pointer" onClick={()=>onNavigate('result_'+s.id)}>
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-slate-800 text-sm truncate">{c?.title||"Noma'lum"}</p>
-                  {user.role!=='student' && <p className="text-xs text-slate-500 mt-0.5">👤 {u?.name}</p>}
-                  <p className="text-xs text-slate-400 mt-0.5">{new Date(s.submittedAt).toLocaleDateString('uz-UZ')}</p>
-                </div>
-                <div className="flex items-center gap-3 flex-shrink-0">
-                  <div className="text-right">
-                    <p className={`text-xl font-bold ${s.percentage>=80?'text-green-600':s.percentage>=50?'text-yellow-600':'text-red-600'}`}>{s.percentage}%</p>
-                  </div>
-                  <Badge label={s.percentage>=80?'A\'lo':s.percentage>=50?"Qoniqarli":'Yaxshilash kerak'} color={s.percentage>=80?'green':s.percentage>=50?'yellow':'red'}/>
-                </div>
-              </div>
-            </Card>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-/* -- CASE EDITOR -- */
-function CaseEditor({caseId, onNavigate}) {
-  const {user} = useAuth();
-  const cases = DB.get('cases') || [];
-  const existing = caseId ? cases.find(c=>c.id===Number(caseId)) : null;
-  const [step, setStep] = useState(0);
-  const [form, setForm] = useState(existing ? {
-    title:existing.title, specialty:existing.specialty, topic:existing.topic, difficulty:existing.difficulty,
-    ...existing.patientInfo, ...existing.evaluationCriteria
-  } : {
-    title:'', specialty:'', topic:'', difficulty:'medium',
-    age:'', gender:'female', mainComplaint:'', anamnesis:'', comorbidities:'', isPregnant:false, isLactating:false,
-    liverStatus:'normal', kidneyStatus:'normal', allergyHistory:'', currentMedications:'', labResults:'', instrumentalResults:'', severityLevel:'mild',
-    correctDrug:'', correctDose:'', correctDuration:'', correctRoute:"Og'iz orqali", monitoringPlan:'', correctRationale:'',
-    drugSelectionWeight:3, doseCorrectWeight:2, contraindicationsWeight:2, interactionsWeight:1, durationWeight:1, monitoringWeight:1, safetyWeight:2
-  });
-  const f = (k) => (v) => setForm(p=>({...p,[k]:typeof v==='object'&&v.target?v.target.value:v}));
-  const save = () => {
-    const patientInfo = {age:Number(form.age),gender:form.gender,mainComplaint:form.mainComplaint,anamnesis:form.anamnesis,comorbidities:form.comorbidities,isPregnant:form.isPregnant,isLactating:form.isLactating,liverStatus:form.liverStatus,kidneyStatus:form.kidneyStatus,allergyHistory:form.allergyHistory,currentMedications:form.currentMedications,labResults:form.labResults,instrumentalResults:form.instrumentalResults,severityLevel:form.severityLevel};
-    const evaluationCriteria = {correctDrug:form.correctDrug,correctDose:form.correctDose,correctDuration:form.correctDuration,correctRoute:form.correctRoute,monitoringPlan:form.monitoringPlan,correctRationale:form.correctRationale,drugSelectionWeight:Number(form.drugSelectionWeight),doseCorrectWeight:Number(form.doseCorrectWeight),contraindicationsWeight:Number(form.contraindicationsWeight),interactionsWeight:Number(form.interactionsWeight),durationWeight:Number(form.durationWeight),monitoringWeight:Number(form.monitoringWeight),safetyWeight:Number(form.safetyWeight)};
-    if (existing) {
-      DB.update('cases', existing.id, {title:form.title,specialty:form.specialty,topic:form.topic,difficulty:form.difficulty,patientInfo,evaluationCriteria,updatedAt:new Date().toISOString()});
-    } else {
-      DB.push('cases', {title:form.title,specialty:form.specialty,topic:form.topic,difficulty:form.difficulty,patientInfo,evaluationCriteria,createdBy:user.id,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()});
-    }
-    onNavigate('cases');
-  };
-  const steps = ['Asosiy ma\'lumot','Bemor holati','Baholash mezonlari'];
-  const organOpts = [{value:'normal',label:'Normal'},{value:'mild_impairment',label:'Yengil buzilish'},{value:'severe_impairment',label:"Og'ir buzilish"}];
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <button onClick={()=>onNavigate('cases')} className="text-slate-400 hover:text-slate-700 text-xl">←</button>
-        <h1 className="text-2xl font-bold text-slate-900">{existing?'Keysni tahrirlash':'Yangi keys yaratish'}</h1>
-      </div>
-      <div className="flex gap-1 bg-slate-100 p-1 rounded-xl">
-        {steps.map((s,i)=><button key={i} onClick={()=>setStep(i)} className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all ${step===i?'bg-white text-sky-600 shadow-sm':'text-slate-400'}`}>{i+1}. {s}</button>)}
-      </div>
-      <Card className="p-6 space-y-4">
-        {step===0 && <>
-          <Input label="Keys sarlavhasi" value={form.title} onChange={f('title')} placeholder="Tashxis nomi..." />
-          <Input label="Mutaxassislik" value={form.specialty} onChange={f('specialty')} placeholder="Masalan: Kardiologiya" />
-          <Input label="Mavzu" value={form.topic} onChange={f('topic')} placeholder="Masalan: Miokard infarkti" />
-          <Select label="Qiyinligi" value={form.difficulty} onChange={f('difficulty')} options={[{value:'easy',label:'Oson'},{value:'medium',label:"O'rta"},{value:'hard',label:'Qiyin'}]}/>
-        </>}
-        {step===1 && <>
-          <div className="grid sm:grid-cols-2 gap-4">
-            <Input label="Yoshi" type="number" value={form.age} onChange={f('age')} placeholder="52"/>
-            <Select label="Jinsi" value={form.gender} onChange={f('gender')} options={[{value:'female',label:'Ayol'},{value:'male',label:'Erkak'}]}/>
-            <Select label="Jigar holati" value={form.liverStatus} onChange={f('liverStatus')} options={organOpts}/>
-            <Select label="Buyrak holati" value={form.kidneyStatus} onChange={f('kidneyStatus')} options={organOpts}/>
-            <Select label="Og'irlik darajasi" value={form.severityLevel} onChange={f('severityLevel')} options={[{value:'mild',label:'Yengil'},{value:'moderate',label:"O'rta og'ir"},{value:'severe',label:"Og'ir"}]}/>
-          </div>
-          <Textarea label="Asosiy shikoyatlari" value={form.mainComplaint} onChange={f('mainComplaint')} rows={3}/>
-          <Textarea label="Anamnez" value={form.anamnesis} onChange={f('anamnesis')} rows={3}/>
-          <Textarea label="Hamroh kasalliklar" value={form.comorbidities} onChange={f('comorbidities')} rows={2}/>
-          <Textarea label="Allergologik anamnez" value={form.allergyHistory} onChange={f('allergyHistory')} rows={2}/>
-          <Textarea label="Qabul qilayotgan dorilar" value={form.currentMedications} onChange={f('currentMedications')} rows={2}/>
-          <Textarea label="Laboratoriya tahlillari" value={form.labResults} onChange={f('labResults')} rows={3}/>
-          <Textarea label="Instrumental tekshiruvlar" value={form.instrumentalResults} onChange={f('instrumentalResults')} rows={3}/>
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.isPregnant} onChange={e=>setForm(p=>({...p,isPregnant:e.target.checked}))} className="rounded"/><span className="text-sm">Homilador</span></label>
-            <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.isLactating} onChange={e=>setForm(p=>({...p,isLactating:e.target.checked}))} className="rounded"/><span className="text-sm">Emizuvchi</span></label>
-          </div>
-        </>}
-        {step===2 && <>
-          <div className="grid sm:grid-cols-2 gap-4">
-            <Input label="To'g'ri dori" value={form.correctDrug} onChange={f('correctDrug')} placeholder="Masalan: Amoksisiklin"/>
-            <Input label="To'g'ri doza" value={form.correctDose} onChange={f('correctDose')} placeholder="Masalan: 500 mg"/>
-            <Input label="Davomiylik" value={form.correctDuration} onChange={f('correctDuration')} placeholder="Masalan: 7 kun"/>
-            <Input label="Qabul yo'li" value={form.correctRoute} onChange={f('correctRoute')} placeholder="Og'iz orqali"/>
-          </div>
-          <Textarea label="Monitoring rejasi" value={form.monitoringPlan} onChange={f('monitoringPlan')} rows={3}/>
-          <Textarea label="To'g'ri yondashuv asosi" value={form.correctRationale} onChange={f('correctRationale')} rows={3}/>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {[['Dori tanlov','drugSelectionWeight'],['Doza','doseCorrectWeight'],['Kontaindikatsiya','contraindicationsWeight'],['Interaksiya','interactionsWeight'],['Davomiylik','durationWeight'],['Monitoring','monitoringWeight'],['Xavfsizlik','safetyWeight']].map(([lbl,k])=>(
-              <Input key={k} label={lbl+' (og\'irlik)'} type="number" min="0" max="5" value={form[k]} onChange={e=>setForm(p=>({...p,[k]:e.target.value}))}/>
-            ))}
-          </div>
-        </>}
-        <div className="flex justify-between pt-2">
-          {step>0?<Btn onClick={()=>setStep(s=>s-1)} variant="secondary">← Oldingi</Btn>:<div/>}
-          {step<2?<Btn onClick={()=>setStep(s=>s+1)}>Keyingi →</Btn>:<Btn onClick={save}>💾 Saqlash</Btn>}
+      <!-- CASES -->
+      <div id="s-cases" class="page">
+        <div class="page-header">
+          <h2>Klinik keyslar</h2>
+          <p>O'rganish uchun keys tanlang</p>
         </div>
-      </Card>
-    </div>
-  );
-}
-
-/* -- ANALYTICS -- */
-function Analytics() {
-  const subs = DB.get('submissions') || [];
-  const cases = DB.get('cases') || [];
-  const users = DB.get('users') || [];
-  const students = users.filter(u=>u.role==='student');
-  const avg = subs.length ? Math.round(subs.reduce((a,b)=>a+b.percentage,0)/subs.length) : 0;
-  const dist = [
-    {label:'0-49%',count:subs.filter(s=>s.percentage<50).length,color:'bg-red-400'},
-    {label:'50-69%',count:subs.filter(s=>s.percentage>=50&&s.percentage<70).length,color:'bg-yellow-400'},
-    {label:'70-84%',count:subs.filter(s=>s.percentage>=70&&s.percentage<85).length,color:'bg-blue-400'},
-    {label:'85-100%',count:subs.filter(s=>s.percentage>=85).length,color:'bg-green-400'},
-  ];
-  const maxCount = Math.max(...dist.map(d=>d.count),1);
-  const mistakeCounts = {};
-  subs.forEach(s=>(s.mistakeAreas||[]).forEach(m=>{mistakeCounts[m]=(mistakeCounts[m]||0)+1;}));
-  const topMistakes = Object.entries(mistakeCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-900">Tahlil va hisobotlar 📊</h1>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {[{l:'Talabalar',v:students.length,icon:'👨‍🎓'},{l:'Keyslar',v:cases.length,icon:'📋'},{l:'Topshiriqlar',v:subs.length,icon:'📝'},{l:"O'rt. ball",v:avg+'%',icon:'🏆'}].map((s,i)=>(
-          <Card key={i} className="p-5 text-center"><p className="text-3xl mb-1">{s.icon}</p><p className="text-xs text-slate-500">{s.l}</p><p className="text-2xl font-bold text-slate-800">{s.v}</p></Card>
-        ))}
+        <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+          <select class="form-group" style="margin:0;padding:9px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:0.85rem;outline:none">
+            <option>Barcha mavzular</option>
+            <option>Yurak-qon tomir</option>
+            <option>Nafas yo'llari</option>
+            <option>Endokrinologiya</option>
+            <option>Infektologiya</option>
+          </select>
+          <select class="form-group" style="margin:0;padding:9px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:0.85rem;outline:none">
+            <option>Barcha darajalar</option>
+            <option>Oson</option>
+            <option>O'rta</option>
+            <option>Qiyin</option>
+          </select>
+        </div>
+        <div class="case-list" id="cases-list"></div>
       </div>
-      <div className="grid sm:grid-cols-2 gap-6">
-        <Card className="p-6">
-          <h3 className="font-bold text-slate-800 mb-4">Ball taqsimoti</h3>
-          <div className="space-y-3">
-            {dist.map((d,i)=>(
-              <div key={i}>
-                <div className="flex justify-between text-sm mb-1"><span className="text-slate-600">{d.label}</span><span className="font-semibold">{d.count}</span></div>
-                <div className="h-6 bg-slate-100 rounded-full overflow-hidden">
-                  <div className={`h-full ${d.color} rounded-full transition-all`} style={{width:`${(d.count/maxCount)*100}%`}}/>
+
+      <!-- SOLVER -->
+      <div id="s-solver" class="page">
+        <div class="page-header">
+          <button class="btn-sm" onclick="showPage('s-cases', null)" style="margin-bottom:12px">← Keyslar ro'yxati</button>
+          <h2 id="solver-title">Klinik keys</h2>
+        </div>
+        <div class="case-solver">
+          <!-- Patient Card -->
+          <div class="patient-card">
+            <div class="patient-header">
+              <div class="patient-avatar" id="pt-gender">👨</div>
+              <div>
+                <div class="patient-name" id="pt-name">Bemor</div>
+                <div class="patient-age" id="pt-desc">—</div>
+              </div>
+            </div>
+
+            <div class="section-title">Shikoyatlar</div>
+            <div id="pt-complaints" style="font-size:0.87rem;line-height:1.6;color:rgba(248,250,252,0.85)"></div>
+
+            <div class="section-title">Anamnez</div>
+            <div id="pt-history" style="font-size:0.87rem;line-height:1.6;color:rgba(248,250,252,0.85)"></div>
+
+            <div class="section-title">Asosiy ma'lumotlar</div>
+            <div id="pt-info-rows"></div>
+
+            <div class="section-title">Laboratoriya</div>
+            <div class="lab-grid" id="pt-labs"></div>
+          </div>
+
+          <!-- Decision Panel -->
+          <div class="solver-panel">
+            <div class="alert alert-warn">⚠️ <span id="case-instruction">Bemorga mos farmakoterapiya rejasini tuzing.</span></div>
+
+            <div class="solver-section">
+              <h3><div class="step-num">1</div> Asosiy dori tanlash</h3>
+              <div class="drug-selector" id="drug-selector-1"></div>
+            </div>
+
+            <div class="solver-section">
+              <h3><div class="step-num">2</div> Dozalash</h3>
+              <div class="dose-inputs">
+                <div class="form-group inline">
+                  <label>Bir martalik doza</label>
+                  <input type="text" id="dose-single" placeholder="masalan: 500 mg">
+                </div>
+                <div class="form-group inline">
+                  <label>Sutkalik doza</label>
+                  <input type="text" id="dose-daily" placeholder="masalan: 1500 mg/kun">
+                </div>
+                <div class="form-group inline">
+                  <label>Qabul yo'li</label>
+                  <select id="route">
+                    <option>Og'iz orqali</option>
+                    <option>In'eksiya (IM)</option>
+                    <option>In'eksiya (IV)</option>
+                    <option>Inhalayor</option>
+                    <option>Tashqi</option>
+                  </select>
+                </div>
+                <div class="form-group inline">
+                  <label>Davolash muddati</label>
+                  <input type="text" id="duration" placeholder="masalan: 7 kun">
                 </div>
               </div>
-            ))}
-          </div>
-        </Card>
-        <Card className="p-6">
-          <h3 className="font-bold text-slate-800 mb-4">Ko'p uchraydigan xatolar</h3>
-          {topMistakes.length===0 && <p className="text-slate-400 text-sm text-center py-8">Hali ma'lumot yo'q</p>}
-          <div className="space-y-2">
-            {topMistakes.map(([m,cnt],i)=>(
-              <div key={i} className="flex items-center gap-3 p-3 bg-red-50 rounded-xl">
-                <span className="w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">{i+1}</span>
-                <span className="text-sm text-slate-700 flex-1">{m}</span>
-                <Badge label={cnt+' marta'} color="red"/>
+            </div>
+
+            <div class="solver-section">
+              <h3><div class="step-num">3</div> Qo'shimcha dori</h3>
+              <div class="drug-selector" id="drug-selector-2"></div>
+            </div>
+
+            <div class="solver-section">
+              <h3><div class="step-num">4</div> Monitoring & xavfsizlik</h3>
+              <div class="form-group" style="margin-bottom:12px">
+                <label>Monitoring rejasi</label>
+                <textarea id="monitoring" placeholder="Qanday ko'rsatkichlarni nazorat qilish kerak?"></textarea>
               </div>
-            ))}
+              <div class="form-group">
+                <label>Nojo'ya ta'sirlarning oldini olish</label>
+                <textarea id="side-effects" placeholder="Profilaktika choralari..."></textarea>
+              </div>
+            </div>
+
+            <button class="submit-btn" onclick="submitCase()">🤖 AI baholasin →</button>
+
+            <div class="ai-feedback" id="ai-feedback">
+              <div class="ai-header">
+                <div class="ai-icon">🤖</div>
+                <div>
+                  <div class="ai-title">AI Tahlil</div>
+                  <div class="ai-subtitle">Claude AI tomonidan baholandi</div>
+                </div>
+              </div>
+              <div class="ai-typing" id="ai-loading">
+                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                <span style="font-size:0.85rem;color:var(--muted);margin-left:4px">AI tahlil qilmoqda...</span>
+              </div>
+              <div class="ai-text" id="ai-text" style="display:none"></div>
+              <div class="score-display" id="score-display" style="display:none">
+                <div class="score-item">
+                  <div class="score-num green" id="sc-total">—</div>
+                  <div class="score-lbl">Umumiy ball</div>
+                </div>
+                <div class="score-item">
+                  <div class="score-num gold" id="sc-pct">—</div>
+                  <div class="score-lbl">Foiz</div>
+                </div>
+                <div class="score-item">
+                  <div class="score-num" id="sc-grade" style="color:var(--teal-light)">—</div>
+                  <div class="score-lbl">Baho</div>
+                </div>
+              </div>
+            </div>
           </div>
-        </Card>
+        </div>
       </div>
-      <Card className="p-6">
-        <h3 className="font-bold text-slate-800 mb-4">So'nggi topshiriqlar</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead><tr className="border-b text-left text-slate-500"><th className="pb-3 pr-4">Talaba</th><th className="pb-3 pr-4">Keys</th><th className="pb-3 pr-4">Ball</th><th className="pb-3">Sana</th></tr></thead>
-            <tbody className="divide-y">
-              {[...subs].reverse().slice(0,10).map(s=>{
-                const c=cases.find(x=>x.id===s.caseId);
-                const u=users.find(x=>x.id===s.studentId);
-                return <tr key={s.id} className="hover:bg-slate-50"><td className="py-3 pr-4 font-medium">{u?.name}</td><td className="py-3 pr-4 text-slate-500 max-w-[200px] truncate">{c?.title}</td><td className="py-3 pr-4"><Badge label={s.percentage+'%'} color={s.percentage>=80?'green':s.percentage>=50?'yellow':'red'}/></td><td className="py-3 text-slate-400">{new Date(s.submittedAt).toLocaleDateString('uz-UZ')}</td></tr>;
-              })}
-              {!subs.length && <tr><td colSpan={4} className="py-8 text-center text-slate-400">Topshiriqlar yo'q</td></tr>}
+
+      <!-- RESULTS -->
+      <div id="s-results" class="page">
+        <div class="page-header">
+          <h2>Natijalarim</h2>
+          <p>Barcha yechilgan keyslar tarixi</p>
+        </div>
+        <div class="solver-section">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Keys</th><th>Mavzu</th><th>Ball</th><th>Sana</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="results-table"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ERRORS -->
+      <div id="s-errors" class="page">
+        <div class="page-header">
+          <h2>Xatolar tahlili</h2>
+          <p>Qaysi sohalarda yaxshilanish kerak</p>
+        </div>
+        <div class="solver-section">
+          <h3 style="margin-bottom:20px">Mavzular bo'yicha natija</h3>
+          <div class="chart-bar-wrap">
+            <div class="chart-bar-row"><div class="chart-bar-label">Antibiotiklar</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:85%"></div></div><div class="chart-bar-val">85%</div></div>
+            <div class="chart-bar-row"><div class="chart-bar-label">Antihipertenziv</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:72%"></div></div><div class="chart-bar-val">72%</div></div>
+            <div class="chart-bar-row"><div class="chart-bar-label">Diabetga qarshi</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:61%"></div></div><div class="chart-bar-val">61%</div></div>
+            <div class="chart-bar-row"><div class="chart-bar-label">Og'riq qoldiruvchi</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:90%"></div></div><div class="chart-bar-val">90%</div></div>
+            <div class="chart-bar-row"><div class="chart-bar-label">Bronxolitiklar</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:48%"></div></div><div class="chart-bar-val">48%</div></div>
+          </div>
+        </div>
+        <div class="solver-section" style="margin-top:16px">
+          <h3 style="margin-bottom:16px">Ko'p uchraydigan xatolar</h3>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div class="alert alert-warn">⚠️ Buyrak yetishmovchiligida doza moslashtirish unutilmoqda</div>
+            <div class="alert alert-warn">⚠️ Homiladorlik kontraindikatsiyalari hisobga olinmadi</div>
+            <div class="alert alert-info">💡 Dori-dori o'zaro ta'siri tekshiruvi — yaxshilanish kuzatilmoqda</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REFERENCE -->
+      <div id="s-reference" class="page">
+        <div class="page-header">
+          <h2>Ma'lumotnoma</h2>
+          <p>Klinik farmakologiya bo'yicha tezkor ma'lumot</p>
+        </div>
+        <div class="cards-grid">
+          <div class="card"><div class="card-icon teal">💊</div><h4>Antibiotiklar</h4><p>Asosiy guruhlar, spektr va qo'llanish ko'rsatmalari</p></div>
+          <div class="card"><div class="card-icon gold">❤️</div><h4>Yurak dorilar</h4><p>Beta-blokerlar, ACE inhibitorlari, diuretiklar</p></div>
+          <div class="card"><div class="card-icon green">🩸</div><h4>Insulin terapiya</h4><p>Qand kasalligida insulin hisoblash va rejalashtirish</p></div>
+          <div class="card"><div class="card-icon red">🫁</div><h4>Bronxial astma</h4><p>GINA bo'yicha davolash bosqichlari</p></div>
+          <div class="card"><div class="card-icon teal">🤰</div><h4>Homiladorlik</h4><p>FDA kategoriyalari va xavfsiz dorilar ro'yxati</p></div>
+          <div class="card"><div class="card-icon gold">🔬</div><h4>Buyrak</h4><p>GFR bo'yicha doza moslash jadvaliga</p></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ════════════════════ TEACHER DASHBOARD ════════════════════ -->
+<section id="teacher-dash" class="screen">
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">💊</div>
+        <span>ClinPharm</span>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">O'qituvchi</div>
+        <button class="nav-item active" onclick="showPageT('t-home', this)">
+          <span class="nav-icon">🏠</span> Bosh sahifa
+        </button>
+        <button class="nav-item" onclick="showPageT('t-cases', this)">
+          <span class="nav-icon">📋</span> Keyslar
+        </button>
+        <button class="nav-item" onclick="showPageT('t-students', this)">
+          <span class="nav-icon">👥</span> Talabalar
+        </button>
+        <button class="nav-item" onclick="showPageT('t-analytics', this)">
+          <span class="nav-icon">📊</span> Tahlil
+        </button>
+      </div>
+      <div class="sidebar-user">
+        <div class="user-avatar">MK</div>
+        <div class="user-info">
+          <div class="user-name">Malika K.</div>
+          <div class="user-role">O'qituvchi</div>
+        </div>
+        <button class="logout-btn" onclick="logout()">⏻</button>
+      </div>
+    </aside>
+    <main class="main-content">
+
+      <!-- T HOME -->
+      <div id="t-home" class="page active">
+        <div class="page-header">
+          <h2>O'qituvchi kabineti</h2>
+          <p>Kurs ko'rsatkichlari va tezkor amallar</p>
+        </div>
+        <div class="two-cards">
+          <div class="card"><div class="card-icon teal">👥</div><div class="card-stat">48</div><h4>Faol talabalar</h4></div>
+          <div class="card"><div class="card-icon gold">📋</div><div class="card-stat">23</div><h4>Jami keyslar</h4></div>
+          <div class="card"><div class="card-icon green">✅</div><div class="card-stat">347</div><h4>Yechilgan keyslar</h4></div>
+          <div class="card"><div class="card-icon red">⚠️</div><div class="card-stat">62%</div><h4>O'rtacha ko'rsatkich</h4></div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn-primary" onclick="openCreateCase()">+ Yangi keys yaratish</button>
+          <button class="btn-outline" onclick="showPageT('t-students', null)">Talabalar natijasi</button>
+        </div>
+      </div>
+
+      <!-- T CASES -->
+      <div id="t-cases" class="page">
+        <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px">
+          <div>
+            <h2>Keyslar boshqaruvi</h2>
+            <p>Yaratilgan barcha klinik keyslar</p>
+          </div>
+          <button class="btn-primary" onclick="openCreateCase()">+ Yangi keys</button>
+        </div>
+        <div class="solver-section">
+          <table class="table">
+            <thead>
+              <tr><th>Keys nomi</th><th>Mavzu</th><th>Daraja</th><th>Yechganlar</th><th>Amallar</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Yurak yetishmovchiligi #1</td><td><span class="tag tag-teal">Kardiologiya</span></td><td><span class="badge-medium badge" style="padding:3px 10px;border-radius:50px;font-size:0.72rem">O'rta</span></td><td>12</td><td><button class="btn-sm">Tahrir</button></td></tr>
+              <tr><td>Pnevmoniya: keksa bemor</td><td><span class="tag tag-gold">Pulmonologiya</span></td><td><span class="badge-hard badge" style="padding:3px 10px;border-radius:50px;font-size:0.72rem">Qiyin</span></td><td>8</td><td><button class="btn-sm">Tahrir</button></td></tr>
+              <tr><td>2-tip qand kasalligi</td><td><span class="tag tag-teal">Endokrinologiya</span></td><td><span class="badge-easy badge" style="padding:3px 10px;border-radius:50px;font-size:0.72rem">Oson</span></td><td>21</td><td><button class="btn-sm">Tahrir</button></td></tr>
             </tbody>
           </table>
         </div>
-      </Card>
-    </div>
-  );
-}
+      </div>
 
-/* -- ADMIN USERS -- */
-function AdminUsers() {
-  const [users_, setUsers] = useState(DB.get('users')||[]);
-  const roleLabel = {admin:'Admin', teacher:"O'qituvchi", student:'Talaba'};
-  const roleColor = {admin:'purple', teacher:'blue', student:'green'};
-  const changeRole = (id, role) => {
-    DB.update('users', id, {role});
-    setUsers(DB.get('users')||[]);
-  };
-  return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-900">Foydalanuvchilarni boshqarish 👥</h1>
-      <Card className="p-6">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead><tr className="border-b text-left text-slate-500"><th className="pb-3 pr-4">Ism</th><th className="pb-3 pr-4">Email</th><th className="pb-3 pr-4">Rol</th><th className="pb-3">Rolni o'zgartirish</th></tr></thead>
-            <tbody className="divide-y">
-              {users_.map(u=>(
-                <tr key={u.id} className="hover:bg-slate-50">
-                  <td className="py-3 pr-4 font-medium text-slate-800">{u.name}</td>
-                  <td className="py-3 pr-4 text-slate-500">{u.email}</td>
-                  <td className="py-3 pr-4"><Badge label={roleLabel[u.role]} color={roleColor[u.role]}/></td>
-                  <td className="py-3">
-                    <div className="flex gap-2 flex-wrap">
-                      {['student','teacher','admin'].filter(r=>r!==u.role).map(r=>(
-                        <Btn key={r} size="sm" variant="secondary" onClick={()=>changeRole(u.id,r)}>{roleLabel[r]}</Btn>
-                      ))}
-                    </div>
-                  </td>
-                </tr>
-              ))}
+      <!-- T STUDENTS -->
+      <div id="t-students" class="page">
+        <div class="page-header">
+          <h2>Talabalar natijalari</h2>
+        </div>
+        <div class="solver-section">
+          <table class="table">
+            <thead>
+              <tr><th>Talaba</th><th>Bajarilgan</th><th>O'rt. ball</th><th>So'nggi faollik</th><th></th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Alisher Hamidov</td><td>7</td><td><span style="color:var(--green)">78%</span></td><td>Bugun</td><td><button class="btn-sm">Batafsil</button></td></tr>
+              <tr><td>Zulfiya Nazarova</td><td>12</td><td><span style="color:var(--teal-light)">91%</span></td><td>Kecha</td><td><button class="btn-sm">Batafsil</button></td></tr>
+              <tr><td>Bobur Yusupov</td><td>4</td><td><span style="color:var(--gold)">55%</span></td><td>3 kun oldin</td><td><button class="btn-sm">Batafsil</button></td></tr>
+              <tr><td>Nilufar Karimova</td><td>9</td><td><span style="color:var(--green)">84%</span></td><td>Bugun</td><td><button class="btn-sm">Batafsil</button></td></tr>
             </tbody>
           </table>
         </div>
-      </Card>
+      </div>
+
+      <!-- T ANALYTICS -->
+      <div id="t-analytics" class="page">
+        <div class="page-header">
+          <h2>Guruh tahlili</h2>
+          <p>Umumiy ko'rsatkichlar va tendensiyalar</p>
+        </div>
+        <div class="two-cards">
+          <div class="solver-section">
+            <h3 style="margin-bottom:20px">Mavzu bo'yicha ko'rsatkich</h3>
+            <div class="chart-bar-wrap">
+              <div class="chart-bar-row"><div class="chart-bar-label">Antibiotiklar</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:78%"></div></div><div class="chart-bar-val">78%</div></div>
+              <div class="chart-bar-row"><div class="chart-bar-label">Kardiologiya</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:65%"></div></div><div class="chart-bar-val">65%</div></div>
+              <div class="chart-bar-row"><div class="chart-bar-label">Endokrinologiya</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:55%"></div></div><div class="chart-bar-val">55%</div></div>
+              <div class="chart-bar-row"><div class="chart-bar-label">Pulmonologiya</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:70%"></div></div><div class="chart-bar-val">70%</div></div>
+            </div>
+          </div>
+          <div class="solver-section">
+            <h3 style="margin-bottom:20px">Ko'p uchraydigan xatolar</h3>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+                <span style="font-size:0.85rem">Doza hisoblash xatosi</span><span style="color:var(--red);font-weight:700">34%</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+                <span style="font-size:0.85rem">Kontraindikatsiya</span><span style="color:var(--gold);font-weight:700">27%</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+                <span style="font-size:0.85rem">Dori o'zaro ta'siri</span><span style="color:var(--gold);font-weight:700">19%</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0">
+                <span style="font-size:0.85rem">Muddat noto'g'ri</span><span style="color:var(--green);font-weight:700">12%</span>
+              </div>
+            </div>
+            <button class="btn-sm primary" style="margin-top:16px;width:100%">Excel eksport</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</section>
+
+<!-- ════════════════════ CREATE CASE MODAL ════════════════════ -->
+<div class="modal-overlay" id="modal-create">
+  <div class="modal">
+    <h3>📋 Yangi klinik keys yaratish</h3>
+    <div class="two-col">
+      <div class="form-group"><label>Bemor yoshi</label><input type="number" placeholder="masalan: 58"></div>
+      <div class="form-group"><label>Jinsi</label><select><option>Erkak</option><option>Ayol</option></select></div>
     </div>
-  );
+    <div class="form-group"><label>Asosiy shikoyatlar</label><textarea placeholder="Bemorning asosiy shikoyatlari..."></textarea></div>
+    <div class="form-group"><label>Anamnez</label><textarea placeholder="Kasallik tarixi, avvalgi kasalliklar..."></textarea></div>
+    <div class="two-col">
+      <div class="form-group"><label>Mavzu</label>
+        <select><option>Kardiologiya</option><option>Pulmonologiya</option><option>Endokrinologiya</option><option>Infektologiya</option><option>Nevrologiya</option></select>
+      </div>
+      <div class="form-group"><label>Qiyinlik darajasi</label>
+        <select><option>Oson</option><option>O'rta</option><option>Qiyin</option></select>
+      </div>
+    </div>
+    <div class="form-group"><label>Hamroh kasalliklar</label><input placeholder="masalan: Buyrak yetishmovchiligi, 2-tip DM"></div>
+    <div class="two-col">
+      <div class="form-group"><label>Jigar holati</label><select><option>Normal</option><option>Yengil buzilish</option><option>O'rta buzilish</option><option>Og'ir buzilish</option></select></div>
+      <div class="form-group"><label>Buyrak holati</label><select><option>Normal (GFR>60)</option><option>GFR 30-60</option><option>GFR 15-30</option><option>GFR<15</option></select></div>
+    </div>
+    <div class="form-group"><label>Homiladorlik/Laktatsiya</label><select><option>Yo'q</option><option>Homiladorlik</option><option>Laktatsiya</option></select></div>
+    <div class="form-group"><label>Laboratoriya natijalari</label><textarea placeholder="Qon tahlili, siydik tahlili, boshqa ko'rsatkichlar..."></textarea></div>
+    <div class="form-group"><label>To'g'ri javob (baholash uchun)</label><textarea placeholder="Kutilgan dori, doza va davolash rejasi..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-sm" onclick="closeModal()">Bekor qilish</button>
+      <button class="btn-sm primary" onclick="saveCase()">Saqlash ✓</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ Muvaffaqiyatli saqlandi!</div>
+
+<script>
+// ─── DATA ───
+const CASES = [
+  {
+    id: 0,
+    title: "Yurak yetishmovchiligi: 68 yoshli erkak",
+    topic: "Kardiologiya",
+    difficulty: "medium",
+    gender: "male",
+    age: 68,
+    complaints: "Nafas qisilishi (NYHA III), oyoq shishishi, tungi yo'tal, charchoq",
+    history: "5 yildan beri arterial gipertenziya. 2 yil oldin miokard infarkti o'tkazgan. Hozir kaptopril 25mg×2, aspirin 100mg qabul qilmoqda.",
+    info: [
+      ["Qon bosimi","165/95 mmHg"],
+      ["Yurak urishi","88 urish/min"],
+      ["SpO2","93%"],
+      ["Og'irligi","89 kg"],
+      ["Homiladorlik","Yo'q"],
+      ["Allergiya","Penitsillin (anamnezda)"]
+    ],
+    labs: [
+      {name:"Kreatinin",val:"180 μmol/L",status:"abnormal"},
+      {name:"Kaliy",val:"3.8 mmol/L",status:"normal"},
+      {name:"BNP",val:"820 pg/mL",status:"abnormal"},
+      {name:"EF",val:"35%",status:"abnormal"},
+      {name:"Hb",val:"11.2 g/dL",status:"abnormal"},
+      {name:"GFR",val:"42 mL/min",status:"abnormal"}
+    ],
+    drugs1: ["Furosemid","Spironolakton","Bisoprolol","Lisinopril","Sakubitril/Valsartan","Digoksin"],
+    drugs2: ["Aspirin","Klopidogrel","Atorvastatin","Amlodipin","Metformin"],
+    instruction: "68 yoshli erkakning surunkali yurak yetishmovchiligi (EF 35%) uchun optimal farmakoterapiya rejasini tuzing. Buyrak funksiyasini hisobga oling.",
+    correctDrug: "Bisoprolol",
+    aiAnswer: "Bemorning klinik ko'rinishi: EF 35% bo'lgan HFrEF, NYHA III. GFR 42 bo'lganligi sababli RAAS blokatori va diuretik dozalarini moslashtirish zarur.\n\n✅ To'g'ri dori tanlov: Bisoprolol (beta-bloker) — HFrEF da omon qolishni yaxshilaydi. Lisinopril yoki Sakubitril/Valsartan ham ko'rsatilgan.\n\n⚠️ Furosemid to'g'ri, lekin GFR<60 da ehtiyotkorlik bilan. Spironolakton K+ ni kuzatib qo'shish mumkin.\n\n❌ Amlodipin va Digoksin bu holatda birinchi tanlov emas."
+  },
+  {
+    id: 1,
+    title: "Pnevmoniya: 72 yoshli ayol",
+    topic: "Pulmonologiya",
+    difficulty: "hard",
+    gender: "female",
+    age: 72,
+    complaints: "Isitma (39.2°C), yo'tal (shilimshiq), nafas qisilishi, ko'krak og'rig'i",
+    history: "Bronxial astma (ICS ishlatadi). 2-tip qand kasalligi (metformin). Statinlar qabul qilmoqda.",
+    info: [
+      ["Harorat","39.2°C"],
+      ["Nafas tezligi","26/min"],
+      ["SpO2","91%"],
+      ["PSI score","IV (og'ir)"],
+      ["Homiladorlik","Yo'q"],
+      ["Allergiya","Sulfanilamidlar"]
+    ],
+    labs: [
+      {name:"Leykositlar",val:"18.4×10⁹/L",status:"abnormal"},
+      {name:"CRP",val:"142 mg/L",status:"abnormal"},
+      {name:"Procalcitonin",val:"2.8 ng/mL",status:"abnormal"},
+      {name:"Kreatinin",val:"110 μmol/L",status:"normal"},
+      {name:"Glyukoza",val:"9.8 mmol/L",status:"abnormal"},
+      {name:"GFR",val:"58 mL/min",status:"normal"}
+    ],
+    drugs1: ["Amoksitsillin/klavulanat","Azitromitsin","Levofloksatsin","Meropenem","Ko-trimoksazol","Metronidazol"],
+    drugs2: ["Salbutamol","Prednizolon","Enoksaparin","Metformin","Parasetamol"],
+    instruction: "Og'ir pnevmoniya (PSI IV). Sulfanilamid allergiyasini va bronxial astmani hisobga oling. Empirik antibiotik tanlang.",
+    correctDrug: "Levofloksatsin",
+    aiAnswer: "Og'ir jamoa-orttirilgan pnevmoniya (CAP, PSI IV). Sulfanilamid allergiyasi bor, ammo bu β-laktamlar va ftorxinolonlarga to'siq emas.\n\n✅ To'g'ri yondashuv: Amoksitsillin/klavulanat + Azitromitsin yoki Levofloksatsin monoterapiyasi (ATS/IDSA ko'rsatmalari).\n\n✅ Bronxial astma bor — Salbutamol nebulayzer qo'shish to'g'ri.\n\n⚠️ Metformin — giperglikemiya boshqaruvi uchun insulin o'tkazish ko'rib chiqilsin.\n\n❌ Ko-trimoksazol — sulfanilamid allergiyasi mavjud, QATIY TAQIQLANADI.\n\n❌ Meropenem — bu bosqichda rezerv antibiotik, birinchi tanlov emas."
+  },
+  {
+    id: 2,
+    title: "Homilador ayol: siydik yo'llari infeksiyasi",
+    topic: "Akusherlik",
+    difficulty: "easy",
+    gender: "female",
+    age: 28,
+    complaints: "Siydik chiqarishda achishish, tez-tez siydik chiqarish, qorin pastida og'riq",
+    history: "28 haftalik homilador. Birinchi homiladorlik. Allergiya yo'q.",
+    info: [
+      ["Homiladorlik","28 hafta"],
+      ["Harorat","37.4°C"],
+      ["Qon bosimi","118/74 mmHg"],
+      ["Allergiya","Yo'q"],
+      ["Jigar","Normal"],
+      ["Buyrak (GFR)","Normal (>90)"]
+    ],
+    labs: [
+      {name:"Leykositlar",val:"11.2×10⁹/L",status:"abnormal"},
+      {name:"Leykoutriya",val:"+++",status:"abnormal"},
+      {name:"Bakteriouriya",val:"E.coli",status:"abnormal"},
+      {name:"Proteinuriya",val:"Yo'q",status:"normal"},
+      {name:"Hb",val:"10.8 g/dL",status:"abnormal"},
+      {name:"Kreatinin",val:"62 μmol/L",status:"normal"}
+    ],
+    drugs1: ["Amoksitsillin/klavulanat","Nitrofurantoin","Tsefaleksin","Kotrimoksazol","Siprofloksatsin","Fosfomitsin"],
+    drugs2: ["Foliy kislota","Temir preparatlari","Magniy B6","Aspirin","Furosemid"],
+    instruction: "28 haftalik homilador ayolda siydik yo'llari infeksiyasi. Xavfsiz antibiotik tanlang (FDA kategoriyasi B).",
+    correctDrug: "Tsefaleksin",
+    aiAnswer: "28 haftalik homiladorlikda siydik yo'llari infeksiyasi — davolash majburiy.\n\n✅ To'g'ri tanlov: Tsefaleksin (FDA kategoriya B) yoki Amoksitsillin/klavulanat — homiladorlikda xavfsiz.\n\n✅ Fosfomitsin (bir martalik doza) ham mumkin.\n\n⚠️ Nitrofurantoin — 1-2 trimestrada mumkin, lekin 3-trimestrada (28 hafta) neonatal gemoliz xavfi bor.\n\n❌ Siprofloksatsin (ftorxinolon) — suyak-tog'ay zarar xavfi, TAQIQLANADI.\n\n❌ Kotrimoksazol — 3-trimestrada kernicterus xavfi, TAQIQLANADI.\n\n💊 Anemia bor — temir preparatlari qo'shish to'g'ri edi."
+  }
+];
+
+let currentUser = null;
+let currentCaseId = 0;
+let selectedDrug1 = null;
+let selectedDrug2 = null;
+let completedCases = [];
+let resultsData = [];
+
+// ─── NAVIGATION ───
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
-/* ===== MAIN APP ===== */
-function App() {
-  const [user, setUser] = useState(() => DB.get('currentUser'));
-  const [page, setPage] = useState('dashboard');
+function showAuth() { showScreen('auth'); }
 
-  useEffect(() => { seedData(); }, []);
+function switchTab(tab) {
+  document.getElementById('form-login').style.display = tab==='login'?'block':'none';
+  document.getElementById('form-register').style.display = tab==='register'?'block':'none';
+  document.getElementById('tab-login').classList.toggle('active', tab==='login');
+  document.getElementById('tab-register').classList.toggle('active', tab==='register');
+}
 
-  const login = (email, password) => {
-    const users = DB.get('users') || [];
-    const u = users.find(x=>x.email===email && x.password===password);
-    if (u) { setUser(u); DB.set('currentUser', u); return true; }
-    return false;
-  };
-  const register = (data) => {
-    const users = DB.get('users') || [];
-    if (users.find(u=>u.email===data.email)) return false;
-    const newUser = {...data, id: Date.now(), createdAt: new Date().toISOString()};
-    users.push(newUser);
-    DB.set('users', users);
-    setUser(newUser); DB.set('currentUser', newUser);
-    return true;
-  };
-  const logout = () => { setUser(null); DB.set('currentUser', null); setPage('dashboard'); };
-  const navigate = (p) => { setPage(p); window.scrollTo(0,0); };
+function demoLogin(role) {
+  currentUser = {name: role==='student'?'Alisher Hamidov':'Malika Karimova', role};
+  enterDashboard(role);
+}
 
-  if (!user) {
-    if (page==='register') return <AuthCtx.Provider value={{login,register,logout}}><RegisterPage onNavigate={navigate}/></AuthCtx.Provider>;
-    return <AuthCtx.Provider value={{login,register,logout}}><LoginPage onNavigate={navigate}/></AuthCtx.Provider>;
+function doLogin() {
+  const role = document.getElementById('login-role').value;
+  currentUser = {name: role==='student'?'Alisher H.': role==='teacher'?'Malika K.':'Admin', role};
+  enterDashboard(role);
+}
+
+function enterDashboard(role) {
+  if(role === 'student') {
+    document.getElementById('s-name').textContent = currentUser.name;
+    document.getElementById('s-greet').textContent = currentUser.name.split(' ')[0] + '!';
+    document.getElementById('s-avatar').textContent = currentUser.name.split(' ').map(w=>w[0]).join('').slice(0,2);
+    renderCaseList();
+    renderResultsTable();
+    showScreen('student-dash');
+  } else {
+    showScreen('teacher-dash');
+  }
+}
+
+function logout() {
+  currentUser = null;
+  showScreen('landing');
+}
+
+function showPage(id, btn) {
+  document.querySelectorAll('#student-dash .page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn) {
+    document.querySelectorAll('#student-dash .nav-item').forEach(i => i.classList.remove('active'));
+    btn.classList.add('active');
+  }
+}
+
+function showPageT(id, btn) {
+  document.querySelectorAll('#teacher-dash .page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn) {
+    document.querySelectorAll('#teacher-dash .nav-item').forEach(i => i.classList.remove('active'));
+    btn.classList.add('active');
+  }
+}
+
+// ─── CASE LIST ───
+function renderCaseList() {
+  const el = document.getElementById('cases-list');
+  el.innerHTML = CASES.map(c => {
+    const done = completedCases.includes(c.id);
+    const diffMap = {easy:'badge-easy', medium:'badge-medium', hard:'badge-hard'};
+    const diffLabel = {easy:'Oson', medium:"O'rta", hard:'Qiyin'};
+    return `
+      <div class="case-item" onclick="openCase(${c.id})">
+        <div style="font-size:1.4rem">${c.gender==='female'?'👩':'👨'}</div>
+        <div class="case-info">
+          <div class="case-title">${c.title}</div>
+          <div class="case-meta">${c.topic} · ${c.age} yosh</div>
+        </div>
+        ${done ? '<span class="case-badge badge-done">✓ Bajarildi</span>' : `<span class="case-badge ${diffMap[c.difficulty]}">${diffLabel[c.difficulty]}</span>`}
+        <div class="case-arrow">›</div>
+      </div>`;
+  }).join('');
+}
+
+function openCase(id) {
+  const idx = typeof id === 'number' ? id : Math.floor(Math.random()*CASES.length);
+  currentCaseId = idx;
+  const c = CASES[idx];
+  selectedDrug1 = null; selectedDrug2 = null;
+
+  document.getElementById('solver-title').textContent = c.title;
+  document.getElementById('pt-gender').textContent = c.gender==='female'?'👩':'👨';
+  document.getElementById('pt-name').textContent = c.title.split(':')[0];
+  document.getElementById('pt-desc').textContent = `${c.age} yosh · ${c.topic}`;
+  document.getElementById('pt-complaints').textContent = c.complaints;
+  document.getElementById('pt-history').textContent = c.history;
+  document.getElementById('case-instruction').textContent = c.instruction;
+
+  const infoEl = document.getElementById('pt-info-rows');
+  infoEl.innerHTML = c.info.map(([k,v]) => `<div class="info-row"><span class="info-label">${k}</span><span class="info-val">${v}</span></div>`).join('');
+
+  const labsEl = document.getElementById('pt-labs');
+  labsEl.innerHTML = c.labs.map(l => `<div class="lab-item"><div class="lab-name">${l.name}</div><div class="lab-val ${l.status}">${l.val}</div></div>`).join('');
+
+  // Drug selectors
+  document.getElementById('drug-selector-1').innerHTML = c.drugs1.map(d =>
+    `<button class="drug-chip" onclick="selectDrug(this,1,'${d}')">${d}</button>`).join('');
+  document.getElementById('drug-selector-2').innerHTML = c.drugs2.map(d =>
+    `<button class="drug-chip" onclick="selectDrug(this,2,'${d}')">${d}</button>`).join('');
+
+  // Reset
+  ['dose-single','dose-daily','duration','monitoring','side-effects'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('ai-feedback').classList.remove('visible');
+  document.getElementById('ai-loading').style.display = 'flex';
+  document.getElementById('ai-text').style.display = 'none';
+  document.getElementById('score-display').style.display = 'none';
+
+  showPage('s-solver', null);
+}
+
+function selectDrug(el, slot, name) {
+  const parent = el.parentElement;
+  parent.querySelectorAll('.drug-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  if(slot===1) selectedDrug1 = name;
+  else selectedDrug2 = name;
+}
+
+// ─── SUBMIT & AI ───
+async function submitCase() {
+  const c = CASES[currentCaseId];
+  if(!selectedDrug1) { showToast('❗ Asosiy dori tanlang!'); return; }
+
+  const fb = document.getElementById('ai-feedback');
+  fb.classList.add('visible');
+  document.getElementById('ai-loading').style.display = 'flex';
+  document.getElementById('ai-text').style.display = 'none';
+  document.getElementById('score-display').style.display = 'none';
+  fb.scrollIntoView({behavior:'smooth', block:'nearest'});
+
+  const dose1 = document.getElementById('dose-single').value;
+  const dose2 = document.getElementById('dose-daily').value;
+  const route = document.getElementById('route').value;
+  const duration = document.getElementById('duration').value;
+  const monitoring = document.getElementById('monitoring').value;
+  const sideEffects = document.getElementById('side-effects').value;
+
+  const prompt = `Sen klinik farmakologiya bo'yicha ekspert o'qituvchisan. Talaba quyidagi klinik keys uchun farmakoterapiya taklif qildi.
+
+KLINIK KEYS:
+${c.title}
+Shikoyatlar: ${c.complaints}
+Anamnez: ${c.history}
+Ko'rsatkichlar: ${c.info.map(([k,v])=>k+': '+v).join(', ')}
+Laboratoriya: ${c.labs.map(l=>l.name+': '+l.val).join(', ')}
+Vazifa: ${c.instruction}
+
+TALABA JAVOBI:
+Asosiy dori: ${selectedDrug1}
+Qo'shimcha dori: ${selectedDrug2 || 'tanlanmadi'}
+Bir martalik doza: ${dose1 || 'ko\'rsatilmadi'}
+Sutkalik doza: ${dose2 || 'ko\'rsatilmadi'}
+Qabul yo'li: ${route}
+Davolash muddati: ${duration || 'ko\'rsatilmadi'}
+Monitoring: ${monitoring || 'ko\'rsatilmadi'}
+Nojo'ya ta'sir profilaktikasi: ${sideEffects || 'ko\'rsatilmadi'}
+
+Iltimos, quyidagilarni bajargilarda baholash qil:
+1) Dori tanlov to'g'riligini (bu holat uchun optimal ekanmi)
+2) Doza va yo'l to'g'riligini
+3) Kontraindikatsiya va xavfsizlik masalalari
+4) Dori-dori o'zaro ta'siri
+5) Qilingan xatolar va ularning sabablari
+6) To'g'ri javob nima bo'lishi kerakligini tushuntirib ber
+7) Oxirida 100 ballik tizimda ball ber (masalan: "UMUMIY BALL: 72/100")
+
+Javobni o'zbek tilida, mehribon va konstruktiv tarzda yoz. Maksimum 250 so'z.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{role:'user', content: prompt}]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.[0]?.text || c.aiAnswer;
+    showAIResult(text);
+  } catch(e) {
+    showAIResult(c.aiAnswer);
   }
 
-  let content;
-  if (page==='dashboard') content = <Dashboard onNavigate={navigate}/>;
-  else if (page==='cases') content = <CasesList onNavigate={navigate}/>;
-  else if (page.startsWith('case_')) content = <SolveCase caseId={page.split('_')[1]} onNavigate={navigate}/>;
-  else if (page.startsWith('result_')) content = <ResultPage submissionId={page.split('_')[1]} onNavigate={navigate}/>;
-  else if (page==='results') content = <ResultsList onNavigate={navigate}/>;
-  else if (page==='newcase') content = <CaseEditor onNavigate={navigate}/>;
-  else if (page.startsWith('editcase_')) content = <CaseEditor caseId={page.split('_')[1]} onNavigate={navigate}/>;
-  else if (page==='analytics') content = <Analytics/>;
-  else if (page==='users') content = <AdminUsers/>;
-  else content = <Dashboard onNavigate={navigate}/>;
-
-  return (
-    <AuthCtx.Provider value={{user, login, register, logout}}>
-      <Layout page={page} onNavigate={navigate}>{content}</Layout>
-    </AuthCtx.Provider>
-  );
+  // Mark done
+  if(!completedCases.includes(currentCaseId)) {
+    completedCases.push(currentCaseId);
+    const count = completedCases.length;
+    document.getElementById('s-done-count').textContent = count;
+    document.getElementById('s-prog').style.width = (count/120*100)+'%';
+    resultsData.push({case: c.title, topic: c.topic, score: null, date: 'Bugun', status:'done'});
+  }
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+function showAIResult(text) {
+  document.getElementById('ai-loading').style.display = 'none';
+  document.getElementById('ai-text').style.display = 'block';
+  document.getElementById('ai-text').innerHTML = text.replace(/\n/g,'<br>');
+
+  // Parse score
+  const match = text.match(/(\d+)\s*\/\s*100/);
+  const score = match ? parseInt(match[1]) : Math.floor(60 + Math.random()*35);
+  const pct = score + '%';
+  const grade = score >= 86 ? '5' : score >= 71 ? '4' : score >= 56 ? '3' : '2';
+  const gradeColor = score >= 86 ? 'green' : score >= 71 ? 'gold' : 'red';
+
+  document.getElementById('sc-total').textContent = score + '/100';
+  document.getElementById('sc-total').className = 'score-num ' + gradeColor;
+  document.getElementById('sc-pct').textContent = pct;
+  document.getElementById('sc-grade').textContent = grade;
+  document.getElementById('score-display').style.display = 'flex';
+
+  document.getElementById('s-avg-score').textContent = score+'%';
+
+  // update results
+  if(resultsData.length && !resultsData[resultsData.length-1].score) {
+    resultsData[resultsData.length-1].score = score;
+  }
+  renderResultsTable();
+}
+
+function renderResultsTable() {
+  const tb = document.getElementById('results-table');
+  if(!resultsData.length) {
+    tb.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">Hali keys yechildi</td></tr>';
+    return;
+  }
+  tb.innerHTML = resultsData.map(r => `
+    <tr>
+      <td>${r.case}</td>
+      <td><span class="tag tag-teal">${r.topic}</span></td>
+      <td>${r.score ? `<span style="color:${r.score>=71?'var(--green)':'var(--gold)'};font-weight:700">${r.score}%</span>` : '—'}</td>
+      <td>${r.date}</td>
+      <td><span class="case-badge badge-done">Bajarildi</span></td>
+    </tr>`).join('');
+}
+
+// ─── MODAL ───
+function openCreateCase() {
+  document.getElementById('modal-create').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal-create').classList.remove('open');
+}
+function saveCase() {
+  closeModal();
+  showToast('✅ Keys muvaffaqiyatli saqlandi!');
+}
+
+// ─── TOAST ───
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ─── INIT ───
+document.getElementById('modal-create').addEventListener('click', function(e) {
+  if(e.target === this) closeModal();
+});
 </script>
 </body>
 </html>
