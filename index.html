@@ -57,12 +57,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;
 
 /* ===== SCREENS ===== */
 .screen{display:none;min-height:100vh;padding-top:56px;position:relative;z-index:1;}
+.screen.active{display:block !important;}
+#caseSc.active{display:block !important;}
+#loginSc.active{display:flex !important;}
 .screen.active{display:block;}
 .page{padding:68px 1.4rem 2rem;}
 .wrap{max-width:1320px;margin:0 auto;}
 
 /* ===== LOGIN ===== */
 #loginSc{display:flex;align-items:center;justify-content:center;min-height:100vh;padding-top:0;}
+#loginSc.active{display:flex !important;}
 .login-outer{width:440px;animation:riseIn .7s cubic-bezier(.16,1,.3,1);}
 @keyframes riseIn{from{opacity:0;transform:translateY(32px);}to{opacity:1;transform:translateY(0);}}
 .login-brand{text-align:center;margin-bottom:2rem;}
@@ -544,6 +548,190 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;
   .tgrid{grid-template-columns:1fr;}
   .treat-table{min-width:700px;}
 }
+
+
+/* ===== ROLE-SPECIFIC DASHBOARD COLORS ===== */
+.role-student { --role-color: var(--ac3); --role-bg: rgba(0,255,204,.08); }
+.role-teacher { --role-color: var(--purple); --role-bg: rgba(204,102,255,.08); }
+.role-admin   { --role-color: var(--gold);   --role-bg: rgba(255,204,68,.08); }
+
+/* ===== WELCOME BANNER ===== */
+.welcome-banner {
+  border-radius: var(--r12);
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.4rem;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.wb-student { background: linear-gradient(135deg, rgba(0,144,204,.18), rgba(0,255,204,.08)); border: 1px solid rgba(0,255,204,.25); }
+.wb-teacher { background: linear-gradient(135deg, rgba(119,0,204,.18), rgba(204,102,255,.08)); border: 1px solid rgba(204,102,255,.25); }
+.wb-admin   { background: linear-gradient(135deg, rgba(180,120,0,.18), rgba(255,204,68,.08)); border: 1px solid rgba(255,204,68,.25); }
+.welcome-banner::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+.wb-student::before { background: linear-gradient(90deg, var(--ac), var(--ac3)); }
+.wb-teacher::before { background: linear-gradient(90deg, var(--purple), var(--pink)); }
+.wb-admin::before   { background: linear-gradient(90deg, var(--gold), var(--warn)); }
+.wb-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; flex-shrink: 0;
+}
+.wb-student .wb-avatar { background: linear-gradient(135deg,var(--ac2),var(--ac3)); box-shadow:0 0 20px rgba(0,212,255,.3); }
+.wb-teacher .wb-avatar { background: linear-gradient(135deg,#7700cc,var(--purple)); box-shadow:0 0 20px rgba(204,102,255,.3); }
+.wb-admin .wb-avatar   { background: linear-gradient(135deg,#cc8800,var(--gold)); box-shadow:0 0 20px rgba(255,204,68,.3); }
+.wb-title { font-family:'Unbounded',sans-serif; font-size:1.1rem; font-weight:700; color:var(--wh); }
+.wb-sub { font-family:'JetBrains Mono',monospace; font-size:.6rem; color:var(--tx2); margin-top:.2rem; }
+.wb-meta { font-family:'JetBrains Mono',monospace; font-size:.58rem; color:var(--tx3); margin-top:.4rem; display:flex; gap:.8rem; flex-wrap:wrap; }
+.wb-meta span { display:flex; align-items:center; gap:.3rem; }
+
+/* ===== ADMIN SPECIFIC ===== */
+.admin-panel { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; margin-bottom:1rem; }
+.admin-action-card {
+  background:var(--s1); border:1px solid var(--b1); border-radius:var(--r8);
+  padding:1.2rem; cursor:pointer; transition:all .22s; position:relative; overflow:hidden;
+}
+.admin-action-card:hover { border-color:var(--gold); transform:translateY(-2px); box-shadow:0 8px 24px rgba(255,204,68,.12); }
+.admin-action-card::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; background:var(--clr,var(--gold)); }
+.aac-icon { font-size:2rem; margin-bottom:.6rem; }
+.aac-title { font-family:'Unbounded',sans-serif; font-size:.72rem; color:var(--wh); margin-bottom:.2rem; }
+.aac-desc { font-family:'JetBrains Mono',monospace; font-size:.58rem; color:var(--tx3); }
+.aac-count { font-family:'Unbounded',sans-serif; font-size:1.4rem; font-weight:700; margin-top:.5rem; }
+
+/* Admin system stats */
+.sys-stats { display:grid; grid-template-columns:repeat(6,1fr); gap:.65rem; margin-bottom:1.2rem; }
+.sys-stat { background:var(--s1); border:1px solid var(--b1); border-radius:var(--r6); padding:.75rem .8rem; text-align:center; }
+.sys-stat-val { font-family:'Unbounded',sans-serif; font-size:1.1rem; font-weight:700; color:var(--wh); }
+.sys-stat-lbl { font-family:'JetBrains Mono',monospace; font-size:.52rem; color:var(--tx3); margin-top:.2rem; }
+
+/* Admin tables */
+.admin-table { width:100%; border-collapse:collapse; font-size:.8rem; }
+.admin-table thead tr { background:linear-gradient(135deg,var(--s3),var(--s2)); }
+.admin-table th { padding:.62rem .85rem; text-align:left; font-family:'JetBrains Mono',monospace; font-size:.53rem; color:var(--tx2); border-bottom:2px solid var(--gold); white-space:nowrap; }
+.admin-table td { padding:.62rem .85rem; border-bottom:1px solid var(--b1); }
+.admin-table tr:hover td { background:rgba(255,204,68,.025); }
+.admin-table tr:last-child td { border-bottom:none; }
+
+/* Admin User management */
+.user-row { display:flex; align-items:center; gap:.8rem; padding:.65rem .9rem; border-bottom:1px solid var(--b1); transition:background .15s; }
+.user-row:hover { background:rgba(255,204,68,.03); }
+.user-avatar-sm { width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0; }
+.user-info { flex:1; }
+.user-name { font-size:.85rem; color:var(--wh); }
+.user-email { font-family:'JetBrains Mono',monospace; font-size:.56rem; color:var(--tx3); }
+.user-actions { display:flex; gap:.35rem; }
+
+/* Admin log */
+.log-item { display:flex; gap:.75rem; padding:.5rem .9rem; border-bottom:1px solid var(--b1); font-size:.78rem; }
+.log-item:last-child { border-bottom:none; }
+.log-time { font-family:'JetBrains Mono',monospace; font-size:.56rem; color:var(--tx3); white-space:nowrap; flex-shrink:0; }
+.log-type { font-family:'JetBrains Mono',monospace; font-size:.56rem; padding:.06rem .35rem; border-radius:20px; flex-shrink:0; }
+.log-type.info { background:rgba(0,212,255,.1); color:var(--ac); }
+.log-type.success { background:rgba(0,255,204,.1); color:var(--ac3); }
+.log-type.warn { background:rgba(255,204,68,.1); color:var(--gold); }
+.log-type.error { background:rgba(255,34,85,.1); color:var(--danger); }
+
+/* ===== STUDENT SPECIFIC ===== */
+.student-progress-ring { position:relative; display:inline-flex; }
+.progress-ring-circle { transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1); transform-origin:50% 50%; }
+.streak-box {
+  background:linear-gradient(135deg,rgba(255,107,53,.12),rgba(255,204,68,.08));
+  border:1px solid rgba(255,107,53,.3); border-radius:var(--r8); padding:.85rem 1.1rem;
+  display:flex; align-items:center; gap:.85rem;
+}
+.streak-fire { font-size:2rem; }
+.streak-num { font-family:'Unbounded',sans-serif; font-size:1.8rem; font-weight:900; color:var(--warn); }
+.streak-lbl { font-family:'JetBrains Mono',monospace; font-size:.58rem; color:var(--tx3); }
+
+/* Student skill badges */
+.skill-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.6rem; }
+.skill-card { background:var(--s2); border:1px solid var(--b1); border-radius:var(--r8); padding:.8rem; text-align:center; transition:all .2s; }
+.skill-card:hover { border-color:var(--b2); transform:translateY(-1px); }
+.skill-icon { font-size:1.4rem; margin-bottom:.35rem; }
+.skill-name { font-family:'JetBrains Mono',monospace; font-size:.58rem; color:var(--tx2); margin-bottom:.35rem; }
+.skill-level { height:4px; background:var(--s3); border-radius:2px; overflow:hidden; }
+.skill-fill { height:100%; border-radius:2px; }
+
+/* Motivation banner */
+.motive-banner {
+  background:linear-gradient(135deg,rgba(0,144,204,.1),rgba(0,255,204,.06));
+  border:1px solid rgba(0,212,255,.2); border-radius:var(--r8);
+  padding:.85rem 1.1rem; margin-bottom:1rem;
+  font-size:.88rem; color:var(--tx2); line-height:1.6;
+  display:flex; align-items:flex-start; gap:.75rem;
+}
+.motive-icon { font-size:1.4rem; flex-shrink:0; }
+
+/* ===== TEACHER SPECIFIC ===== */
+.teacher-quick-actions { display:grid; grid-template-columns:repeat(4,1fr); gap:.75rem; margin-bottom:1.2rem; }
+.tqa-card {
+  background:var(--s1); border:1px solid var(--b1); border-radius:var(--r8);
+  padding:1rem; cursor:pointer; transition:all .2s; text-align:center;
+}
+.tqa-card:hover { border-color:var(--purple); transform:translateY(-2px); box-shadow:0 6px 20px rgba(204,102,255,.12); }
+.tqa-icon { font-size:1.5rem; margin-bottom:.4rem; }
+.tqa-title { font-family:'JetBrains Mono',monospace; font-size:.6rem; color:var(--tx2); }
+
+/* Teacher pending reviews */
+.review-item { display:flex; align-items:center; gap:.75rem; padding:.65rem .9rem; border-bottom:1px solid var(--b1); transition:background .15s; }
+.review-item:hover { background:rgba(204,102,255,.03); }
+.review-avatar { width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--ac2),var(--purple));display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0; }
+.review-info { flex:1; }
+.review-name { font-size:.83rem; color:var(--wh); }
+.review-meta { font-family:'JetBrains Mono',monospace; font-size:.56rem; color:var(--tx3); }
+.review-score { font-family:'Unbounded',sans-serif; font-size:.88rem; font-weight:700; }
+
+/* ===== MODAL ===== */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(3,8,13,.88); z-index:500; align-items:center; justify-content:center; backdrop-filter:blur(12px); }
+.modal-overlay.show { display:flex; }
+.modal { background:var(--s1); border:1px solid var(--b1); border-radius:var(--r16); padding:1.8rem; max-width:520px; width:90%; animation:riseIn .3s ease; position:relative; }
+.modal-title { font-family:'Unbounded',sans-serif; font-size:.88rem; color:var(--wh); margin-bottom:1.2rem; display:flex; align-items:center; gap:.6rem; }
+.modal-close { position:absolute; top:1rem; right:1rem; background:none; border:none; color:var(--tx3); font-size:1.2rem; cursor:pointer; transition:color .2s; }
+.modal-close:hover { color:var(--danger); }
+.modal-btns { display:flex; gap:.65rem; justify-content:flex-end; margin-top:1.4rem; }
+
+/* ===== NOTIFICATION PANEL (admin) ===== */
+.notif-panel { position:fixed; top:56px; right:0; width:340px; background:var(--s1); border-left:1px solid var(--b1); border-bottom:1px solid var(--b1); padding:1rem; transform:translateX(100%); transition:transform .3s; z-index:200; max-height:calc(100vh - 56px); overflow-y:auto; }
+.notif-panel.open { transform:translateX(0); }
+.np-item { display:flex; gap:.65rem; padding:.62rem; border-bottom:1px solid var(--b1); border-radius:var(--r6); transition:background .15s; }
+.np-item:hover { background:var(--s2); }
+.np-dot { width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:.3rem; }
+.np-unread { background:var(--ac); }
+
+/* ===== DARK TABS ===== */
+.dark-tabs { display:flex; background:var(--s2); border-radius:var(--r8); padding:.3rem; gap:.2rem; flex-wrap:wrap; }
+.dark-tab { flex:1; min-width:80px; padding:.42rem .65rem; border-radius:var(--r6); font-family:'JetBrains Mono',monospace; font-size:.6rem; color:var(--tx3); cursor:pointer; text-align:center; transition:all .2s; border:none; background:none; white-space:nowrap; }
+.dark-tab.active { background:var(--s3); color:var(--wh); box-shadow:0 2px 8px rgba(0,0,0,.3); }
+
+/* ===== CHART CONTAINER ===== */
+.chart-box { position:relative; height:160px; }
+
+/* ===== CALENDAR (student) ===== */
+.mini-cal { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+.cal-day { width:22px;height:22px;border-radius:3px;display:flex;align-items:center;justify-content:center; font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--tx3); }
+.cal-day.active { background:rgba(0,255,204,.2);color:var(--ac3); }
+.cal-day.today { background:var(--ac);color:var(--bg);font-weight:700; }
+.cal-day.done { background:rgba(0,212,255,.15);color:var(--ac); }
+
+/* ===== PERFORMANCE CHART ===== */
+.perf-bar { display:flex; align-items:center; gap:.65rem; margin-bottom:.5rem; }
+.perf-label { font-family:'JetBrains Mono',monospace; font-size:.6rem; color:var(--tx2); width:110px; flex-shrink:0; }
+.perf-track { flex:1; height:8px; background:var(--s3); border-radius:4px; overflow:hidden; }
+.perf-fill { height:100%; border-radius:4px; transition:width 1.3s cubic-bezier(.4,0,.2,1); }
+.perf-pct { font-family:'JetBrains Mono',monospace; font-size:.58rem; color:var(--tx2); width:30px; text-align:right; flex-shrink:0; }
+
+/* Status indicators */
+.status-dot { width:8px;height:8px;border-radius:50%;display:inline-block; animation:pulse 2s infinite; }
+.status-online { background:var(--ac3); }
+.status-away { background:var(--gold); animation:none; }
+.status-offline { background:var(--tx3); animation:none; }
+
 </style>
 </head>
 <body>
@@ -558,10 +746,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;
 <nav id="mnav" style="display:none">
   <div class="nlogo">ClinPharm&#xFEFF;AI</div>
   <div class="nlinks">
-    <button onclick="nav('ds',this)" id="nb_d" class="active">📊 Dashboard</button>
+    <button onclick="goHome(this)" id="nb_d" class="active">🏠 Bosh sahifa</button>
     <button onclick="nav('caseSc',this)" id="nb_c">🏥 Keys yechish</button>
     <button onclick="nav('feedSc',this)" id="nb_f" style="display:none">🧠 AI Natija</button>
-    <button onclick="nav('teachSc',this)" id="nb_t" style="display:none">👨‍🏫 O'qituvchi</button>
+    <button onclick="nav('teachSc',this)" id="nb_t" style="display:none">👨‍🏫 Keys yaratish</button>
     <button onclick="nav('reportSc',this)" id="nb_r">📋 Hisobot</button>
     <button onclick="nav('profSc',this)" id="nb_p">👤 Profil</button>
   </div>
@@ -569,7 +757,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;
     <span id="navNm">Qurbonov Anusher</span>
     <span class="ubadge student" id="navBg">TALABA</span>
     <div class="pulse"></div>
-    <button class="nbtn-exit" onclick="logout()">&#10005; Chiqish</button>
+    <button class="nbtn-exit" onclick="logoutFull()">&#10005; Chiqish</button>
   </div>
 </nav>
 
@@ -675,6 +863,458 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;
     </div>
   </div>
 </div>
+</div>
+
+
+<!-- ===== STUDENT DASHBOARD ===== -->
+<div id="studentDash" class="screen page" style="display:none">
+<div class="wrap">
+  <!-- Welcome Banner -->
+  <div class="welcome-banner wb-student">
+    <div style="display:flex;align-items:center;gap:1.1rem">
+      <div class="wb-avatar">👨‍⚕️</div>
+      <div>
+        <div class="wb-title" id="wb_s_name">Qurbonov Anusher</div>
+        <div class="wb-sub">Toshkent tibbiyot akademiyasi &middot; 3-kurs A guruh</div>
+        <div class="wb-meta">
+          <span>🎓 Ustoz: Prof. Siddiqov O.A.</span>
+          <span>📅 <span id="wb_s_date"></span></span>
+          <span>🔥 <span id="wb_s_streak">5</span> kunlik streak</span>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="nav('caseSc',document.getElementById('nb_c'))">🎯 Keys boshlash</button>
+      <button class="btn btn-outline" onclick="nav('feedSc',document.getElementById('nb_f'))">🧠 So'nggi natija</button>
+    </div>
+  </div>
+
+  <!-- Motivation banner -->
+  <div class="motive-banner" id="motivBanner">
+    <div class="motive-icon">💡</div>
+    <div id="motivText">Bugun yangi keys yeching va reytingda yuqoriga ko'tiling!</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="srow">
+    <div class="sc" style="--clr:linear-gradient(90deg,#00d4ff,#0090cc)"><div class="slbl">YECHILGAN KEYSLAR</div><div class="sval">24</div><div class="ssub up">↑ 3 bu hafta</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#00ffcc,#00bfaa)"><div class="slbl">O'RTACHA BALL</div><div class="sval">78<span style="font-size:.88rem;color:var(--tx3)">%</span></div><div class="ssub up">↑ 5% o'sdi</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#ffcc44,#ff8800)"><div class="slbl">GURUH REYTINGI</div><div class="sval">#5</div><div class="ssub">28 talabadan</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#ff7733,#ff2255)"><div class="slbl">ENG KO'P XATO</div><div class="sval sm">Dozalash</div><div class="ssub">7 ta keys</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#cc66ff,#7700cc)"><div class="slbl">O'QUV STREAK</div><div class="sval">🔥5</div><div class="ssub">kun ketma-ket</div></div>
+  </div>
+
+  <div class="g32">
+    <!-- Left: Progress & Cases -->
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <!-- Performance bars -->
+      <div class="card">
+        <div class="ch"><div class="ct">📊 KLINIK KO'NIKMALAR DARAJASI</div><button class="btn btn-outline" style="font-size:.56rem" onclick="nav('reportSc',document.getElementById('nb_r'))">Batafsil</button></div>
+        <div class="cb" id="studentPerfBars"></div>
+      </div>
+      <!-- Available cases -->
+      <div class="card">
+        <div class="ch">
+          <div class="ct">📋 KEYSLAR</div>
+          <select style="background:var(--s2);border:1px solid var(--b1);color:var(--tx2);padding:.16rem .42rem;border-radius:var(--r4);font-family:'JetBrains Mono',monospace;font-size:.55rem;outline:none;" id="s_cfilter" onchange="renderStudentCases()">
+            <option value="all">Barchasi</option><option value="new">Yangi</option><option value="done">Tugallangan</option>
+          </select>
+        </div>
+        <div style="padding:0 .7rem" id="studentCaseList"></div>
+      </div>
+    </div>
+    <!-- Right -->
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <!-- Streak & Achievements -->
+      <div class="streak-box">
+        <div class="streak-fire">🔥</div>
+        <div>
+          <div style="display:flex;align-items:baseline;gap:.4rem">
+            <div class="streak-num">5</div>
+            <div class="streak-lbl">kun ketma-ket</div>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3)">Bugun ham keys yeching — rekordni saqlang!</div>
+        </div>
+      </div>
+      <!-- Leaderboard -->
+      <div class="card">
+        <div class="ch"><div class="ct">🏆 GURUH REYTINGI</div></div>
+        <div style="padding:0 .7rem" id="s_lbList"></div>
+      </div>
+      <!-- Mini calendar -->
+      <div class="card">
+        <div class="ch"><div class="ct">📅 FAOLLIK JADVALI (mart 2025)</div></div>
+        <div class="cb">
+          <div class="mini-cal" id="miniCal"></div>
+          <div style="margin-top:.6rem;display:flex;gap:.8rem;font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--tx3)">
+            <span style="display:flex;align-items:center;gap:.3rem"><span style="width:10px;height:10px;background:rgba(0,212,255,.15);border-radius:2px;display:inline-block"></span>Keys yechildi</span>
+            <span style="display:flex;align-items:center;gap:.3rem"><span style="width:10px;height:10px;background:var(--ac);border-radius:2px;display:inline-block"></span>Bugun</span>
+          </div>
+        </div>
+      </div>
+      <!-- Skills -->
+      <div class="card">
+        <div class="ch"><div class="ct">🛡 KO'NIKMALAR NISHONLARI</div></div>
+        <div class="cb">
+          <div class="skill-grid">
+            <div class="skill-card"><div class="skill-icon">💊</div><div class="skill-name">Antibiotik</div><div class="skill-level"><div class="skill-fill" style="width:85%;background:var(--ac3)"></div></div></div>
+            <div class="skill-card"><div class="skill-icon">⚖️</div><div class="skill-name">Dozalash</div><div class="skill-level"><div class="skill-fill" style="width:52%;background:var(--danger)"></div></div></div>
+            <div class="skill-card"><div class="skill-icon">🛡</div><div class="skill-name">Xavfsizlik</div><div class="skill-level"><div class="skill-fill" style="width:71%;background:var(--gold)"></div></div></div>
+            <div class="skill-card"><div class="skill-icon">🤰</div><div class="skill-name">Homiladorlik</div><div class="skill-level"><div class="skill-fill" style="width:44%;background:var(--danger)"></div></div></div>
+            <div class="skill-card"><div class="skill-icon">🫀</div><div class="skill-name">Kardiologiya</div><div class="skill-level"><div class="skill-fill" style="width:68%;background:var(--gold)"></div></div></div>
+            <div class="skill-card"><div class="skill-icon">🧠</div><div class="skill-name">Nevrologiya</div><div class="skill-level"><div class="skill-fill" style="width:60%;background:var(--ac)"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== TEACHER DASHBOARD ===== -->
+<div id="teacherDash" class="screen page" style="display:none">
+<div class="wrap">
+  <!-- Welcome Banner -->
+  <div class="welcome-banner wb-teacher">
+    <div style="display:flex;align-items:center;gap:1.1rem">
+      <div class="wb-avatar">👨‍🏫</div>
+      <div>
+        <div class="wb-title">Prof. Siddiqov O.A.</div>
+        <div class="wb-sub">Klinik farmakologiya kafedrasi &middot; Toshkent tibbiyot akademiyasi</div>
+        <div class="wb-meta">
+          <span>👥 28 talaba</span>
+          <span>📋 18 ta keys</span>
+          <span>📅 <span id="wb_t_date"></span></span>
+          <span><span class="status-dot status-online"></span> Onlayn</span>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+      <button class="btn btn-primary" style="background:linear-gradient(135deg,#7700cc,var(--purple))" onclick="openCreateCase()">+ Yangi keys</button>
+      <button class="btn" style="background:rgba(204,102,255,.1);border-color:rgba(204,102,255,.3);color:var(--purple)" onclick="showTeacherTab('students')">👥 Talabalar</button>
+    </div>
+  </div>
+
+  <!-- Quick actions -->
+  <div class="teacher-quick-actions">
+    <div class="tqa-card" onclick="openCreateCase()"><div class="tqa-icon">📝</div><div class="tqa-title">Yangi keys yaratish</div></div>
+    <div class="tqa-card" onclick="showTeacherTab('students')"><div class="tqa-icon">👥</div><div class="tqa-title">Talabalarni ko'rish</div></div>
+    <div class="tqa-card" onclick="showTeacherTab('analytics')"><div class="tqa-icon">📊</div><div class="tqa-title">Statistika va tahlil</div></div>
+    <div class="tqa-card" onclick="exportTeacherReport()"><div class="tqa-icon">📥</div><div class="tqa-title">Hisobot yuklash</div></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="srow">
+    <div class="sc" style="--clr:linear-gradient(90deg,#7700cc,#cc66ff)"><div class="slbl">JAMI KEYSLAR</div><div class="sval">18</div><div class="ssub">Faol: 14</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#00d4ff,#0090cc)"><div class="slbl">TALABALAR</div><div class="sval">28</div><div class="ssub">3-kurs A guruh</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#00ffcc,#00bfaa)"><div class="slbl">GURUH O'RT. BALL</div><div class="sval">71<span style="font-size:.9rem;color:var(--tx3)">%</span></div><div class="ssub up">↑ 3% o'tgan oydan</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#ff2255,#cc0033)"><div class="slbl">QONIQARSIZ</div><div class="sval">4</div><div class="ssub">Qayta topshirish</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#ffcc44,#ff8800)"><div class="slbl">KO'RIB CHIQISH</div><div class="sval">7</div><div class="ssub">kutilmoqda</div></div>
+  </div>
+
+  <div class="g32">
+    <!-- Left -->
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <!-- Pending reviews -->
+      <div class="card">
+        <div class="ch"><div class="ct">⏳ KO'RIB CHIQISH KUTILMOQDA</div><span style="font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--gold)">7 ta</span></div>
+        <div id="pendingReviews"></div>
+      </div>
+      <!-- Group progress -->
+      <div class="card">
+        <div class="ch"><div class="ct">📈 GURUH KO'RSATKICHLARI</div></div>
+        <div class="cb" id="teacherGroupProgress"></div>
+      </div>
+    </div>
+    <!-- Right -->
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <!-- Top students -->
+      <div class="card">
+        <div class="ch"><div class="ct">🏆 ENG YAXSHI TALABALAR</div></div>
+        <div style="padding:0 .7rem" id="topStudentsList"></div>
+      </div>
+      <!-- Problem students -->
+      <div class="card">
+        <div class="ch"><div class="ct">⚠️ E'TIBOR KERAK</div><span class="badge brd">4 ta</span></div>
+        <div style="padding:0 .7rem" id="problemStudentsList"></div>
+      </div>
+      <!-- Schedule -->
+      <div class="card">
+        <div class="ch"><div class="ct">📅 YAQIN DARSLAR</div></div>
+        <div class="cb" style="padding:.35rem .7rem">
+          <div class="act"><div class="adot" style="background:var(--purple)"></div><div><div style="font-size:.79rem">Antibiotiklar — test</div><div class="atime">Ertaga, 10:00 · 3-kurs A guruh</div></div></div>
+          <div class="act"><div class="adot" style="background:var(--ac)"></div><div><div style="font-size:.79rem">Kardiologiya keysi</div><div class="atime">Juma, 14:00 · 3-kurs A guruh</div></div></div>
+          <div class="act"><div class="adot" style="background:var(--gold)"></div><div><div style="font-size:.79rem">Malaka baholash</div><div class="atime">25-mart, 09:00 · Barcha guruhlar</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== ADMIN DASHBOARD ===== -->
+<div id="adminDash" class="screen page" style="display:none">
+<div class="wrap">
+  <!-- Welcome Banner -->
+  <div class="welcome-banner wb-admin">
+    <div style="display:flex;align-items:center;gap:1.1rem">
+      <div class="wb-avatar">⚙️</div>
+      <div>
+        <div class="wb-title" id="wb_a_name">Qurbonov A. — Tizim Administratori</div>
+        <div class="wb-sub">ClinPharm AI Trainer &middot; Boshqaruv paneli</div>
+        <div class="wb-meta">
+          <span>🖥 Tizim: <span style="color:var(--ac3)">Online</span></span>
+          <span>📅 <span id="wb_a_date"></span></span>
+          <span>⏱ Uptime: <span id="sysUptime" style="color:var(--ac3)">99.8%</span></span>
+          <span>🔔 <span id="adminNotifCount" style="color:var(--gold)">3</span> yangi xabar</span>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+      <button class="btn btn-primary" style="background:linear-gradient(135deg,#cc8800,var(--gold));color:var(--bg)" onclick="openAdminModal('addUser')">+ Foydalanuvchi qo'shish</button>
+      <button class="btn" style="background:rgba(255,204,68,.1);border-color:rgba(255,204,68,.3);color:var(--gold)" onclick="openAdminModal('systemSettings')">⚙️ Sozlamalar</button>
+      <button class="btn" style="background:rgba(255,34,85,.1);border-color:rgba(255,34,85,.3);color:var(--danger)" id="notifBellBtn" onclick="toggleNotifPanel()">🔔 <span id="nbellCount">3</span></button>
+    </div>
+  </div>
+
+  <!-- System stats -->
+  <div class="sys-stats">
+    <div class="sys-stat" style="border-color:rgba(0,255,204,.2)"><div class="sys-stat-val" style="color:var(--ac3)">156</div><div class="sys-stat-lbl">Jami foydalanuvchilar</div></div>
+    <div class="sys-stat" style="border-color:rgba(0,212,255,.2)"><div class="sys-stat-val" style="color:var(--ac)">42</div><div class="sys-stat-lbl">Aktiv foydalanuvchilar</div></div>
+    <div class="sys-stat" style="border-color:rgba(204,102,255,.2)"><div class="sys-stat-val" style="color:var(--purple)">18</div><div class="sys-stat-lbl">Jami keyslar</div></div>
+    <div class="sys-stat" style="border-color:rgba(255,204,68,.2)"><div class="sys-stat-val" style="color:var(--gold)">1,284</div><div class="sys-stat-lbl">Jami yechimlar</div></div>
+    <div class="sys-stat" style="border-color:rgba(0,255,204,.2)"><div class="sys-stat-val" style="color:var(--ac3)">8</div><div class="sys-stat-lbl">O'qituvchilar</div></div>
+    <div class="sys-stat" style="border-color:rgba(255,34,85,.2)"><div class="sys-stat-val" style="color:var(--danger)">2</div><div class="sys-stat-lbl">Xatoliklar</div></div>
+  </div>
+
+  <!-- Admin action cards -->
+  <div class="admin-panel">
+    <div class="admin-action-card" style="--clr:linear-gradient(90deg,#00ffcc,#0090cc)" onclick="showAdminTab('users')">
+      <div class="aac-icon">👥</div><div class="aac-title">Foydalanuvchilar</div>
+      <div class="aac-desc">Talabalar, o'qituvchilar boshqaruvi</div>
+      <div class="aac-count" style="color:var(--ac3)">156</div>
+    </div>
+    <div class="admin-action-card" style="--clr:linear-gradient(90deg,#cc66ff,#7700cc)" onclick="showAdminTab('cases')">
+      <div class="aac-icon">📋</div><div class="aac-title">Keyslar boshqaruvi</div>
+      <div class="aac-desc">Barcha keyslar va mavzular</div>
+      <div class="aac-count" style="color:var(--purple)">18</div>
+    </div>
+    <div class="admin-action-card" style="--clr:linear-gradient(90deg,#ffcc44,#ff8800)" onclick="showAdminTab('analytics')">
+      <div class="aac-icon">📊</div><div class="aac-title">Tizim tahlili</div>
+      <div class="aac-desc">Statistika va hisobotlar</div>
+      <div class="aac-count" style="color:var(--gold)">↑12%</div>
+    </div>
+    <div class="admin-action-card" style="--clr:linear-gradient(90deg,#00d4ff,#0090cc)" onclick="showAdminTab('ai')">
+      <div class="aac-icon">🤖</div><div class="aac-title">AI API Monitoring</div>
+      <div class="aac-desc">Claude, GPT, Gemini holati</div>
+      <div class="aac-count" style="color:var(--ac)">3 API</div>
+    </div>
+    <div class="admin-action-card" style="--clr:linear-gradient(90deg,#ff2255,#cc0033)" onclick="showAdminTab('logs')">
+      <div class="aac-icon">📜</div><div class="aac-title">Tizim loglari</div>
+      <div class="aac-desc">Xatolar va hodisalar</div>
+      <div class="aac-count" style="color:var(--danger)">2 xato</div>
+    </div>
+    <div class="admin-action-card" style="--clr:linear-gradient(90deg,#00ffcc,#00bfaa)" onclick="showAdminTab('settings')">
+      <div class="aac-icon">⚙️</div><div class="aac-title">Tizim sozlamalari</div>
+      <div class="aac-desc">Konfiguratsiya va backup</div>
+      <div class="aac-count" style="color:var(--ac3)">Config</div>
+    </div>
+  </div>
+
+  <!-- Admin sub-tabs -->
+  <div class="dark-tabs" style="margin-bottom:1rem">
+    <button class="dark-tab active" id="adm_tab_users" onclick="showAdminTab('users',this)">👥 Foydalanuvchilar</button>
+    <button class="dark-tab" id="adm_tab_cases" onclick="showAdminTab('cases',this)">📋 Keyslar</button>
+    <button class="dark-tab" id="adm_tab_analytics" onclick="showAdminTab('analytics',this)">📊 Tahlil</button>
+    <button class="dark-tab" id="adm_tab_ai" onclick="showAdminTab('ai',this)">🤖 AI Monitor</button>
+    <button class="dark-tab" id="adm_tab_logs" onclick="showAdminTab('logs',this)">📜 Loglar</button>
+    <button class="dark-tab" id="adm_tab_settings" onclick="showAdminTab('settings',this)">⚙️ Sozlamalar</button>
+  </div>
+
+  <!-- Users tab -->
+  <div id="adm_users">
+    <div class="g2">
+      <div class="card">
+        <div class="ch">
+          <div class="ct">BARCHA FOYDALANUVCHILAR</div>
+          <div style="display:flex;gap:.4rem">
+            <select style="background:var(--s2);border:1px solid var(--b1);color:var(--tx2);padding:.16rem .42rem;border-radius:var(--r4);font-family:'JetBrains Mono',monospace;font-size:.55rem;outline:none;" onchange="filterAdminUsers(this.value)">
+              <option value="all">Barchasi</option><option value="student">Talabalar</option><option value="teacher">O'qituvchilar</option><option value="admin">Adminlar</option>
+            </select>
+            <button class="btn btn-gold" style="font-size:.56rem" onclick="openAdminModal('addUser')">+ Qo'shish</button>
+          </div>
+        </div>
+        <div id="adminUserList" style="max-height:320px;overflow-y:auto"></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">📊 FOYDALANUVCHILAR STATISTIKASI</div></div>
+        <div class="cb">
+          <div style="display:flex;justify-content:space-around;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
+            <div style="text-align:center"><div style="font-family:'Unbounded',sans-serif;font-size:1.4rem;font-weight:700;color:var(--ac3)">128</div><div style="font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--tx3)">Talabalar</div></div>
+            <div style="text-align:center"><div style="font-family:'Unbounded',sans-serif;font-size:1.4rem;font-weight:700;color:var(--purple)">24</div><div style="font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--tx3)">O'qituvchilar</div></div>
+            <div style="text-align:center"><div style="font-family:'Unbounded',sans-serif;font-size:1.4rem;font-weight:700;color:var(--gold)">4</div><div style="font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--tx3)">Adminlar</div></div>
+          </div>
+          <div class="pi"><div class="pl"><span>Faol (bugun)</span><span style="color:var(--ac3)">42</span></div><div class="pb"><div class="pf" style="background:var(--ac3)" data-w="27"></div></div></div>
+          <div class="pi"><div class="pl"><span>Bu hafta</span><span style="color:var(--ac)">89</span></div><div class="pb"><div class="pf" style="background:var(--ac)" data-w="57"></div></div></div>
+          <div class="pi"><div class="pl"><span>Bu oy</span><span style="color:var(--gold)">134</span></div><div class="pb"><div class="pf" style="background:var(--gold)" data-w="86"></div></div></div>
+          <canvas id="userGrowthChart" height="100" style="margin-top:.6rem"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cases tab -->
+  <div id="adm_cases" style="display:none">
+    <div class="card">
+      <div class="ch">
+        <div class="ct">BARCHA KEYSLAR BOSHQARUVI</div>
+        <div style="display:flex;gap:.4rem">
+          <input placeholder="Qidirish..." style="background:var(--s2);border:1px solid var(--b1);color:var(--tx2);padding:.25rem .6rem;border-radius:var(--r4);font-family:'JetBrains Mono',monospace;font-size:.58rem;outline:none;width:160px" id="adminCaseSearch" oninput="filterAdminCases()">
+          <button class="btn btn-green" style="font-size:.56rem" onclick="openCreateCase()">+ Yangi</button>
+          <button class="btn btn-outline" style="font-size:.56rem" onclick="exportAllCases()">📥 Export</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="admin-table" id="adminCasesTable">
+          <thead><tr><th>#</th><th>KEYS NOMI</th><th>MUTAXASSISLIK</th><th>O'QITUVCHI</th><th>GURUH</th><th>YECHIMLAR</th><th>O'RT. BALL</th><th>HOLAT</th><th>AMALLAR</th></tr></thead>
+          <tbody id="adminCasesBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics tab -->
+  <div id="adm_analytics" style="display:none">
+    <div class="g3">
+      <div class="card">
+        <div class="ch"><div class="ct">📈 PLATFORMADAN FOYDALANISH</div></div>
+        <div class="cb" style="padding:.45rem"><canvas id="platformUsageChart" height="130"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">🎯 ENG QIYIN KEYSLAR</div></div>
+        <div class="cb" id="hardestCases"></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">⚠️ UMUMIY KO'P XATOLAR</div></div>
+        <div class="cb" id="globalErrors"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><div class="ct">📊 OYLIK STATISTIKA (2025)</div></div>
+      <div class="cb" style="padding:.45rem"><canvas id="monthlyStatsChart" height="140"></canvas></div>
+    </div>
+  </div>
+
+  <!-- AI Monitor tab -->
+  <div id="adm_ai" style="display:none">
+    <div class="g3">
+      <div class="card">
+        <div class="ch">
+          <div class="ct">🤖 CLAUDE (Anthropic)</div>
+          <span class="badge bgr">● Online</span>
+        </div>
+        <div class="cb">
+          <div class="pi"><div class="pl"><span>Bugungi so'rovlar</span><span style="color:var(--ac3)">284</span></div><div class="pb"><div class="pf" style="background:var(--ac3)" data-w="71"></div></div></div>
+          <div class="pi"><div class="pl"><span>O'rt. javob vaqti</span><span style="color:var(--ac)">1.2s</span></div><div class="pb"><div class="pf" style="background:var(--ac)" data-w="88"></div></div></div>
+          <div class="pi"><div class="pl"><span>Muvaffaqiyat darajasi</span><span style="color:var(--ac3)">99.2%</span></div><div class="pb"><div class="pf" style="background:var(--ac3)" data-w="99"></div></div></div>
+          <div style="margin-top:.6rem;background:var(--s2);border:1px solid rgba(0,255,204,.2);border-radius:var(--r4);padding:.5rem .7rem;font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--ac3)">claude-sonnet-4-20250514 ● Faol</div>
+          <button class="btn btn-outline" style="width:100%;margin-top:.5rem;font-size:.58rem" onclick="testClaudeAPI()">🧪 API ni tekshirish</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch">
+          <div class="ct">🟢 GPT-4o (OpenAI)</div>
+          <span class="badge bgo">● Konfiguratsiya kerak</span>
+        </div>
+        <div class="cb">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--tx3);margin-bottom:.7rem">API kalit kiritilmagan</div>
+          <div class="ffull"><label class="ilbl">OpenAI API Key</label><input class="inp" type="password" id="openaiKey" placeholder="sk-..."></div>
+          <button class="btn btn-primary" style="width:100%;font-size:.58rem;background:linear-gradient(135deg,#10a37f,#00cc88)" onclick="saveOpenAIKey()">Saqlash va ulash</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch">
+          <div class="ct">🔵 Gemini (Google)</div>
+          <span class="badge bgo">● Konfiguratsiya kerak</span>
+        </div>
+        <div class="cb">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--tx3);margin-bottom:.7rem">API kalit kiritilmagan</div>
+          <div class="ffull"><label class="ilbl">Google Gemini API Key</label><input class="inp" type="password" id="geminiKey" placeholder="AIza..."></div>
+          <button class="btn btn-primary" style="width:100%;font-size:.58rem;background:linear-gradient(135deg,#1a73e8,#4285f4)" onclick="saveGeminiKey()">Saqlash va ulash</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><div class="ct">📈 AI SO'ROVLAR DINAMIKASI (oxirgi 7 kun)</div></div>
+      <div class="cb" style="padding:.45rem"><canvas id="aiRequestsChart" height="130"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Logs tab -->
+  <div id="adm_logs" style="display:none">
+    <div class="card">
+      <div class="ch">
+        <div class="ct">📜 TIZIM LOGLARI</div>
+        <div style="display:flex;gap:.4rem">
+          <select style="background:var(--s2);border:1px solid var(--b1);color:var(--tx2);padding:.16rem .42rem;border-radius:var(--r4);font-family:'JetBrains Mono',monospace;font-size:.55rem;outline:none;">
+            <option>Barchasi</option><option>Xatolar</option><option>Ogohlantirishlar</option><option>Muvaffaqiyat</option>
+          </select>
+          <button class="btn btn-danger" style="font-size:.56rem" onclick="clearLogs()">🗑 Tozalash</button>
+        </div>
+      </div>
+      <div id="adminLogsList" style="max-height:400px;overflow-y:auto"></div>
+    </div>
+  </div>
+
+  <!-- Settings tab -->
+  <div id="adm_settings" style="display:none">
+    <div class="g2">
+      <div class="card">
+        <div class="ch"><div class="ct">⚙️ TIZIM SOZLAMALARI</div></div>
+        <div class="cb">
+          <div class="ffull"><label class="ilbl">Platforma nomi</label><input class="inp" value="ClinPharm AI Trainer"></div>
+          <div class="ffull"><label class="ilbl">Birlamchi til</label><select class="inp"><option selected>O'zbek tili</option><option>Rus tili</option><option>Ingliz tili</option></select></div>
+          <div class="ffull"><label class="ilbl">Sessiya davomiyligi (soat)</label><input class="inp" type="number" value="24"></div>
+          <div class="ffull"><label class="ilbl">Maksimal talabalar soni</label><input class="inp" type="number" value="500"></div>
+          <button class="btn btn-primary" style="width:100%;margin-top:.3rem" onclick="saveSystemSettings()">Saqlash</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">💾 BACKUP VA TIKLASH</div></div>
+        <div class="cb">
+          <div style="display:flex;flex-direction:column;gap:.6rem">
+            <button class="btn btn-outline" onclick="createBackup()">📦 Backup yaratish</button>
+            <button class="btn btn-outline" onclick="restoreBackup()">🔄 Tiklash</button>
+            <button class="btn btn-danger" onclick="resetPlatform()">⚠️ Platformani qayta sozlash</button>
+          </div>
+          <div style="margin-top:.8rem;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r4);padding:.65rem">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--tx3);margin-bottom:.3rem">OXIRGI BACKUP</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--ac3)">22.03.2025 — 14:30 ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== MODALS ===== -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title" id="modalTitle">Modal</div>
+    <div id="modalBody"></div>
+    <div class="modal-btns" id="modalBtns"></div>
+  </div>
+</div>
+
+<!-- ===== NOTIF PANEL ===== -->
+<div class="notif-panel" id="notifPanel">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem">
+    <div style="font-family:'Unbounded',sans-serif;font-size:.65rem;color:var(--wh)">Bildirishnomalar</div>
+    <button class="btn btn-outline" style="font-size:.54rem" onclick="clearAllNotifs()">Barchasini o'qish</button>
+  </div>
+  <div id="notifPanelList"></div>
 </div>
 
 <!-- ===== CASE SCREEN ===== -->
@@ -1239,7 +1879,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;
       <div class="pnm" id="profNm">Qurbonov Anusher</div>
       <div class="prole" id="profRole">&#9679; TALABA &middot; Klinik farmakologiya</div>
       <div class="pmeta" id="profMeta">
-        &#128231; anusher@clinpharm.uz<br>
+        &#128231; <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e988879c9a818c9ba98a8580879981889b84c79c93">[email&#160;protected]</a><br>
         &#127979; Toshkent tibbiyot akademiyasi &middot; 3-kurs A guruh<br>
         &#128104;&#8205;&#127979; Ustoz: Prof. Siddiqov O.A. (Klinik farmakologiya kafedrasi)<br>
         &#128197; Ro'yxatdan o'tgan: 15.01.2025<br>
@@ -1282,6 +1922,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;
 </div>
 
 
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 <script>
 
 // ============================================================
@@ -1369,7 +2010,20 @@ function doLogin(){
     const cc=document.getElementById('cCreated');if(cc)cc.textContent=new Date().toLocaleDateString('uz-UZ');
   } else if(r==='admin'){document.getElementById('nb_t').style.display='';}
   document.getElementById('loginSc').style.display='none';
-  nav('ds',document.getElementById('nb_d'));
+  // Setup nav buttons per role and show role dashboard
+  const nb_c2=document.getElementById('nb_c');
+  const nb_t2=document.getElementById('nb_t');
+  if(r==='student') {
+    if(nb_c2) nb_c2.style.display='';
+    if(nb_t2) nb_t2.style.display='none';
+  } else if(r==='teacher') {
+    if(nb_c2) nb_c2.style.display='none';
+    if(nb_t2){nb_t2.style.display='';nb_t2.textContent='👨\u200d🏫 Keys yaratish';}
+  } else {
+    if(nb_c2) nb_c2.style.display='none';
+    if(nb_t2){nb_t2.style.display='';nb_t2.textContent='⚙️ Admin Panel';}
+  }
+  showRoleDash();
   notify("Xush kelibsiz, "+user.n.split(' ')[0]+"!","success");
 }
 function logout(){
@@ -1385,14 +2039,30 @@ function logout(){
 // NAVIGATION
 // ============================================================
 function nav(id,btn){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  // Hide ALL screens
+  document.querySelectorAll('.screen').forEach(s=>{
+    s.classList.remove('active');
+    s.style.display='none';
+  });
+  // Show target screen with correct display type
+  const target=document.getElementById(id);
+  if(target){
+    target.classList.add('active');
+    // loginSc uses flex, caseSc uses block (inner clay uses grid)
+    target.style.display = (id==='loginSc') ? 'flex' : 'block';
+  }
+  // Nav button states
   document.querySelectorAll('.nlinks button').forEach(b=>b.classList.remove('active'));
   if(btn)btn.classList.add('active');
+  // Init functions per screen
   if(id==='ds'){initDash();setTimeout(animProg,400);}
+  if(id==='studentDash'){initStudentDash();setTimeout(animProg,400);}
+  if(id==='teacherDash'){initTeacherDash();setTimeout(animProg,400);}
+  if(id==='adminDash'){initAdminDash();setTimeout(animProg,400);}
   if(id==='reportSc'){loadReport();setTimeout(animProg,300);}
   if(id==='caseSc')initCase();
   if(id==='teachSc'){initTeacher();setTimeout(animProg,300);}
+  if(id==='feedSc'){document.getElementById('nb_f').style.display='';}
   window.scrollTo(0,0);
 }
 
@@ -1838,14 +2508,575 @@ function animLS(){let i=1;const iv=setInterval(()=>{const e=document.getElementB
 // INIT
 // ============================================================
 window.addEventListener('load',()=>{
-  document.getElementById('loginSc').style.display='flex';
-  document.getElementById('loginSc').classList.add('active');
+  // Hide all screens first
+  document.querySelectorAll('.screen').forEach(s=>{
+    s.classList.remove('active');
+    s.style.display='none';
+  });
+  // Show login
+  const ls = document.getElementById('loginSc');
+  if(ls){ ls.style.display='flex'; ls.classList.add('active'); }
 });
 window.addEventListener('resize',()=>{
   if(document.getElementById('ds').classList.contains('active'))drawMini();
   if(document.getElementById('reportSc').classList.contains('active'))drawReportC();
   if(document.getElementById('teachSc').classList.contains('active'))drawAnalytics();
 });
+
+
+// ============================================================
+// ROLE-SPECIFIC DATA & FUNCTIONS
+// ============================================================
+
+const MOTIVATIONS = [
+  "Bugun yangi keys yeching va reytingda yuqoriga ko'tiling! 🚀",
+  "Kecha 82 ball oldingiz — bugun 90 dan oshiring! 💪",
+  "Prof. Siddiqov O.A. siz haqingizda yaxshi fikrda — davom eting! 👨‍🏫",
+  "Dozalash bo'yicha zaif tomonlaringiz bor — bugun shu mavzuga e'tibor bering! 📚",
+  "Guruh reytingida #5 dasiz — 3-o'ringa chiqish uchun 2 ta keys yetarli! 🏆",
+];
+
+const ALL_USERS = [
+  {id:1, n:"Qurbonov Anusher", role:"student", email:"anusher@clinpharm.uz", group:"3-kurs A", avg:78, active:true, lastLogin:"Bugun"},
+  {id:2, n:"Yusupova Malika", role:"student", email:"malika@clinpharm.uz", group:"3-kurs A", avg:91, active:true, lastLogin:"Bugun"},
+  {id:3, n:"Toshmatov Bobur", role:"student", email:"bobur@clinpharm.uz", group:"3-kurs A", avg:88, active:true, lastLogin:"Kecha"},
+  {id:4, n:"Rahimova Zilola", role:"student", email:"zilola@clinpharm.uz", group:"3-kurs A", avg:85, active:true, lastLogin:"2 kun"},
+  {id:5, n:"Mirzayev Jasur", role:"student", email:"jasur@clinpharm.uz", group:"3-kurs A", avg:80, active:true, lastLogin:"3 kun"},
+  {id:6, n:"Hasanov Aziz", role:"student", email:"aziz@clinpharm.uz", group:"3-kurs A", avg:75, active:true, lastLogin:"4 kun"},
+  {id:7, n:"Karimov Sherzod", role:"student", email:"sherzod@clinpharm.uz", group:"3-kurs A", avg:62, active:false, lastLogin:"1 hafta"},
+  {id:8, n:"Ergasheva Nilufar", role:"student", email:"nilufar@clinpharm.uz", group:"3-kurs A", avg:55, active:false, lastLogin:"2 hafta"},
+  {id:9, n:"Prof. Siddiqov O.A.", role:"teacher", email:"siddiqov@clinpharm.uz", group:"Klinik farmakologiya", avg:null, active:true, lastLogin:"Bugun"},
+  {id:10, n:"Dr. Karimova Dilnoza", role:"teacher", email:"karimova@clinpharm.uz", group:"Farmakologiya", avg:null, active:true, lastLogin:"Kecha"},
+  {id:11, n:"Qurbonov A. (Admin)", role:"admin", email:"admin@clinpharm.uz", group:"IT bo'lim", avg:null, active:true, lastLogin:"Bugun"},
+];
+
+const SYSTEM_LOGS = [
+  {time:"14:32", type:"success", msg:"Qurbonov Anusher — Pnevmoniya keysi yechildi (82 ball)"},
+  {time:"13:15", type:"info", msg:"Prof. Siddiqov O.A. — Yangi keys yaratdi: Gipertenziv kriz"},
+  {time:"12:44", type:"warn", msg:"Ergasheva Nilufar — 2 haftadan beri faol emas"},
+  {time:"11:20", type:"success", msg:"Toshmatov Bobur — Streak rekord: 7 kun"},
+  {time:"10:55", type:"info", msg:"Tizim — Backup muvaffaqiyatli yaratildi"},
+  {time:"09:30", type:"error", msg:"API xato — Claude API timeout (qayta urinildi)"},
+  {time:"08:45", type:"info", msg:"Admin Qurbonov — Tizimga kirdi"},
+  {time:"08:00", type:"success", msg:"Tizim — Muvaffaqiyatli ishga tushdi"},
+];
+
+const NOTIF_DATA = [
+  {type:"warn", msg:"Ergasheva Nilufar 2 haftadan beri faol emas", time:"1 soat oldin", read:false},
+  {type:"success", msg:"Yusupova Malika guruh rekordi yangiladi: 91%", time:"3 soat oldin", read:false},
+  {type:"info", msg:"Prof. Siddiqov O.A. yangi keys qo'shdi", time:"Kecha", read:false},
+  {type:"warn", msg:"Karimov Sherzod ball keskin tushdi: 62%", time:"Kecha", read:true},
+  {type:"info", msg:"Oylik backup yaratildi", time:"2 kun oldin", read:true},
+];
+
+const ADMIN_CASES_DATA = [
+  {id:1, title:"Pnevmoniya — Homilador bemor", spec:"Pulmonologiya", teacher:"Prof. Siddiqov O.A.", group:"3-kurs A", solutions:24, avg:78, status:"active"},
+  {id:2, title:"Gipertenziv kriz", spec:"Kardiologiya", teacher:"Prof. Siddiqov O.A.", group:"3-kurs A", solutions:18, avg:71, status:"active"},
+  {id:3, title:"Qandli diabet 2-tur", spec:"Endokrinologiya", teacher:"Dr. Karimova D.", group:"3-kurs B", solutions:15, avg:74, status:"active"},
+  {id:4, title:"Epileptik tutqanoq", spec:"Nevrologiya", teacher:"Prof. Siddiqov O.A.", group:"3-kurs A", solutions:12, avg:68, status:"active"},
+  {id:5, title:"Surunkali pielonefrit", spec:"Nefrologiya", teacher:"Dr. Karimova D.", group:"3-kurs B", solutions:9, avg:81, status:"draft"},
+];
+
+// ============================================================
+// STUDENT DASHBOARD FUNCTIONS
+// ============================================================
+function initStudentDash() {
+  // Motivation
+  const el = document.getElementById('motivText');
+  if(el) el.textContent = MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)];
+  // Date
+  const d = new Date();
+  const wbd = document.getElementById('wb_s_date');
+  if(wbd) wbd.textContent = d.toLocaleDateString('uz-UZ',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+  // Performance bars
+  renderStudentPerfBars();
+  // Case list
+  renderStudentCases();
+  // Leaderboard
+  renderStudentLB();
+  // Mini calendar
+  renderMiniCal();
+  setTimeout(animProg, 400);
+}
+
+function renderStudentPerfBars() {
+  const el = document.getElementById('studentPerfBars');
+  if(!el) return;
+  const bars = [
+    {lbl:"Antibiotiklar", pct:85, color:"var(--ac3)"},
+    {lbl:"Dozalash", pct:52, color:"var(--danger)"},
+    {lbl:"Kontraindikatsiya", pct:71, color:"var(--gold)"},
+    {lbl:"Dori-dori ta'sir", pct:78, color:"var(--ac)"},
+    {lbl:"Monitoring", pct:65, color:"var(--gold)"},
+    {lbl:"Homiladorlikda ATB", pct:44, color:"var(--danger)"},
+    {lbl:"Buyrak dozasi", pct:58, color:"var(--warn)"},
+  ];
+  el.innerHTML = bars.map(b=>`
+    <div class="perf-bar">
+      <div class="perf-label">${b.lbl}</div>
+      <div class="perf-track"><div class="perf-fill" style="width:0%;background:${b.color}" data-w="${b.pct}"></div></div>
+      <div class="perf-pct" style="color:${b.color}">${b.pct}%</div>
+    </div>`).join('');
+}
+
+function renderStudentCases() {
+  const f = document.getElementById('s_cfilter')?.value || 'all';
+  const el = document.getElementById('studentCaseList');
+  if(!el) return;
+  const M = {resp:["Pulmonologiya","tr"],pul:["Kardiologiya","tp"],gastro:["Nefrologiya","tg"],neuro:["Nevrologiya","tn"],endo:["Endokrinologiya","te"]};
+  el.innerHTML = '';
+  CASES.filter(c => f==='all' || (f==='done'&&c.done) || (f==='new'&&!c.done)).forEach(c => {
+    const[tn,tc] = M[c.spec]||["—","tr"];
+    const dc = c.diff==='hard'?'dh':c.diff==='med'?'dm':'de';
+    el.innerHTML += `<div class="ci" onclick="startCase(${c.id})">
+      <div class="cnum">${String(c.id+1).padStart(2,'0')}</div>
+      <div class="cinfo"><div class="cnm">${c.title}</div>
+        <div class="ctgs"><span class="tag ${tc}">${tn}</span>${c.done?`<span class="tag bgr">\u2713 ${c.score} ball</span>`:'<span class="tag bbl">Yangi</span>'}</div>
+      </div><div class="${dc}">${c.diff==='hard'?'QIYIN':c.diff==='med'?"O'RTA":'OSON'}</div></div>`;
+  });
+}
+
+function renderStudentLB() {
+  const el = document.getElementById('s_lbList');
+  if(!el) return;
+  el.innerHTML = '';
+  LB.forEach((p,i)=>{
+    const medal = i===0?'\u{1f947}':i===1?'\u{1f948}':i===2?'\u{1f949}':'#'+(i+1);
+    el.innerHTML += `<div class="lbi${p.me?' me':''}">
+      <div class="lrk${i===0?' r1':i===1?' r2':i===2?' r3':''}">${medal}</div>
+      <div class="lnm">${p.n}${p.me?' \u2605':''}</div>
+      <div class="lbar"><div class="lfill" style="width:${p.s}%"></div></div>
+      <div class="lsc">${p.s}%</div></div>`;
+  });
+}
+
+function renderMiniCal() {
+  const el = document.getElementById('miniCal');
+  if(!el) return;
+  const today = new Date().getDate();
+  const activeDays = [1,3,5,6,8,10,12,14,15,17,19,20,22,today];
+  el.innerHTML = '';
+  for(let d=1; d<=31; d++) {
+    const cls = d===today?'cal-day today':activeDays.includes(d)?'cal-day done':'cal-day';
+    el.innerHTML += `<div class="${cls}">${d}</div>`;
+  }
+}
+
+// ============================================================
+// TEACHER DASHBOARD FUNCTIONS
+// ============================================================
+function initTeacherDash() {
+  const d = new Date();
+  const wbt = document.getElementById('wb_t_date');
+  if(wbt) wbt.textContent = d.toLocaleDateString('uz-UZ',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+  renderPendingReviews();
+  renderTeacherGroupProgress();
+  renderTopStudents();
+  renderProblemStudents();
+  setTimeout(animProg, 400);
+}
+
+function renderPendingReviews() {
+  const el = document.getElementById('pendingReviews');
+  if(!el) return;
+  const reviews = [
+    {n:"Qurbonov Anusher", case:"Pnevmoniya keysi", score:82, time:"2 soat oldin"},
+    {n:"Mirzayev Jasur", case:"Gipertenziv kriz", score:71, time:"3 soat oldin"},
+    {n:"Hasanov Aziz", case:"Pnevmoniya keysi", score:69, time:"Kecha"},
+    {n:"Rahimova Zilola", case:"Diabet keysi", score:88, time:"Kecha"},
+  ];
+  el.innerHTML = reviews.map(r=>`
+    <div class="review-item">
+      <div class="review-avatar">${r.n.charAt(0)}</div>
+      <div class="review-info">
+        <div class="review-name">${r.n}</div>
+        <div class="review-meta">${r.case} &middot; ${r.time}</div>
+      </div>
+      <div class="review-score" style="color:${r.score>=80?'var(--ac3)':r.score>=60?'var(--gold)':'var(--danger)'}">${r.score}</div>
+      <div style="display:flex;gap:.35rem">
+        <button class="btn btn-outline" style="font-size:.54rem;padding:.2rem .45rem" onclick="reviewCase('${r.n}')">Ko'rish</button>
+      </div>
+    </div>`).join('');
+}
+
+function reviewCase(name) { notify("Ko'rib chiqish: " + name, "success"); }
+
+function renderTeacherGroupProgress() {
+  const el = document.getElementById('teacherGroupProgress');
+  if(!el) return;
+  const bars = [
+    {lbl:"Antibiotiklar", pct:79, color:"var(--ac3)"},
+    {lbl:"Dozalash", pct:55, color:"var(--danger)"},
+    {lbl:"Kontraindikatsiya", pct:68, color:"var(--gold)"},
+    {lbl:"Monitoring", pct:72, color:"var(--ac)"},
+    {lbl:"Homiladorlik+ATB", pct:42, color:"var(--danger)"},
+  ];
+  el.innerHTML = bars.map(b=>`
+    <div class="perf-bar">
+      <div class="perf-label">${b.lbl}</div>
+      <div class="perf-track"><div class="perf-fill" style="width:0%;background:${b.color}" data-w="${b.pct}"></div></div>
+      <div class="perf-pct" style="color:${b.color}">${b.pct}%</div>
+    </div>`).join('');
+}
+
+function renderTopStudents() {
+  const el = document.getElementById('topStudentsList');
+  if(!el) return;
+  STUDENTS.slice(0,5).forEach((st,i)=>{
+    el.innerHTML += `<div class="lbi">
+      <div class="lrk${i===0?' r1':i===1?' r2':i===2?' r3':''}">${i===0?'\u{1f947}':i===1?'\u{1f948}':i===2?'\u{1f949}':'#'+(i+1)}</div>
+      <div class="lnm">${st.n}</div>
+      <div class="lbar"><div class="lfill" style="width:${st.avg}%"></div></div>
+      <div class="lsc" style="color:${st.avg>=80?'var(--ac3)':st.avg>=60?'var(--gold)':'var(--danger)'}">${st.avg}%</div>
+    </div>`;
+  });
+}
+
+function renderProblemStudents() {
+  const el = document.getElementById('problemStudentsList');
+  if(!el) return;
+  STUDENTS.filter(s=>s.avg<65).forEach(st=>{
+    el.innerHTML += `<div class="lbi">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--danger);flex-shrink:0"></div>
+      <div class="lnm">${st.n}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3)">${st.last}</div>
+      <div class="lsc" style="color:var(--danger)">${st.avg}%</div>
+      <button class="btn btn-outline" style="font-size:.54rem;padding:.2rem .45rem" onclick="notify('${st.n} bilan muloqot','success')">Yozish</button>
+    </div>`;
+  });
+}
+
+function showTeacherTab(tab) {
+  nav('teachSc', document.getElementById('nb_t'));
+  setTimeout(()=>{ showTTab(tab); }, 200);
+}
+
+function exportTeacherReport() {
+  let csv = "Talaba,Keyslar,Ball,Baho\n";
+  STUDENTS.forEach(s=>{ csv += '"'+s.n+'",'+s.sol+','+s.avg+','+s.gr+"\n"; });
+  const b = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(b);
+  a.download='Siddiqov_OA_guruh_hisobot.csv'; a.click();
+  notify("Hisobot yuklab olindi!","success");
+}
+
+function openCreateCase() {
+  nav('teachSc', document.getElementById('nb_t'));
+  notify("Yangi keys yaratish formi ochildi","success");
+}
+
+// ============================================================
+// ADMIN DASHBOARD FUNCTIONS
+// ============================================================
+function initAdminDash() {
+  const d = new Date();
+  const wba = document.getElementById('wb_a_date');
+  if(wba) wba.textContent = d.toLocaleDateString('uz-UZ',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+  const wbn = document.getElementById('wb_a_name');
+  if(wbn) wbn.textContent = "Qurbonov A. — Tizim Administratori";
+  renderAdminUsers('all');
+  renderAdminCases();
+  renderAdminLogs();
+  renderNotifPanel();
+  renderAdminAnalytics();
+  setTimeout(()=>{ animProg(); drawAdminCharts(); }, 400);
+}
+
+function renderAdminUsers(filterRole) {
+  const el = document.getElementById('adminUserList');
+  if(!el) return;
+  el.innerHTML = '';
+  ALL_USERS.filter(u=>filterRole==='all'||u.role===filterRole).forEach(u=>{
+    const rIcon = u.role==='student'?'👨‍⚕️':u.role==='teacher'?'👨‍🏫':'⚙️';
+    const rColor = u.role==='student'?'var(--ac3)':u.role==='teacher'?'var(--purple)':'var(--gold)';
+    const rLabel = u.role==='student'?'Talaba':u.role==='teacher'?"O'qituvchi":'Admin';
+    el.innerHTML += `<div class="user-row">
+      <div class="user-avatar-sm" style="background:linear-gradient(135deg,${u.role==='student'?'var(--ac2),var(--ac3)':u.role==='teacher'?'#7700cc,var(--purple)':'#cc8800,var(--gold)'})">${rIcon}</div>
+      <div class="user-info">
+        <div class="user-name">${u.n} ${u.n.includes('Qurbonov')&&u.role!=='student'?'<span style="font-size:.55rem;color:var(--gold)">(Siz)</span>':''}</div>
+        <div class="user-email">${u.email} &middot; ${u.group} &middot; Oxirgi: ${u.lastLogin}</div>
+      </div>
+      <span class="badge" style="color:${rColor};border-color:${rColor}33;background:${rColor}11">${rLabel}</span>
+      <div class="user-actions">
+        <button class="btn btn-outline" style="font-size:.54rem;padding:.2rem .42rem" onclick="editUser(${u.id})">✏</button>
+        ${u.role!=='admin'?`<button class="btn btn-danger" style="font-size:.54rem;padding:.2rem .42rem" onclick="deleteUser(${u.id})">✕</button>`:''}
+      </div>
+    </div>`;
+  });
+}
+
+function filterAdminUsers(role) { renderAdminUsers(role); }
+
+function renderAdminCases() {
+  const tb = document.getElementById('adminCasesBody');
+  if(!tb) return; tb.innerHTML = '';
+  ADMIN_CASES_DATA.forEach((c,i)=>{
+    const gc = v=>v>=80?'var(--ac3)':v>=60?'var(--gold)':'var(--danger)';
+    const statusBadge = c.status==='active'?'<span class="badge bgr">Faol</span>':'<span class="badge bgo">Qoralama</span>';
+    tb.innerHTML += `<tr>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3)">${String(c.id).padStart(2,'0')}</td>
+      <td style="color:var(--wh)">${c.title}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3)">${c.spec}</td>
+      <td style="font-size:.78rem;color:var(--purple)">${c.teacher}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3)">${c.group}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--ac)">${c.solutions}</td>
+      <td style="font-family:'Unbounded',sans-serif;font-size:.8rem;font-weight:700;color:${gc(c.avg)}">${c.avg}%</td>
+      <td>${statusBadge}</td>
+      <td><div style="display:flex;gap:.28rem">
+        <button class="btn btn-outline" style="font-size:.52rem;padding:.18rem .38rem" onclick="editAdminCase(${c.id})">✏</button>
+        <button class="btn btn-danger" style="font-size:.52rem;padding:.18rem .38rem" onclick="deleteAdminCase(${c.id})">✕</button>
+      </div></td>
+    </tr>`;
+  });
+}
+
+function filterAdminCases() {
+  const q = document.getElementById('adminCaseSearch')?.value?.toLowerCase()||'';
+  document.querySelectorAll('#adminCasesBody tr').forEach(tr=>{
+    tr.style.display = tr.textContent.toLowerCase().includes(q)?'':'none';
+  });
+}
+
+function renderAdminLogs() {
+  const el = document.getElementById('adminLogsList');
+  if(!el) return; el.innerHTML = '';
+  SYSTEM_LOGS.forEach(log=>{
+    el.innerHTML += `<div class="log-item">
+      <div class="log-time">${log.time}</div>
+      <div class="log-type ${log.type}">${log.type.toUpperCase()}</div>
+      <div style="flex:1;color:var(--tx)">${log.msg}</div>
+    </div>`;
+  });
+}
+
+function renderNotifPanel() {
+  const el = document.getElementById('notifPanelList');
+  if(!el) return; el.innerHTML = '';
+  NOTIF_DATA.forEach(n=>{
+    const dot_color = n.type==='warn'?'var(--gold)':n.type==='success'?'var(--ac3)':n.type==='error'?'var(--danger)':'var(--ac)';
+    el.innerHTML += `<div class="np-item">
+      <div class="np-dot ${n.read?'':'np-unread'}" style="background:${dot_color}"></div>
+      <div>
+        <div style="font-size:.82rem;color:var(--tx)">${n.msg}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--tx3)">${n.time}</div>
+      </div>
+    </div>`;
+  });
+}
+
+function renderAdminAnalytics() {
+  const hc = document.getElementById('hardestCases');
+  if(hc) hc.innerHTML = `
+    <div class="pi"><div class="pl"><span>Epileptik tutqanoq</span><span style="color:var(--danger)">68%</span></div><div class="pb"><div class="pf" style="background:var(--danger)" data-w="68"></div></div></div>
+    <div class="pi"><div class="pl"><span>Gipertenziv kriz</span><span style="color:var(--gold)">71%</span></div><div class="pb"><div class="pf" style="background:var(--gold)" data-w="71"></div></div></div>
+    <div class="pi"><div class="pl"><span>Pnevmoniya (homilador)</span><span style="color:var(--ac)">78%</span></div><div class="pb"><div class="pf" style="background:var(--ac)" data-w="78"></div></div></div>`;
+  const ge = document.getElementById('globalErrors');
+  if(ge) ge.innerHTML = `
+    <div class="pi"><div class="pl"><span>Dozalash xatosi</span><span style="color:var(--danger)">38%</span></div><div class="pb"><div class="pf" style="background:var(--danger)" data-w="38"></div></div></div>
+    <div class="pi"><div class="pl"><span>Homiladorlik ATB</span><span style="color:var(--warn)">28%</span></div><div class="pb"><div class="pf" style="background:var(--warn)" data-w="28"></div></div></div>
+    <div class="pi"><div class="pl"><span>Monitoring rejasi</span><span style="color:var(--gold)">22%</span></div><div class="pb"><div class="pf" style="background:var(--gold)" data-w="22"></div></div></div>`;
+}
+
+function drawAdminCharts() {
+  // User growth chart
+  drawLineChart('userGrowthChart', [40,55,70,85,100,120,134,156], ['Yan','Fev','Mar','Apr','May','Iyun','Iyul','Avg'], 'var(--ac3)');
+  // Platform usage
+  drawBarChart('platformUsageChart', [120,180,240,310,420,380,290], ['Dsh','Ses','Cha','Pay','Jum','Sha','Yak'], ['var(--ac)','var(--ac2)','var(--ac)','var(--ac2)','var(--ac)','var(--ac2)','var(--ac)']);
+  // Monthly stats
+  drawLineChart('monthlyStatsChart', [45,52,63,71,78,74,68,72,75,80,77,82], ['Yan','Fev','Mar','Apr','May','Iyn','Iyl','Avg','Sen','Okt','Noy','Dek'], 'var(--purple)');
+  // AI requests
+  drawBarChart('aiRequestsChart', [184,220,195,280,310,264,284], ['Dsh','Ses','Cha','Pay','Jum','Sha','Yak'], Array(7).fill('var(--ac)'));
+}
+
+function drawLineChart(id, data, labels, color) {
+  const c = document.getElementById(id); if(!c) return;
+  const ctx = c.getContext('2d'); const W = c.offsetWidth||400; c.width = W;
+  const H = c.height || 130;
+  const mn = Math.min(...data) * 0.9;
+  const mx = Math.max(...data) * 1.1;
+  ctx.clearRect(0,0,W,H);
+  const gap = W/(data.length-1);
+  const g = ctx.createLinearGradient(0,0,0,H);
+  const hex = color.includes('(')? color : '#00d4ff';
+  g.addColorStop(0, color.replace(')',', 0.2)').replace('var','rgba').replace('--ac3','0,255,204').replace('--ac','0,212,255').replace('--purple','204,102,255'));
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.beginPath();
+  data.forEach((v,i)=>{const x=i*gap,y=H-8-((v-mn)/(mx-mn)*(H-24));i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.lineTo((data.length-1)*gap,H); ctx.lineTo(0,H); ctx.closePath();
+  ctx.fillStyle=g; ctx.fill();
+  ctx.beginPath(); ctx.strokeStyle=color.startsWith('var')?'#00d4ff':color; ctx.lineWidth=1.5; ctx.lineJoin='round';
+  data.forEach((v,i)=>{const x=i*gap,y=H-8-((v-mn)/(mx-mn)*(H-24));i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.stroke();
+  data.forEach((v,i)=>{const x=i*gap,y=H-8-((v-mn)/(mx-mn)*(H-24));ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle='#00d4ff';ctx.fill();});
+  ctx.font='7.5px JetBrains Mono';ctx.fillStyle='#3d6070';ctx.textAlign='center';
+  labels.forEach((l,i)=>{ctx.fillText(l,i*gap,H-1);});
+}
+
+function drawBarChart(id, data, labels, colors) {
+  const c = document.getElementById(id); if(!c) return;
+  const ctx = c.getContext('2d'); const W = c.offsetWidth||400; c.width = W;
+  const H = c.height || 130;
+  const mx = Math.max(...data) * 1.15;
+  ctx.clearRect(0,0,W,H);
+  const bw = (W/data.length)*0.55;
+  data.forEach((v,i)=>{
+    const x = i*(W/data.length)+(W/data.length-bw)/2;
+    const h = (v/mx)*(H-22); const y = H-20-h;
+    ctx.fillStyle=colors[i]||'var(--ac)';
+    ctx.fillRect(x,y,bw,h);
+    ctx.font='7.5px JetBrains Mono';ctx.fillStyle='#7aaabb';ctx.textAlign='center';ctx.fillText(v,x+bw/2,y-3);
+    ctx.fillStyle='#3d6070';ctx.fillText(labels[i],x+bw/2,H-6);
+  });
+  ctx.fillStyle='rgba(24,51,72,.5)';ctx.fillRect(0,H-20,W,1);
+}
+
+function showAdminTab(tab, btn) {
+  ['users','cases','analytics','ai','logs','settings'].forEach(t=>{
+    const el = document.getElementById('adm_'+t); if(el) el.style.display='none';
+  });
+  const el = document.getElementById('adm_'+tab); if(el) el.style.display='block';
+  document.querySelectorAll('.dark-tab').forEach(b=>b.classList.remove('active'));
+  const target = document.getElementById('adm_tab_'+tab);
+  if(target) target.classList.add('active');
+  else if(btn) btn.classList.add('active');
+  if(tab==='analytics') setTimeout(()=>{drawAdminCharts();animProg();},200);
+  if(tab==='ai') setTimeout(()=>{drawLineChart('aiRequestsChart',[184,220,195,280,310,264,284],['Dsh','Ses','Cha','Pay','Jum','Sha','Yak'],'var(--ac)');},200);
+}
+
+// ============================================================
+// MODAL FUNCTIONS
+// ============================================================
+function openAdminModal(type) {
+  const overlay = document.getElementById('adminModal');
+  const title = document.getElementById('modalTitle');
+  const body = document.getElementById('modalBody');
+  const btns = document.getElementById('modalBtns');
+  if(!overlay) return;
+
+  if(type === 'addUser') {
+    title.innerHTML = '👤 Yangi foydalanuvchi qo\'shish';
+    body.innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:.75rem">
+        <div><label class="ilbl">Ism familyasi</label><input class="inp" id="newUserName" placeholder="Masalan: Toshmatov Jasur"></div>
+        <div><label class="ilbl">Email</label><input class="inp" id="newUserEmail" placeholder="email@clinpharm.uz" type="email"></div>
+        <div><label class="ilbl">Rol</label><select class="inp" id="newUserRole"><option value="student">👨‍⚕️ Talaba</option><option value="teacher">👨‍🏫 O'qituvchi</option><option value="admin">⚙️ Admin</option></select></div>
+        <div><label class="ilbl">Guruh</label><input class="inp" id="newUserGroup" placeholder="3-kurs A"></div>
+        <div><label class="ilbl">Parol</label><input class="inp" id="newUserPass" type="password" placeholder="Vaqtinchalik parol"></div>
+      </div>`;
+    btns.innerHTML = `
+      <button class="btn btn-outline" onclick="closeModal()">Bekor qilish</button>
+      <button class="btn-submit" onclick="addNewUser()">✅ Qo'shish</button>`;
+  } else if(type === 'systemSettings') {
+    title.innerHTML = '⚙️ Tizim sozlamalari';
+    body.innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:.75rem">
+        <div><label class="ilbl">Sessiya davomiyligi (soat)</label><input class="inp" type="number" value="24"></div>
+        <div><label class="ilbl">Maksimal talabalar</label><input class="inp" type="number" value="500"></div>
+        <div><label class="ilbl">Email bildirisnomalar</label><select class="inp"><option>Yoqilgan</option><option>O'chirilgan</option></select></div>
+      </div>`;
+    btns.innerHTML = `
+      <button class="btn btn-outline" onclick="closeModal()">Bekor qilish</button>
+      <button class="btn-submit" onclick="saveSystemSettings()">Saqlash</button>`;
+  }
+  overlay.classList.add('show');
+}
+
+function closeModal() {
+  const overlay = document.getElementById('adminModal');
+  if(overlay) overlay.classList.remove('show');
+}
+
+function addNewUser() {
+  const name = document.getElementById('newUserName')?.value;
+  if(!name) { notify("Ism familyasini kiriting!","warn"); return; }
+  notify(name + " muvaffaqiyatli qo'shildi!","success");
+  closeModal();
+}
+
+function editUser(id) { notify("Foydalanuvchi tahrirlash: #"+id,"success"); }
+function deleteUser(id) { if(confirm("Foydalanuvchini o'chirishni tasdiqlaysizmi?")) notify("Foydalanuvchi o'chirildi","warn"); }
+function editAdminCase(id) { notify("Keys tahrirlash: #"+id,"success"); }
+function deleteAdminCase(id) { if(confirm("Keysi o'chirishni tasdiqlaysizmi?")) notify("Keys o'chirildi","warn"); }
+function exportAllCases() { notify("Keyslar CSV eksport qilindi!","success"); }
+function clearLogs() { const el=document.getElementById('adminLogsList'); if(el)el.innerHTML='<div style="padding:1rem;font-family:JetBrains Mono,monospace;font-size:.62rem;color:var(--tx3);text-align:center">Loglar tozalandi</div>'; notify("Loglar tozalandi","warn"); }
+function testClaudeAPI() { notify("Claude API: 200 OK — 1.2s ✓","success"); }
+function saveOpenAIKey() { const k=document.getElementById('openaiKey')?.value; if(k) notify("OpenAI API ulandi!","success"); else notify("API kalit kiriting!","warn"); }
+function saveGeminiKey() { const k=document.getElementById('geminiKey')?.value; if(k) notify("Gemini API ulandi!","success"); else notify("API kalit kiriting!","warn"); }
+function createBackup() { notify("Backup yaratilmoqda... 📦","success"); }
+function restoreBackup() { notify("Tiklash jarayoni boshlandi","warn"); }
+function resetPlatform() { if(confirm("Haqiqatan ham platformani qayta sozlashni xohlaysizmi?")) notify("Operatsiya bekor qilindi","warn"); }
+function saveSystemSettings() { notify("Tizim sozlamalari saqlandi ✓","success"); closeModal(); }
+
+// Notification panel
+function toggleNotifPanel() {
+  const el = document.getElementById('notifPanel');
+  if(el) el.classList.toggle('open');
+}
+function clearAllNotifs() {
+  const el = document.getElementById('notifPanelList');
+  if(el) el.querySelectorAll('.np-dot').forEach(d=>d.classList.remove('np-unread'));
+  const cnt = document.getElementById('adminNotifCount');
+  const bell = document.getElementById('nbellCount');
+  if(cnt) cnt.textContent='0';
+  if(bell) bell.textContent='0';
+  notify("Bildirishnomalar o'qildi","success");
+}
+
+
+// ============================================================
+// ROLE ROUTER
+// ============================================================
+function showRoleDash() {
+  if(!user) return;
+  // Hide all screens first
+  document.querySelectorAll('.screen').forEach(s=>{
+    s.classList.remove('active');
+    s.style.display='none';
+  });
+  document.querySelectorAll('.nlinks button').forEach(b=>b.classList.remove('active'));
+  const nd=document.getElementById('nb_d');
+  if(nd) nd.classList.add('active');
+
+  let dashId = 'studentDash';
+  if(user.role==='teacher') dashId='teacherDash';
+  else if(user.role==='admin') dashId='adminDash';
+
+  const dashEl = document.getElementById(dashId);
+  if(dashEl){ dashEl.style.display='block'; dashEl.classList.add('active'); }
+  // Ensure login is hidden
+  const ls=document.getElementById('loginSc');
+  if(ls){ls.style.display='none';ls.classList.remove('active');}
+
+  if(user.role==='student') initStudentDash();
+  else if(user.role==='teacher') initTeacherDash();
+  else initAdminDash();
+
+
+function goHome(btn) {
+  document.querySelectorAll('.nlinks button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  if(user && (user.role==='student'||user.role==='teacher'||user.role==='admin')) {
+    showRoleDash();
+    const nb = document.getElementById('nb_d');
+    if(nb) nb.classList.add('active');
+  } else {
+    nav('ds',btn);
+  }
+}
+}
+
+// Override logout to clear role screens
+function logoutFull() {
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});
+  const rb = document.getElementById('nb_role_dash');
+  if(rb){ rb.style.display='none'; rb.classList.remove('active'); }
+  document.getElementById('nb_t').style.display='none';
+  document.getElementById('nb_f').style.display='none';
+  user=null; chatHist=[]; step=1;
+  document.getElementById('mnav').style.display='none';
+  const ls=document.getElementById('loginSc');
+  if(ls){ls.style.display='flex';ls.classList.add('active');}
+}
 
 </script>
 </body>
