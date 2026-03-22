@@ -3,302 +3,546 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ClinPharm AI Trainer</title>
-<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@300;400;500&family=Unbounded:wght@300;400;600;700&display=swap" rel="stylesheet">
+<title>ClinPharm AI Trainer — Prof. Siddiqov O.A.</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@300;400;500&family=Unbounded:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <style>
+/* ===== DESIGN SYSTEM ===== */
 :root{
-  --bg:#050a0f;--s1:#0a1520;--s2:#0f1e2e;--s3:#152535;
-  --b1:#1a3a55;--b2:#1e4a6e;
-  --ac:#00c8ff;--ac2:#0088bb;--ac3:#00ffaa;
-  --warn:#ff6b35;--danger:#ff3355;--gold:#ffc84a;--purple:#b060ff;
-  --tx:#c8dde8;--tx2:#7aa0b8;--tx3:#4a7090;--wh:#e8f4f8;
+  --bg:#03080d;--s1:#080f18;--s2:#0d1822;--s3:#111f2d;--s4:#152535;
+  --b1:#183348;--b2:#1e4060;--b3:#255070;
+  --ac:#00d4ff;--ac2:#0090cc;--ac3:#00ffcc;--ac4:#00bfaa;
+  --warn:#ff7733;--danger:#ff2255;--gold:#ffcc44;--purple:#cc66ff;--pink:#ff44aa;
+  --tx:#cce0ec;--tx2:#7aaabb;--tx3:#3d6070;--wh:#eef6fa;
+  --glow:0 0 30px rgba(0,212,255,.12);--glow2:0 0 60px rgba(0,212,255,.07);
+  --r4:4px;--r6:6px;--r8:8px;--r12:12px;--r16:16px;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,200,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
-nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(5,10,15,.97);border-bottom:1px solid var(--b1);backdrop-filter:blur(20px);padding:0 1.4rem;height:56px;display:flex;align-items:center;justify-content:space-between;gap:.8rem;}
-.nlogo{font-family:'Unbounded',sans-serif;font-size:.9rem;font-weight:700;color:var(--ac);flex-shrink:0;white-space:nowrap;}.nlogo span{color:var(--ac3);}
-.nlinks{display:flex;gap:.25rem;flex-wrap:wrap;}
-.nlinks button{background:none;border:1px solid transparent;color:var(--tx2);padding:.28rem .6rem;font-family:'JetBrains Mono',monospace;font-size:.62rem;cursor:pointer;border-radius:4px;transition:all .2s;white-space:nowrap;}
-.nlinks button:hover,.nlinks button.active{color:var(--ac);border-color:var(--b2);background:rgba(0,200,255,.06);}
-.nuser{display:flex;align-items:center;gap:.5rem;font-family:'JetBrains Mono',monospace;font-size:.63rem;color:var(--tx2);flex-shrink:0;}
-.ubadge{background:rgba(0,255,170,.1);border:1px solid rgba(0,255,170,.3);color:var(--ac3);padding:.14rem .42rem;border-radius:20px;font-size:.56rem;}
-.pulse{width:6px;height:6px;border-radius:50%;background:var(--ac3);animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,170,.4);}50%{box-shadow:0 0 0 5px rgba(0,255,170,0);}}
-.screen{display:none;min-height:100vh;padding-top:56px;position:relative;z-index:1;}.screen.active{display:block;}
-/* LOGIN */
+html{scroll-behavior:smooth;}
+body{font-family:"Crimson Pro",Georgia,serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;}
+
+/* Animated grid bg */
+body::before{content:"";position:fixed;inset:0;
+  background-image:linear-gradient(rgba(0,212,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.018) 1px,transparent 1px);
+  background-size:48px 48px;pointer-events:none;z-index:0;}
+body::after{content:"";position:fixed;inset:0;
+  background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(0,144,204,.12),transparent),
+             radial-gradient(ellipse 60% 40% at 80% 80%,rgba(0,255,204,.05),transparent);
+  pointer-events:none;z-index:0;}
+
+/* ===== NAV ===== */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;
+  background:rgba(3,8,13,.96);border-bottom:1px solid var(--b1);
+  backdrop-filter:blur(24px);padding:0 1.5rem;height:56px;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.nlogo{font-family:"Unbounded",sans-serif;font-size:.92rem;font-weight:900;
+  background:linear-gradient(135deg,var(--ac),var(--ac3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;white-space:nowrap;flex-shrink:0;letter-spacing:-.01em;}
+.nlinks{display:flex;gap:.2rem;flex-wrap:wrap;}
+.nlinks button{background:none;border:1px solid transparent;color:var(--tx2);
+  padding:.28rem .62rem;font-family:"JetBrains Mono",monospace;font-size:.62rem;
+  cursor:pointer;border-radius:var(--r4);transition:all .2s;white-space:nowrap;}
+.nlinks button:hover{color:var(--ac);border-color:var(--b2);background:rgba(0,212,255,.06);}
+.nlinks button.active{color:var(--ac);border-color:var(--b2);background:rgba(0,212,255,.1);}
+.nuser{display:flex;align-items:center;gap:.5rem;font-family:"JetBrains Mono",monospace;font-size:.63rem;color:var(--tx2);flex-shrink:0;}
+.ubadge{padding:.14rem .42rem;border-radius:20px;font-size:.56rem;font-family:"JetBrains Mono",monospace;}
+.ubadge.student{background:rgba(0,255,204,.1);border:1px solid rgba(0,255,204,.3);color:var(--ac3);}
+.ubadge.teacher{background:rgba(204,102,255,.1);border:1px solid rgba(204,102,255,.3);color:var(--purple);}
+.ubadge.admin{background:rgba(255,204,68,.1);border:1px solid rgba(255,204,68,.3);color:var(--gold);}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--ac3);animation:pulse 2s infinite;flex-shrink:0;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,204,.5);}50%{box-shadow:0 0 0 6px rgba(0,255,204,0);}}
+.nbtn-exit{background:none;border:1px solid var(--b1);color:var(--tx3);padding:.22rem .5rem;
+  border-radius:var(--r4);cursor:pointer;font-family:"JetBrains Mono",monospace;font-size:.55rem;transition:all .2s;}
+.nbtn-exit:hover{border-color:var(--danger);color:var(--danger);}
+
+/* ===== SCREENS ===== */
+.screen{display:none;min-height:100vh;padding-top:56px;position:relative;z-index:1;}
+.screen.active{display:block;}
+.page{padding:68px 1.4rem 2rem;}
+.wrap{max-width:1320px;margin:0 auto;}
+
+/* ===== LOGIN ===== */
 #loginSc{display:flex;align-items:center;justify-content:center;min-height:100vh;padding-top:0;}
-.lwrap{width:400px;animation:fadeUp .6s ease;}
-.lbig{font-family:'Unbounded',sans-serif;font-size:1.8rem;font-weight:700;color:var(--ac);text-align:center;margin-bottom:.2rem;}.lbig span{color:var(--ac3);}
-.lsub{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--tx3);letter-spacing:.12em;text-align:center;margin-bottom:1.8rem;}
-.lcard{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:1.6rem;box-shadow:0 0 40px rgba(0,200,255,.07);}
-.lcard h2{font-family:'Unbounded',sans-serif;font-size:.7rem;font-weight:400;color:var(--tx2);margin-bottom:1.1rem;letter-spacing:.06em;}
-.fg{margin-bottom:.8rem;}.fg label{display:block;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--tx3);margin-bottom:.26rem;letter-spacing:.05em;}
-.fg input,.fg select{width:100%;background:var(--s2);border:1px solid var(--b1);color:var(--wh);padding:.55rem .8rem;border-radius:5px;font-family:'Crimson Pro',serif;font-size:.9rem;transition:border-color .2s;}
-.fg input:focus,.fg select:focus{outline:none;border-color:var(--ac2);box-shadow:0 0 0 3px rgba(0,200,255,.07);}.fg select option{background:var(--s2);}
-.btnp{width:100%;background:linear-gradient(135deg,var(--ac2),var(--ac));border:none;color:var(--bg);padding:.68rem;border-radius:5px;font-family:'Unbounded',sans-serif;font-size:.7rem;font-weight:700;cursor:pointer;transition:all .2s;margin-top:.28rem;}
-.btnp:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,200,255,.3);}
-.drow{margin-top:.8rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:.4rem;}
-.dbtn{background:var(--s3);border:1px solid var(--b1);color:var(--tx2);padding:.38rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.58rem;cursor:pointer;transition:all .2s;text-align:center;}
-.dbtn:hover{border-color:var(--ac);color:var(--ac);}
-/* LAYOUT HELPERS */
-.page{padding:68px 1.3rem 2rem;}.wrap{max-width:1290px;margin:0 auto;}
-.phdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.3rem;flex-wrap:wrap;gap:.7rem;}
-.ptitle{font-family:'Unbounded',sans-serif;font-size:.92rem;font-weight:300;color:var(--wh);letter-spacing:.04em;}.ptitle span{color:var(--ac);}
-.psub{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--ac3);margin-top:.14rem;}
-.srow{display:grid;grid-template-columns:repeat(5,1fr);gap:.72rem;margin-bottom:1.3rem;}
-.sc{background:var(--s1);border:1px solid var(--b1);border-radius:7px;padding:.88rem 1rem;position:relative;overflow:hidden;transition:all .2s;}
-.sc:hover{border-color:var(--b2);transform:translateY(-2px);}
-.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--clr,var(--ac));}
-.slbl{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--tx3);letter-spacing:.1em;margin-bottom:.35rem;}
-.sval{font-family:'Unbounded',sans-serif;font-size:1.5rem;font-weight:700;color:var(--wh);line-height:1;}.sval.sm{font-size:.88rem;line-height:1.3;}
-.ssub{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--tx3);margin-top:.2rem;}
-.g32{display:grid;grid-template-columns:3fr 2fr;gap:.95rem;margin-bottom:.95rem;}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:.95rem;margin-bottom:.95rem;}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.95rem;margin-bottom:.95rem;}
-.card{background:var(--s1);border:1px solid var(--b1);border-radius:7px;overflow:hidden;}
-.ch{padding:.72rem .95rem;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;}
-.ct{font-family:'Unbounded',sans-serif;font-size:.61rem;font-weight:400;color:var(--tx2);letter-spacing:.05em;}
-.cb{padding:.82rem .95rem;}
+.login-outer{width:440px;animation:riseIn .7s cubic-bezier(.16,1,.3,1);}
+@keyframes riseIn{from{opacity:0;transform:translateY(32px);}to{opacity:1;transform:translateY(0);}}
+.login-brand{text-align:center;margin-bottom:2rem;}
+.login-logo{font-family:"Unbounded",sans-serif;font-size:2.2rem;font-weight:900;
+  background:linear-gradient(135deg,var(--ac),var(--ac3) 60%,var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:-.02em;line-height:1;}
+.login-tagline{font-family:"JetBrains Mono",monospace;font-size:.62rem;color:var(--tx3);
+  letter-spacing:.14em;margin-top:.5rem;}
+.login-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r16);
+  padding:1.8rem;box-shadow:var(--glow2),inset 0 1px 0 rgba(255,255,255,.04);}
+.login-card h2{font-family:"Unbounded",sans-serif;font-size:.72rem;font-weight:400;
+  color:var(--tx2);margin-bottom:1.3rem;letter-spacing:.08em;}
+.fg{margin-bottom:.85rem;}
+.fg label{display:block;font-family:"JetBrains Mono",monospace;font-size:.6rem;
+  color:var(--tx3);margin-bottom:.26rem;letter-spacing:.06em;text-transform:uppercase;}
+.fg input,.fg select{width:100%;background:var(--s2);border:1px solid var(--b1);color:var(--wh);
+  padding:.58rem .82rem;border-radius:var(--r6);font-family:"Crimson Pro",serif;font-size:.92rem;
+  transition:all .2s;outline:none;}
+.fg input:focus,.fg select:focus{border-color:var(--ac2);box-shadow:0 0 0 3px rgba(0,212,255,.08);}
+.fg select option{background:var(--s2);}
+.login-btn{width:100%;background:linear-gradient(135deg,var(--ac2),var(--ac),var(--ac3));
+  border:none;color:var(--bg);padding:.72rem;border-radius:var(--r8);
+  font-family:"Unbounded",sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;
+  transition:all .25s;margin-top:.35rem;letter-spacing:.04em;position:relative;overflow:hidden;}
+.login-btn::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(255,255,255,.15),transparent);
+  transform:translateX(-100%);transition:transform .4s;}
+.login-btn:hover::after{transform:translateX(100%);}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,212,255,.4);}
+.demo-row{margin-top:.9rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:.42rem;}
+.demo-btn{background:var(--s3);border:1px solid var(--b1);color:var(--tx2);padding:.4rem;
+  border-radius:var(--r4);font-family:"JetBrains Mono",monospace;font-size:.6rem;cursor:pointer;
+  transition:all .2s;text-align:center;}
+.demo-btn:hover{border-color:var(--ac);color:var(--ac);background:rgba(0,212,255,.06);}
+
+/* ===== LAYOUT COMPONENTS ===== */
+.phdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.4rem;flex-wrap:wrap;gap:.8rem;}
+.ptitle{font-family:"Unbounded",sans-serif;font-size:.95rem;font-weight:300;color:var(--wh);letter-spacing:.03em;}
+.ptitle span{background:linear-gradient(135deg,var(--ac),var(--ac3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.psub{font-family:"JetBrains Mono",monospace;font-size:.58rem;color:var(--ac3);margin-top:.14rem;}
+.pbtn-row{display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;}
+
 /* Buttons */
-.bsm{background:rgba(0,200,255,.07);border:1px solid var(--b2);color:var(--ac);padding:.24rem .58rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.59rem;cursor:pointer;transition:all .2s;white-space:nowrap;}
-.bsm:hover{background:rgba(0,200,255,.14);}
-.bdg{background:rgba(255,51,85,.08);border:1px solid rgba(255,51,85,.3);color:var(--danger);padding:.24rem .58rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.59rem;cursor:pointer;transition:all .2s;}
-.bgl{background:rgba(255,200,74,.08);border:1px solid rgba(255,200,74,.3);color:var(--gold);padding:.24rem .58rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.59rem;cursor:pointer;transition:all .2s;}
-.bgn{background:rgba(0,255,170,.08);border:1px solid rgba(0,255,170,.3);color:var(--ac3);padding:.24rem .58rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.59rem;cursor:pointer;transition:all .2s;}
-.bsub{background:linear-gradient(135deg,var(--ac2),var(--ac));border:none;color:var(--bg);padding:.5rem 1.2rem;border-radius:5px;font-family:'Unbounded',sans-serif;font-size:.64rem;font-weight:700;cursor:pointer;transition:all .2s;}
-.bsub:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,200,255,.3);}
-.bback{background:none;border:1px solid var(--b1);color:var(--tx2);padding:.5rem .82rem;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:.62rem;cursor:pointer;transition:all .2s;}
-.bback:hover{border-color:var(--b2);color:var(--tx);}
-/* Prog */
-.pi{margin-bottom:.58rem;}.pl{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--tx2);margin-bottom:.19rem;}
-.pb{height:3px;background:var(--s3);border-radius:2px;overflow:hidden;}
-.pf{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+.btn{padding:.28rem .65rem;border-radius:var(--r4);font-family:"JetBrains Mono",monospace;font-size:.6rem;cursor:pointer;transition:all .2s;white-space:nowrap;border:1px solid;}
+.btn-primary{background:linear-gradient(135deg,var(--ac2),var(--ac));border-color:transparent;color:var(--bg);font-weight:700;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,212,255,.35);}
+.btn-outline{background:rgba(0,212,255,.07);border-color:var(--b2);color:var(--ac);}
+.btn-outline:hover{background:rgba(0,212,255,.14);}
+.btn-gold{background:rgba(255,204,68,.08);border-color:rgba(255,204,68,.35);color:var(--gold);}
+.btn-gold:hover{background:rgba(255,204,68,.15);}
+.btn-green{background:rgba(0,255,204,.07);border-color:rgba(0,255,204,.3);color:var(--ac3);}
+.btn-green:hover{background:rgba(0,255,204,.14);}
+.btn-danger{background:rgba(255,34,85,.07);border-color:rgba(255,34,85,.3);color:var(--danger);}
+.btn-danger:hover{background:rgba(255,34,85,.14);}
+.btn-purple{background:rgba(204,102,255,.07);border-color:rgba(204,102,255,.3);color:var(--purple);}
+.btn-purple:hover{background:rgba(204,102,255,.14);}
+.btn-submit{background:linear-gradient(135deg,var(--ac2),var(--ac),var(--ac3));border:none;color:var(--bg);
+  padding:.52rem 1.3rem;border-radius:var(--r8);font-family:"Unbounded",sans-serif;font-size:.66rem;
+  font-weight:700;cursor:pointer;transition:all .25s;letter-spacing:.03em;}
+.btn-submit:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,212,255,.35);}
+.btn-back{background:none;border:1px solid var(--b1);color:var(--tx2);padding:.52rem .85rem;
+  border-radius:var(--r6);font-family:"JetBrains Mono",monospace;font-size:.63rem;cursor:pointer;transition:all .2s;}
+.btn-back:hover{border-color:var(--b2);color:var(--tx);}
+
+/* Cards */
+.card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r8);overflow:hidden;
+  transition:border-color .2s;}
+.card:hover{border-color:var(--b2);}
+.ch{padding:.75rem 1rem;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;}
+.ct{font-family:"Unbounded",sans-serif;font-size:.62rem;font-weight:400;color:var(--tx2);letter-spacing:.05em;}
+.cb{padding:.85rem 1rem;}
+
+/* Stat cards */
+.srow{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;margin-bottom:1.3rem;}
+.sc{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r8);padding:.9rem 1rem;
+  position:relative;overflow:hidden;transition:all .22s;cursor:default;}
+.sc::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--clr,var(--ac));}
+.sc::after{content:"";position:absolute;top:0;right:0;width:60px;height:60px;
+  background:radial-gradient(circle at top right,rgba(255,255,255,.04),transparent);pointer-events:none;}
+.sc:hover{border-color:var(--b2);transform:translateY(-2px);box-shadow:var(--glow);}
+.slbl{font-family:"JetBrains Mono",monospace;font-size:.55rem;color:var(--tx3);letter-spacing:.1em;margin-bottom:.35rem;}
+.sval{font-family:"Unbounded",sans-serif;font-size:1.5rem;font-weight:700;color:var(--wh);line-height:1;}
+.sval.sm{font-size:.88rem;line-height:1.3;}
+.ssub{font-family:"JetBrains Mono",monospace;font-size:.55rem;color:var(--tx3);margin-top:.2rem;}
+.ssub.up{color:var(--ac3);}
+
+/* Grids */
+.g32{display:grid;grid-template-columns:3fr 2fr;gap:1rem;margin-bottom:1rem;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1rem;}
+
+/* Progress bars */
+.pi{margin-bottom:.62rem;}
+.pl{display:flex;justify-content:space-between;font-family:"JetBrains Mono",monospace;font-size:.58rem;color:var(--tx2);margin-bottom:.2rem;}
+.pb{height:4px;background:var(--s3);border-radius:2px;overflow:hidden;}
+.pf{height:100%;border-radius:2px;transition:width 1.4s cubic-bezier(.4,0,.2,1);}
+
 /* Activity & LB */
-.act{display:flex;gap:.58rem;padding:.46rem 0;border-bottom:1px solid var(--b1);font-size:.79rem;}
+.act{display:flex;gap:.62rem;padding:.48rem 0;border-bottom:1px solid var(--b1);font-size:.8rem;}
 .act:last-child{border-bottom:none;}
-.adot{width:6px;height:6px;border-radius:50%;margin-top:.26rem;flex-shrink:0;}
-.atime{font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--tx3);}
-.lbi{display:flex;align-items:center;gap:.58rem;padding:.46rem 0;border-bottom:1px solid var(--b1);}
+.adot{width:7px;height:7px;border-radius:50%;margin-top:.28rem;flex-shrink:0;}
+.atime{font-family:"JetBrains Mono",monospace;font-size:.55rem;color:var(--tx3);}
+.lbi{display:flex;align-items:center;gap:.6rem;padding:.48rem 0;border-bottom:1px solid var(--b1);}
 .lbi:last-child{border-bottom:none;}
-.lrk{font-family:'Unbounded',sans-serif;font-size:.66rem;width:17px;text-align:center;flex-shrink:0;}
-.lrk.r1{color:var(--gold);}.lrk.r2{color:var(--tx2);}.lrk.r3{color:var(--warn);}
-.lnm{flex:1;font-size:.8rem;}.lsc{font-family:'JetBrains Mono',monospace;font-size:.63rem;color:var(--ac);}
-.lbar{width:48px;height:3px;background:var(--s3);border-radius:2px;overflow:hidden;}
+.lrk{font-family:"Unbounded",sans-serif;font-size:.68rem;width:18px;text-align:center;flex-shrink:0;}
+.lrk.r1{color:var(--gold);}  .lrk.r2{color:var(--tx2);}  .lrk.r3{color:var(--warn);}
+.lnm{flex:1;font-size:.8rem;}  .lsc{font-family:"JetBrains Mono",monospace;font-size:.65rem;color:var(--ac);}
+.lbar{width:50px;height:3px;background:var(--s3);border-radius:2px;overflow:hidden;}
 .lfill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--ac2),var(--ac));}
-.lbi.me .lnm{color:var(--ac3);}
-/* Case items */
-.ci{display:flex;align-items:center;gap:.68rem;padding:.58rem .48rem;border-bottom:1px solid var(--b1);cursor:pointer;transition:background .15s;border-radius:4px;}
-.ci:last-child{border-bottom:none;}.ci:hover{background:rgba(0,200,255,.04);}
-.cnum{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--ac);width:19px;text-align:center;flex-shrink:0;}
+.lbi.me .lnm{color:var(--ac3);font-weight:600;}
+
+/* Case list items */
+.ci{display:flex;align-items:center;gap:.7rem;padding:.62rem .5rem;border-bottom:1px solid var(--b1);
+  cursor:pointer;transition:all .15s;border-radius:var(--r4);}
+.ci:last-child{border-bottom:none;}
+.ci:hover{background:rgba(0,212,255,.04);padding-left:.8rem;}
+.cnum{font-family:"JetBrains Mono",monospace;font-size:.56rem;color:var(--ac);width:20px;text-align:center;flex-shrink:0;}
 .cinfo{flex:1;min-width:0;}
-.cnm{font-size:.84rem;color:var(--wh);margin-bottom:.16rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cnm{font-size:.84rem;color:var(--wh);margin-bottom:.18rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .ctgs{display:flex;gap:.26rem;flex-wrap:wrap;}
-.tag{font-family:'JetBrains Mono',monospace;font-size:.52rem;padding:.08rem .32rem;border-radius:20px;border:1px solid;white-space:nowrap;}
-.tp{color:#60a0ff;border-color:rgba(96,160,255,.3);background:rgba(96,160,255,.07);}
-.tr{color:#60d0a0;border-color:rgba(96,208,160,.3);background:rgba(96,208,160,.07);}
-.tg{color:#ffa060;border-color:rgba(255,160,96,.3);background:rgba(255,160,96,.07);}
-.tn{color:#e060ff;border-color:rgba(224,96,255,.3);background:rgba(224,96,255,.07);}
-.te{color:#ffcc40;border-color:rgba(255,204,64,.3);background:rgba(255,204,64,.07);}
-.de{color:var(--ac3);font-family:'JetBrains Mono',monospace;font-size:.56rem;}
-.dm{color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:.56rem;}
-.dh{color:var(--danger);font-family:'JetBrains Mono',monospace;font-size:.56rem;}
-/* CASE SCREEN */
+.tag{font-family:"JetBrains Mono",monospace;font-size:.52rem;padding:.08rem .32rem;border-radius:20px;border:1px solid;white-space:nowrap;}
+.tp{color:#5599ff;border-color:rgba(85,153,255,.3);background:rgba(85,153,255,.07);}
+.tr{color:#55ddaa;border-color:rgba(85,221,170,.3);background:rgba(85,221,170,.07);}
+.tg{color:#ff9955;border-color:rgba(255,153,85,.3);background:rgba(255,153,85,.07);}
+.tn{color:#dd55ff;border-color:rgba(221,85,255,.3);background:rgba(221,85,255,.07);}
+.te{color:#ffdd44;border-color:rgba(255,221,68,.3);background:rgba(255,221,68,.07);}
+.tag.bgr{color:var(--ac3);border-color:rgba(0,255,204,.3);background:rgba(0,255,204,.07);}
+.de{color:var(--ac3);font-family:"JetBrains Mono",monospace;font-size:.56rem;}
+.dm{color:var(--gold);font-family:"JetBrains Mono",monospace;font-size:.56rem;}
+.dh{color:var(--danger);font-family:"JetBrains Mono",monospace;font-size:.56rem;}
+
+/* Badges */
+.badge{font-family:"JetBrains Mono",monospace;font-size:.54rem;padding:.1rem .38rem;border-radius:20px;border:1px solid;display:inline-flex;align-items:center;gap:.2rem;}
+.bgr{color:var(--ac3);border-color:rgba(0,255,204,.3);background:rgba(0,255,204,.07);}
+.bgo{color:var(--gold);border-color:rgba(255,204,68,.3);background:rgba(255,204,68,.07);}
+.brd{color:var(--danger);border-color:rgba(255,34,85,.3);background:rgba(255,34,85,.07);}
+.bbl{color:var(--ac);border-color:rgba(0,212,255,.3);background:rgba(0,212,255,.07);}
+.bpp{color:var(--purple);border-color:rgba(204,102,255,.3);background:rgba(204,102,255,.07);}
+
+/* Form inputs */
+.inp{width:100%;background:var(--s2);border:1px solid var(--b1);color:var(--wh);padding:.52rem .68rem;
+  border-radius:var(--r6);font-family:"Crimson Pro",serif;font-size:.9rem;transition:all .2s;outline:none;}
+.inp:focus{border-color:var(--ac2);box-shadow:0 0 0 3px rgba(0,212,255,.07);}
+.inpa{width:100%;background:var(--s2);border:1px solid var(--b1);color:var(--wh);padding:.52rem .68rem;
+  border-radius:var(--r6);font-family:"Crimson Pro",serif;font-size:.9rem;resize:vertical;min-height:65px;
+  transition:all .2s;outline:none;}
+.inpa:focus{border-color:var(--ac2);box-shadow:0 0 0 3px rgba(0,212,255,.07);}
+.ilbl{font-family:"JetBrains Mono",monospace;font-size:.57rem;color:var(--tx3);letter-spacing:.05em;margin-bottom:.22rem;display:block;text-transform:uppercase;}
+
+/* ===== CASE SCREEN ===== */
 #caseSc{padding:56px 0 0;}
-.clay{display:grid;grid-template-columns:278px 1fr;height:calc(100vh - 56px);}
+.clay{display:grid;grid-template-columns:280px 1fr;height:calc(100vh - 56px);}
+
+/* Sidebar */
 .csb{background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow:hidden;}
-.sbhdr{padding:.72rem .88rem;border-bottom:1px solid var(--b1);}
-.sbcase{font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--tx3);margin-bottom:.14rem;}
-.sbnm{font-family:'Unbounded',sans-serif;font-size:.63rem;color:var(--ac);line-height:1.3;}
-.ptcard{padding:.72rem .88rem;border-bottom:1px solid var(--b1);}
-.ptphoto{width:54px;height:54px;border-radius:6px;background:linear-gradient(135deg,var(--s2),var(--s3));border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:1.35rem;margin-bottom:.48rem;}
-.ptnm{font-family:'Unbounded',sans-serif;font-size:.61rem;font-weight:400;color:var(--wh);margin-bottom:.2rem;}
-.ptmt{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--tx3);line-height:1.65;}
-.sbtabs{display:flex;border-bottom:1px solid var(--b1);overflow-x:auto;flex-shrink:0;}
+.sbhdr{padding:.75rem .9rem;border-bottom:1px solid var(--b1);background:linear-gradient(135deg,var(--s2),var(--s1));}
+.sbcase{font-family:"JetBrains Mono",monospace;font-size:.54rem;color:var(--ac3);margin-bottom:.15rem;letter-spacing:.06em;}
+.sbnm{font-family:"Unbounded",sans-serif;font-size:.64rem;color:var(--wh);line-height:1.3;}
+.ptcard{padding:.78rem .9rem;border-bottom:1px solid var(--b1);}
+.ptphoto{width:56px;height:56px;border-radius:var(--r8);background:linear-gradient(135deg,var(--s2),var(--s3));
+  border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:.5rem;}
+.ptnm{font-family:"Unbounded",sans-serif;font-size:.62rem;font-weight:400;color:var(--wh);margin-bottom:.22rem;}
+.ptmt{font-family:"JetBrains Mono",monospace;font-size:.56rem;color:var(--tx3);line-height:1.7;}
+.sbtabs{display:flex;border-bottom:1px solid var(--b1);overflow-x:auto;flex-shrink:0;background:var(--s2);}
 .sbtabs::-webkit-scrollbar{height:2px;}
-.stab{flex-shrink:0;padding:.46rem .62rem;font-family:'JetBrains Mono',monospace;font-size:.52rem;color:var(--tx3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;}
-.stab.active{color:var(--ac);border-bottom-color:var(--ac);}
-.sbc{flex:1;overflow-y:auto;padding:.72rem .88rem;}
-.isec{margin-bottom:.75rem;}
-.ilbl{font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--tx3);letter-spacing:.08em;margin-bottom:.18rem;}
-.ival{font-size:.82rem;color:var(--tx);line-height:1.55;}
-.abox{background:rgba(255,51,85,.08);border:1px solid rgba(255,51,85,.3);border-radius:4px;padding:.4rem .58rem;font-size:.74rem;color:#ff8080;margin-bottom:.4rem;}
-.wbox{background:rgba(255,107,53,.08);border:1px solid rgba(255,107,53,.3);border-radius:4px;padding:.4rem .58rem;font-size:.74rem;color:#ffaa80;margin-bottom:.4rem;}
-.obox{background:rgba(0,255,170,.06);border:1px solid rgba(0,255,170,.25);border-radius:4px;padding:.4rem .58rem;font-size:.74rem;color:#80ffcc;margin-bottom:.4rem;}
+.stab{flex-shrink:0;padding:.48rem .65rem;font-family:"JetBrains Mono",monospace;font-size:.52rem;
+  color:var(--tx3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;}
+.stab.active{color:var(--ac);border-bottom-color:var(--ac);background:rgba(0,212,255,.04);}
+.sbc{flex:1;overflow-y:auto;padding:.78rem .9rem;}
+.isec{margin-bottom:.82rem;}
+.ilbl2{font-family:"JetBrains Mono",monospace;font-size:.54rem;color:var(--tx3);letter-spacing:.08em;margin-bottom:.2rem;}
+.ival{font-size:.84rem;color:var(--tx);line-height:1.58;}
+.abox{background:rgba(255,34,85,.08);border:1px solid rgba(255,34,85,.35);border-radius:var(--r4);
+  padding:.45rem .65rem;font-size:.76rem;color:#ff8888;margin-bottom:.42rem;display:flex;gap:.5rem;align-items:flex-start;}
+.wbox{background:rgba(255,119,51,.08);border:1px solid rgba(255,119,51,.35);border-radius:var(--r4);
+  padding:.45rem .65rem;font-size:.76rem;color:#ffaa77;margin-bottom:.42rem;display:flex;gap:.5rem;align-items:flex-start;}
+.obox{background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.25);border-radius:var(--r4);
+  padding:.45rem .65rem;font-size:.76rem;color:#88ddff;margin-bottom:.42rem;}
+.okbox{background:rgba(0,255,204,.06);border:1px solid rgba(0,255,204,.25);border-radius:var(--r4);
+  padding:.45rem .65rem;font-size:.76rem;color:#88ffdd;margin-bottom:.42rem;}
 .lgrid{display:grid;grid-template-columns:1fr 1fr;gap:.3rem;}
-.litm{background:var(--s2);border:1px solid var(--b1);border-radius:3px;padding:.33rem .48rem;}
-.lnm{font-family:'JetBrains Mono',monospace;font-size:.52rem;color:var(--tx3);}
-.lval{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--wh);}.lval.hi{color:var(--danger);}.lval.lo{color:var(--gold);}
+.litm{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r4);padding:.35rem .5rem;
+  transition:border-color .2s;}
+.litm:hover{border-color:var(--b2);}
+.lnm2{font-family:"JetBrains Mono",monospace;font-size:.52rem;color:var(--tx3);}
+.lval{font-family:"JetBrains Mono",monospace;font-size:.7rem;color:var(--wh);}
+.lval.hi{color:var(--danger);}  .lval.lo{color:var(--gold);}  .lval.ok{color:var(--ac3);}
+
+/* Case main */
 .cmain{display:flex;flex-direction:column;overflow:hidden;}
-.ctopbar{padding:.72rem 1.05rem;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-.cstept{font-family:'Unbounded',sans-serif;font-size:.73rem;font-weight:300;color:var(--wh);}
-.sprow{display:flex;align-items:center;gap:.28rem;}
-.spdot{width:23px;height:23px;border-radius:50%;border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.52rem;color:var(--tx3);transition:all .3s;flex-shrink:0;}
-.spdot.done{background:var(--ac3);border-color:var(--ac3);color:var(--bg);}
-.spdot.active{border-color:var(--ac);color:var(--ac);background:rgba(0,200,255,.08);}
-.spln{width:13px;height:1px;background:var(--b1);}
-.cbody{flex:1;overflow-y:auto;padding:.95rem;}
-.dsg{display:grid;grid-template-columns:1fr 1fr;gap:.68rem;margin-bottom:.72rem;}
-.inp{width:100%;background:var(--s2);border:1px solid var(--b1);color:var(--wh);padding:.5rem .65rem;border-radius:4px;font-family:'Crimson Pro',serif;font-size:.88rem;transition:border-color .2s;}
-.inp:focus{outline:none;border-color:var(--ac2);}
-.inpa{width:100%;background:var(--s2);border:1px solid var(--b1);color:var(--wh);padding:.5rem .65rem;border-radius:4px;font-family:'Crimson Pro',serif;font-size:.88rem;resize:vertical;min-height:62px;transition:border-color .2s;}
-.inpa:focus{outline:none;border-color:var(--ac2);}
-.ilbl2{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--tx3);letter-spacing:.05em;margin-bottom:.2rem;display:block;}
-.intbox{background:var(--s2);border:1px solid var(--b1);border-radius:4px;padding:.65rem;margin-top:.62rem;}
-.intboxt{font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--tx3);margin-bottom:.4rem;}
-.inti{display:flex;align-items:center;gap:.4rem;font-size:.76rem;margin-bottom:.17rem;}
-.intd{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
-/* Treat table */
-.twrap{overflow-x:auto;}
-.tt{width:100%;border-collapse:collapse;font-size:.8rem;}
-.tt th{background:var(--s2);padding:.54rem .68rem;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--tx2);border-bottom:1px solid var(--b1);white-space:nowrap;}
-.tt td{padding:.62rem .68rem;border-bottom:1px solid var(--b1);vertical-align:top;}
-.tt tr:last-child td{border-bottom:none;}
-.rxt{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--ac);line-height:1.7;}
-.sf{background:var(--s2);border:1px solid var(--b1);color:var(--wh);padding:.24rem .38rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.62rem;width:58px;text-align:center;}
-.sf:focus{outline:none;border-color:var(--ac2);}
-.slbl{font-size:.56rem;color:var(--tx3);margin-bottom:.15rem;font-family:'JetBrains Mono',monospace;}
-/* Monitor */
-.msec{margin-top:.95rem;background:var(--s1);border:1px solid var(--b1);border-radius:7px;overflow:hidden;}
-.mhdr{padding:.65rem .88rem;border-bottom:1px solid var(--b1);font-family:'Unbounded',sans-serif;font-size:.6rem;color:var(--tx2);}
-.mbody{padding:.82rem;}
-.mrow{display:grid;grid-template-columns:1fr 1fr;gap:.82rem;margin-bottom:.82rem;}
-.mgt{font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--tx3);margin-bottom:.36rem;letter-spacing:.06em;}
-.tdays{display:flex;flex-wrap:wrap;gap:2px;}
-.tday{width:17px;height:17px;border-radius:3px;background:var(--s3);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.46rem;color:var(--tx3);cursor:pointer;transition:all .12s;}
-.tday:hover{background:rgba(0,200,255,.15);border-color:var(--ac);color:var(--ac);}
-.tday.se{background:rgba(0,255,170,.2);border-color:var(--ac3);color:var(--ac3);}
-.tday.ss{background:rgba(255,107,53,.2);border-color:var(--warn);color:var(--warn);}
-.mobs{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;}
-.obox2{background:var(--s2);border:1px solid var(--b1);border-radius:4px;padding:.58rem;}
-.otitle{font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--tx3);margin-bottom:.32rem;}
-.oinp{width:100%;background:var(--s3);border:1px solid var(--b1);color:var(--wh);padding:.38rem .5rem;border-radius:4px;font-family:'Crimson Pro',serif;font-size:.82rem;resize:none;min-height:50px;}
-.oinp:focus{outline:none;border-color:var(--ac2);}
-.cfooter{padding:.72rem 1.05rem;border-top:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;background:var(--s1);flex-shrink:0;}
-/* FEEDBACK */
-#feedSc{padding:68px 1.3rem 2rem;}
-.fbwrap{max-width:900px;margin:0 auto;}
-.scorecard{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:1.4rem;margin-bottom:.95rem;position:relative;overflow:hidden;}
-.scorecard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--danger),var(--gold),var(--ac3),var(--ac));}
-.scinn{display:flex;align-items:center;gap:1.7rem;flex-wrap:wrap;}
-.sccir{width:96px;height:96px;border-radius:50%;border:2px solid var(--ac);display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,200,255,.04);box-shadow:0 0 26px rgba(0,200,255,.12);flex-shrink:0;}
-.scnum{font-family:'Unbounded',sans-serif;font-size:1.7rem;font-weight:700;color:var(--ac);line-height:1;}
-.scmax{font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--tx3);}
-.scgr{font-family:'Unbounded',sans-serif;font-size:.86rem;color:var(--gold);margin-bottom:.18rem;}
-.scpct{font-family:'JetBrains Mono',monospace;font-size:.63rem;color:var(--tx3);margin-bottom:.4rem;}
-.scsum{font-size:.88rem;color:var(--tx2);max-width:340px;line-height:1.55;}
-.bkdn{display:grid;grid-template-columns:repeat(4,1fr);gap:.48rem;margin-top:1.1rem;}
-.bkit{background:var(--s2);border:1px solid var(--b1);border-radius:5px;padding:.58rem;text-align:center;}
-.bkv{font-family:'Unbounded',sans-serif;font-size:.86rem;margin-bottom:.14rem;}
-.bkv.good{color:var(--ac3);}.bkv.warn{color:var(--gold);}.bkv.bad{color:var(--danger);}
-.bkl{font-family:'JetBrains Mono',monospace;font-size:.52rem;color:var(--tx3);}
-.radwrap{display:flex;justify-content:center;padding:.3rem 0 .65rem;}
-/* AI Chat */
-.aichat{background:var(--s1);border:1px solid var(--b1);border-radius:10px;overflow:hidden;margin-bottom:.95rem;}
-.aichdr{padding:.72rem .95rem;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:.62rem;}
-.aiico{width:25px;height:25px;border-radius:5px;background:linear-gradient(135deg,var(--ac2),var(--ac3));display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;}
-.ainmt{font-family:'Unbounded',sans-serif;font-size:.63rem;color:var(--wh);}.ainmt span{color:var(--ac);}
-.aistat{font-family:'JetBrains Mono',monospace;font-size:.52rem;color:var(--ac3);}
-.aimsg{padding:.95rem;min-height:155px;max-height:320px;overflow-y:auto;}
-.msg{margin-bottom:.72rem;animation:fadeUp .28s ease;}
-.mrole{font-family:'JetBrains Mono',monospace;font-size:.52rem;color:var(--tx3);margin-bottom:.18rem;}
-.mbub{background:var(--s2);border:1px solid var(--b1);border-radius:7px;padding:.62rem .85rem;font-size:.84rem;line-height:1.58;}
-.msg.ai .mbub{border-color:rgba(0,200,255,.18);background:rgba(0,200,255,.04);}
+.ctopbar{padding:.75rem 1.1rem;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:linear-gradient(135deg,var(--s1),var(--s2));}
+.cstept{font-family:"Unbounded",sans-serif;font-size:.72rem;font-weight:300;color:var(--wh);}
+.sprow{display:flex;align-items:center;gap:.3rem;}
+.spdot{width:24px;height:24px;border-radius:50%;border:1px solid var(--b1);display:flex;align-items:center;
+  justify-content:center;font-family:"JetBrains Mono",monospace;font-size:.52rem;color:var(--tx3);
+  transition:all .3s;flex-shrink:0;cursor:pointer;}
+.spdot.done{background:linear-gradient(135deg,var(--ac3),var(--ac4));border-color:var(--ac3);color:var(--bg);}
+.spdot.active{border-color:var(--ac);color:var(--ac);background:rgba(0,212,255,.1);box-shadow:0 0 0 3px rgba(0,212,255,.12);}
+.spln{width:14px;height:1px;background:var(--b1);}
+.cbody{flex:1;overflow-y:auto;padding:1rem;}
+
+/* Drug selection */
+.dsg{display:grid;grid-template-columns:1fr 1fr;gap:.72rem;margin-bottom:.78rem;}
+
+/* Interaction box */
+.intbox{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r6);padding:.72rem;margin-top:.68rem;}
+.intboxt{font-family:"JetBrains Mono",monospace;font-size:.55rem;color:var(--tx3);margin-bottom:.42rem;letter-spacing:.05em;}
+.inti{display:flex;align-items:center;gap:.42rem;font-size:.78rem;margin-bottom:.18rem;}
+.intd{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+/* ===== DAVOLASH JADVALI — YANGI ZOR DIZAYN ===== */
+.treat-outer{overflow-x:auto;border-radius:var(--r8);border:1px solid var(--b1);}
+.treat-table{width:100%;border-collapse:collapse;font-size:.82rem;min-width:900px;}
+.treat-table thead tr{background:linear-gradient(135deg,var(--s3),var(--s2));}
+.treat-table th{padding:.65rem .85rem;text-align:left;font-family:"JetBrains Mono",monospace;
+  font-size:.54rem;color:var(--tx2);border-bottom:2px solid var(--b2);white-space:nowrap;
+  letter-spacing:.04em;position:relative;}
+.treat-table th:not(:last-child)::after{content:"";position:absolute;right:0;top:20%;bottom:20%;
+  width:1px;background:var(--b1);}
+.treat-table th.col-score{text-align:center;background:rgba(0,212,255,.04);}
+.treat-table tbody tr{transition:background .15s;}
+.treat-table tbody tr:nth-child(even){background:rgba(255,255,255,.01);}
+.treat-table tbody tr:hover{background:rgba(0,212,255,.04);}
+.treat-table td{padding:.72rem .85rem;border-bottom:1px solid var(--b1);vertical-align:top;}
+.treat-table tbody tr:last-child td{border-bottom:none;}
+.row-num{font-family:"JetBrains Mono",monospace;font-size:.6rem;color:var(--ac);
+  background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);
+  border-radius:4px;padding:.15rem .35rem;display:inline-block;}
+.rxt{font-family:"JetBrains Mono",monospace;font-size:.64rem;color:var(--ac3);line-height:1.75;
+  background:rgba(0,255,204,.04);border:1px solid rgba(0,255,204,.12);
+  border-radius:var(--r4);padding:.4rem .6rem;}
+.rxt.empty{color:var(--tx3);}
+.rx-inp{width:100%;background:var(--s2);border:1px solid var(--b1);color:var(--ac3);
+  padding:.38rem .52rem;border-radius:var(--r4);font-family:"JetBrains Mono",monospace;
+  font-size:.63rem;resize:none;min-height:52px;outline:none;transition:border-color .2s;line-height:1.6;}
+.rx-inp:focus{border-color:var(--ac4);background:rgba(0,255,204,.04);}
+
+/* Score input cells */
+.score-cell{text-align:center;padding:.72rem .5rem !important;}
+.sf{background:var(--s2);border:1px solid var(--b1);color:var(--wh);
+  padding:.28rem .4rem;border-radius:var(--r4);font-family:"JetBrains Mono",monospace;
+  font-size:.64rem;width:58px;text-align:center;transition:all .2s;outline:none;
+  display:block;margin:0 auto;}
+.sf:focus{border-color:var(--ac2);background:rgba(0,212,255,.05);}
+.sf:valid:not(:placeholder-shown){border-color:var(--ac3);color:var(--ac3);}
+.slbl{font-size:.52rem;color:var(--tx3);margin-bottom:.16rem;font-family:"JetBrains Mono",monospace;text-align:center;}
+
+/* Score badge in table */
+.score-badge{display:inline-flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;font-family:"JetBrains Mono",monospace;
+  font-size:.65rem;font-weight:600;border:2px solid;transition:all .3s;}
+.score-badge.empty{background:var(--s3);border-color:var(--b1);color:var(--tx3);}
+.score-badge.good{background:rgba(0,255,204,.12);border-color:var(--ac3);color:var(--ac3);}
+.score-badge.mid{background:rgba(255,204,68,.1);border-color:var(--gold);color:var(--gold);}
+.score-badge.low{background:rgba(255,34,85,.1);border-color:var(--danger);color:var(--danger);}
+
+/* Analysis boxes */
+.analysis-col{display:flex;flex-direction:column;gap:.32rem;}
+.mini-analysis{background:var(--s3);border:1px solid var(--b1);border-radius:var(--r4);
+  padding:.35rem .5rem;font-size:.76rem;color:var(--tx2);line-height:1.5;
+  border-left:2px solid var(--b2);transition:border-color .2s;}
+.mini-analysis.has-content{border-left-color:var(--ac3);}
+.mini-analysis textarea{width:100%;background:transparent;border:none;color:var(--tx2);
+  font-family:"Crimson Pro",serif;font-size:.82rem;resize:none;outline:none;min-height:42px;line-height:1.5;}
+.analysis-label{font-family:"JetBrains Mono",monospace;font-size:.5rem;color:var(--tx3);
+  letter-spacing:.06em;margin-bottom:.2rem;display:block;}
+
+/* Monitor section */
+.msec{margin-top:1rem;background:var(--s1);border:1px solid var(--b1);border-radius:var(--r8);overflow:hidden;}
+.mhdr{padding:.7rem .95rem;border-bottom:1px solid var(--b1);font-family:"Unbounded",sans-serif;
+  font-size:.62rem;color:var(--tx2);background:linear-gradient(135deg,var(--s2),var(--s1));
+  display:flex;align-items:center;gap:.6rem;}
+.mbody{padding:.88rem;}
+.mrow{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem;}
+.mgt{font-family:"JetBrains Mono",monospace;font-size:.55rem;color:var(--tx3);margin-bottom:.42rem;letter-spacing:.06em;}
+.tdays{display:flex;flex-wrap:wrap;gap:3px;}
+.tday{width:18px;height:18px;border-radius:3px;background:var(--s3);border:1px solid var(--b1);
+  display:flex;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;
+  font-size:.48rem;color:var(--tx3);cursor:pointer;transition:all .12s;}
+.tday:hover{background:rgba(0,212,255,.15);border-color:var(--ac);color:var(--ac);}
+.tday.se{background:rgba(0,255,204,.22);border-color:var(--ac3);color:var(--ac3);}
+.tday.ss{background:rgba(255,119,51,.2);border-color:var(--warn);color:var(--warn);}
+.mobs{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.obox2{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r6);padding:.65rem;}
+.otitle{font-family:"JetBrains Mono",monospace;font-size:.54rem;color:var(--tx3);margin-bottom:.35rem;letter-spacing:.05em;}
+.oinp{width:100%;background:var(--s3);border:1px solid var(--b1);color:var(--wh);
+  padding:.42rem .55rem;border-radius:var(--r4);font-family:"Crimson Pro",serif;
+  font-size:.86rem;resize:none;min-height:52px;outline:none;}
+.oinp:focus{border-color:var(--ac2);}
+
+/* Case footer */
+.cfooter{padding:.78rem 1.1rem;border-top:1px solid var(--b1);display:flex;align-items:center;
+  justify-content:space-between;background:linear-gradient(135deg,var(--s1),var(--s2));flex-shrink:0;}
+
+/* ===== FEEDBACK ===== */
+#feedSc{padding:68px 1.4rem 2rem;}
+.fbwrap{max-width:920px;margin:0 auto;}
+.scorecard{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r16);
+  padding:1.6rem;margin-bottom:1rem;position:relative;overflow:hidden;}
+.scorecard::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--danger),var(--gold),var(--ac3),var(--ac),var(--purple));}
+.scorecard::after{content:"";position:absolute;top:0;right:0;width:200px;height:200px;
+  background:radial-gradient(circle at top right,rgba(0,212,255,.06),transparent);pointer-events:none;}
+.scinn{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;}
+.sccir{width:100px;height:100px;border-radius:50%;border:2px solid var(--ac);display:flex;
+  flex-direction:column;align-items:center;justify-content:center;
+  background:rgba(0,212,255,.05);box-shadow:0 0 0 8px rgba(0,212,255,.05),var(--glow);flex-shrink:0;}
+.scnum{font-family:"Unbounded",sans-serif;font-size:1.75rem;font-weight:700;color:var(--ac);line-height:1;}
+.scmax{font-family:"JetBrains Mono",monospace;font-size:.56rem;color:var(--tx3);}
+.scgr{font-family:"Unbounded",sans-serif;font-size:.88rem;color:var(--gold);margin-bottom:.2rem;}
+.scpct{font-family:"JetBrains Mono",monospace;font-size:.64rem;color:var(--tx3);margin-bottom:.42rem;}
+.scsum{font-size:.9rem;color:var(--tx2);max-width:350px;line-height:1.55;}
+.bkdn{display:grid;grid-template-columns:repeat(4,1fr);gap:.52rem;margin-top:1.2rem;}
+.bkit{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r6);padding:.62rem;
+  text-align:center;transition:all .2s;cursor:default;}
+.bkit:hover{border-color:var(--b2);transform:translateY(-1px);}
+.bkv{font-family:"Unbounded",sans-serif;font-size:.88rem;margin-bottom:.15rem;}
+.bkv.good{color:var(--ac3);}  .bkv.warn{color:var(--gold);}  .bkv.bad{color:var(--danger);}
+.bkl{font-family:"JetBrains Mono",monospace;font-size:.52rem;color:var(--tx3);}
+.radwrap{display:flex;justify-content:center;padding:.35rem 0 .65rem;}
+
+/* AI multi-model panel */
+.ai-model-tabs{display:flex;gap:.35rem;padding:.75rem 1rem .4rem;border-bottom:1px solid var(--b1);flex-wrap:wrap;}
+.ai-model-tab{padding:.24rem .6rem;border-radius:20px;border:1px solid var(--b1);
+  font-family:"JetBrains Mono",monospace;font-size:.56rem;color:var(--tx3);cursor:pointer;transition:all .2s;}
+.ai-model-tab:hover{border-color:var(--b2);color:var(--tx2);}
+.ai-model-tab.active{border-color:var(--ac);color:var(--ac);background:rgba(0,212,255,.08);}
+.ai-model-tab.gpt{--mc:#10a37f;}
+.ai-model-tab.gpt.active{border-color:var(--mc);color:var(--mc);background:rgba(16,163,127,.08);}
+.ai-model-tab.gem{--mc:#4285f4;}
+.ai-model-tab.gem.active{border-color:var(--mc);color:var(--mc);background:rgba(66,133,244,.08);}
+.ai-model-tab.claude{--mc:#cc7a00;}
+.ai-model-tab.claude.active{border-color:var(--mc);color:var(--mc);background:rgba(204,122,0,.08);}
+
+.aichat{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r12);overflow:hidden;margin-bottom:1rem;}
+.aichdr{padding:.78rem 1rem;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:.68rem;
+  background:linear-gradient(135deg,var(--s2),var(--s1));}
+.aiico{width:28px;height:28px;border-radius:var(--r6);display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;}
+.ainmt{font-family:"Unbounded",sans-serif;font-size:.65rem;color:var(--wh);}
+.ainmt span{background:linear-gradient(135deg,var(--ac),var(--ac3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.aistat{font-family:"JetBrains Mono",monospace;font-size:.52rem;color:var(--ac3);}
+.aimsg{padding:1rem;min-height:160px;max-height:340px;overflow-y:auto;}
+.msg{margin-bottom:.8rem;animation:riseIn .28s ease;}
+.mrole{font-family:"JetBrains Mono",monospace;font-size:.52rem;color:var(--tx3);margin-bottom:.2rem;display:flex;align-items:center;gap:.3rem;}
+.mrole-dot{width:5px;height:5px;border-radius:50%;display:inline-block;}
+.mbub{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r8);padding:.68rem .9rem;font-size:.86rem;line-height:1.6;}
+.msg.ai .mbub{border-color:rgba(0,212,255,.18);background:rgba(0,212,255,.04);}
 .msg.ai .mrole{color:var(--ac);}
-.tind{display:flex;gap:4px;padding:.24rem;}
-.tdot{width:5px;height:5px;border-radius:50%;background:var(--ac);animation:typ 1.1s infinite;}
-.tdot:nth-child(2){animation-delay:.18s;}.tdot:nth-child(3){animation-delay:.36s;}
-@keyframes typ{0%,60%,100%{transform:translateY(0);opacity:.4;}30%{transform:translateY(-5px);opacity:1;}}
-.aiinrow{padding:.72rem .95rem;border-top:1px solid var(--b1);display:flex;gap:.58rem;}
-.aiinp{flex:1;background:var(--s2);border:1px solid var(--b1);color:var(--wh);padding:.48rem .75rem;border-radius:5px;font-family:'Crimson Pro',serif;font-size:.88rem;}
-.aiinp:focus{outline:none;border-color:var(--ac2);}
-.bask{background:rgba(0,200,255,.09);border:1px solid var(--ac2);color:var(--ac);padding:.48rem .82rem;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:.62rem;cursor:pointer;transition:all .2s;white-space:nowrap;}
-.bask:hover{background:rgba(0,200,255,.18);}.bask:disabled{opacity:.45;cursor:not-allowed;}
-.qqrow{display:flex;gap:.4rem;flex-wrap:wrap;padding:0 .95rem .72rem;}
-.qq{background:var(--s3);border:1px solid var(--b1);color:var(--tx2);padding:.24rem .52rem;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:.54rem;cursor:pointer;transition:all .2s;}
-.qq:hover{border-color:var(--ac);color:var(--ac);}
-.errcard{background:var(--s1);border:1px solid var(--b1);border-radius:7px;overflow:hidden;margin-bottom:.58rem;animation:fadeUp .28s ease;}
-.errhdr{padding:.58rem .88rem;border-bottom:1px solid var(--b1);}
-.errt{font-family:'JetBrains Mono',monospace;font-size:.58rem;display:flex;align-items:center;gap:.28rem;}
-.errt.wrong{color:var(--danger);}.errt.partial{color:var(--gold);}.errt.correct{color:var(--ac3);}
-.errbody{padding:.72rem .88rem;font-size:.82rem;line-height:1.62;color:var(--tx);}.errbody strong{color:var(--ac);}
-/* TEACHER SCREEN */
-#teachSc{padding:68px 1.3rem 2rem;}
-.twrap{max-width:1270px;margin:0 auto;}
-.tstats{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.1rem;}
-.tgrid{display:grid;grid-template-columns:285px 1fr;gap:.95rem;}
+.msg.gpt .mbub{border-color:rgba(16,163,127,.2);background:rgba(16,163,127,.04);}
+.msg.gpt .mrole{color:#10a37f;}
+.tind{display:flex;gap:4px;padding:.28rem;}
+.tdot{width:5px;height:5px;border-radius:50%;background:var(--ac);animation:typing 1.1s infinite;}
+.tdot:nth-child(2){animation-delay:.18s;}  .tdot:nth-child(3){animation-delay:.36s;}
+@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.4;}30%{transform:translateY(-5px);opacity:1;}}
+.aiinrow{padding:.78rem 1rem;border-top:1px solid var(--b1);display:flex;gap:.62rem;}
+.aiinp{flex:1;background:var(--s2);border:1px solid var(--b1);color:var(--wh);padding:.5rem .78rem;
+  border-radius:var(--r6);font-family:"Crimson Pro",serif;font-size:.9rem;outline:none;transition:all .2s;}
+.aiinp:focus{border-color:var(--ac2);box-shadow:0 0 0 3px rgba(0,212,255,.07);}
+.bask{background:rgba(0,212,255,.09);border:1px solid var(--ac2);color:var(--ac);padding:.5rem .88rem;
+  border-radius:var(--r6);font-family:"JetBrains Mono",monospace;font-size:.63rem;cursor:pointer;transition:all .2s;}
+.bask:hover{background:rgba(0,212,255,.18);transform:translateY(-1px);}
+.bask:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.qqrow{display:flex;gap:.4rem;flex-wrap:wrap;padding:0 1rem .75rem;}
+.qq{background:var(--s3);border:1px solid var(--b1);color:var(--tx2);padding:.26rem .55rem;
+  border-radius:20px;font-family:"JetBrains Mono",monospace;font-size:.55rem;cursor:pointer;transition:all .2s;}
+.qq:hover{border-color:var(--ac);color:var(--ac);background:rgba(0,212,255,.06);}
+.errcard{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r8);overflow:hidden;margin-bottom:.62rem;animation:riseIn .28s ease;}
+.errhdr{padding:.62rem .92rem;border-bottom:1px solid var(--b1);}
+.errt{font-family:"JetBrains Mono",monospace;font-size:.6rem;display:flex;align-items:center;gap:.3rem;}
+.errt.wrong{color:var(--danger);}  .errt.partial{color:var(--gold);}  .errt.correct{color:var(--ac3);}
+.errbody{padding:.78rem .92rem;font-size:.84rem;line-height:1.65;color:var(--tx);}
+.errbody strong{color:var(--ac);}
+
+/* ===== TEACHER ===== */
+#teachSc{padding:68px 1.4rem 2rem;}
+.twrap2{max-width:1260px;margin:0 auto;}
+.tstats{display:grid;grid-template-columns:repeat(4,1fr);gap:.72rem;margin-bottom:1.1rem;}
+.tgrid{display:grid;grid-template-columns:290px 1fr;gap:1rem;}
 .ftabs{display:flex;border-bottom:1px solid var(--b1);background:var(--s2);overflow-x:auto;}
-.ftab{flex-shrink:0;padding:.62rem .88rem;font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;}
+.ftab{flex-shrink:0;padding:.68rem .92rem;font-family:"JetBrains Mono",monospace;font-size:.6rem;
+  color:var(--tx3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;}
 .ftab.active{color:var(--ac);border-bottom-color:var(--ac);}
-.fsec{padding:.95rem;display:none;}.fsec.active{display:block;}
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:.7rem;}
-.ffull{margin-bottom:.7rem;}
-.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.58rem;}
-.sit{background:var(--s2);border:1px solid var(--b1);border-radius:4px;padding:.58rem;}
-.sitl{font-family:'JetBrains Mono',monospace;font-size:.52rem;color:var(--tx3);margin-bottom:.28rem;}
-.sitinp{width:100%;background:var(--s3);border:1px solid var(--b1);color:var(--ac);padding:.28rem .42rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.74rem;text-align:center;}
-.sitinp:focus{outline:none;border-color:var(--ac2);}
-/* Teacher info banner */
-.tbanner{background:rgba(0,255,170,.04);border:1px solid rgba(0,255,170,.2);border-radius:5px;padding:.6rem .88rem;margin-bottom:.7rem;display:flex;align-items:center;gap:.7rem;}
-.tbav{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--ac2),var(--purple));display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
-.tbnm{font-family:'Unbounded',sans-serif;font-size:.65rem;color:var(--wh);}.tbsub{font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--ac3);}
-/* Students / report tables */
-.stbl{width:100%;border-collapse:collapse;font-size:.8rem;}
-.stbl th{background:var(--s2);padding:.55rem .78rem;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.53rem;color:var(--tx3);border-bottom:1px solid var(--b1);}
-.stbl td{padding:.6rem .78rem;border-bottom:1px solid var(--b1);}
-.stbl tr:last-child td{border-bottom:none;}
-.stbl tr:hover td{background:rgba(0,200,255,.015);}
-/* Sub-tabs */
+.fsec{padding:1rem;display:none;}  .fsec.active{display:block;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:.68rem;margin-bottom:.72rem;}
+.ffull{margin-bottom:.72rem;}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;}
+.sit{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r6);padding:.62rem;}
+.sitl{font-family:"JetBrains Mono",monospace;font-size:.53rem;color:var(--tx3);margin-bottom:.28rem;}
+.sitinp{width:100%;background:var(--s3);border:1px solid var(--b1);color:var(--ac);
+  padding:.3rem .45rem;border-radius:var(--r4);font-family:"JetBrains Mono",monospace;font-size:.76rem;text-align:center;outline:none;}
+.sitinp:focus{border-color:var(--ac2);}
+.tbanner{background:linear-gradient(135deg,rgba(0,212,255,.06),rgba(0,255,204,.04));
+  border:1px solid rgba(0,212,255,.2);border-radius:var(--r8);padding:.65rem .92rem;
+  margin-bottom:.75rem;display:flex;align-items:center;gap:.72rem;}
+.tbav{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--ac2),var(--purple));
+  display:flex;align-items:center;justify-content:center;font-size:.92rem;flex-shrink:0;
+  box-shadow:0 0 12px rgba(0,212,255,.3);}
+.tbnm{font-family:"Unbounded",sans-serif;font-size:.67rem;color:var(--wh);}
+.tbsub{font-family:"JetBrains Mono",monospace;font-size:.55rem;color:var(--ac3);}
 .subtabs{display:flex;gap:.38rem;margin-bottom:.95rem;flex-wrap:wrap;}
-.subtab{background:rgba(0,200,255,.07);border:1px solid var(--b2);color:var(--ac);padding:.26rem .6rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.6rem;cursor:pointer;transition:all .2s;white-space:nowrap;}
-.subtab.active{background:rgba(0,200,255,.18);border-color:var(--ac);}
-/* REPORT SCREEN */
-#reportSc{padding:68px 1.3rem 2rem;}
-.rwrap{max-width:1080px;margin:0 auto;}
-/* PROFILE SCREEN */
-#profSc{padding:68px 1.3rem 2rem;}
-.pwrap{max-width:860px;margin:0 auto;}
-.pcard{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:1.6rem;margin-bottom:.95rem;display:flex;gap:1.6rem;align-items:flex-start;flex-wrap:wrap;}
-.ava{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--ac2),var(--ac3));display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;border:2px solid var(--ac);}
-.pnm{font-family:'Unbounded',sans-serif;font-size:1.18rem;font-weight:700;color:var(--wh);margin-bottom:.24rem;}
-.prole{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--ac3);margin-bottom:.4rem;}
-.pmeta{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--tx3);line-height:1.8;}
-.achgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.68rem;}
-.ach{background:var(--s2);border:1px solid var(--b1);border-radius:7px;padding:.78rem;text-align:center;transition:border-color .2s;}
-.ach:hover{border-color:var(--b2);}.achi{font-size:1.6rem;margin-bottom:.32rem;}
-.achn{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--tx2);}
-.achd{font-size:.74rem;color:var(--tx3);margin-top:.14rem;}.ach.locked{opacity:.3;}
-/* badges */
-.badge{font-family:'JetBrains Mono',monospace;font-size:.54rem;padding:.1rem .38rem;border-radius:20px;border:1px solid;display:inline-flex;align-items:center;}
-.bgr{color:var(--ac3);border-color:rgba(0,255,170,.3);background:rgba(0,255,170,.07);}
-.bgo{color:var(--gold);border-color:rgba(255,200,74,.3);background:rgba(255,200,74,.07);}
-.brd{color:var(--danger);border-color:rgba(255,51,85,.3);background:rgba(255,51,85,.07);}
-.bbl{color:var(--ac);border-color:rgba(0,200,255,.3);background:rgba(0,200,255,.07);}
-/* LOADER & NOTIF */
-.loader{display:none;position:fixed;inset:0;background:rgba(5,10,15,.9);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:.82rem;backdrop-filter:blur(12px);}
+.subtab{background:rgba(0,212,255,.07);border:1px solid var(--b2);color:var(--ac);
+  padding:.26rem .6rem;border-radius:var(--r4);font-family:"JetBrains Mono",monospace;
+  font-size:.6rem;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.subtab.active{background:rgba(0,212,255,.18);border-color:var(--ac);box-shadow:0 0 0 2px rgba(0,212,255,.1);}
+
+/* Students table */
+.stbl{width:100%;border-collapse:collapse;font-size:.8rem;}
+.stbl thead tr{background:linear-gradient(135deg,var(--s3),var(--s2));}
+.stbl th{padding:.62rem .82rem;text-align:left;font-family:"JetBrains Mono",monospace;
+  font-size:.53rem;color:var(--tx2);border-bottom:2px solid var(--b2);}
+.stbl td{padding:.62rem .82rem;border-bottom:1px solid var(--b1);}
+.stbl tr:hover td{background:rgba(0,212,255,.03);}
+.stbl tr:last-child td{border-bottom:none;}
+
+/* Report */
+#reportSc{padding:68px 1.4rem 2rem;}
+.rwrap2{max-width:1100px;margin:0 auto;}
+
+/* Profile */
+#profSc{padding:68px 1.4rem 2rem;}
+.pwrap2{max-width:880px;margin:0 auto;}
+.pcard{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r16);
+  padding:1.8rem;margin-bottom:1rem;display:flex;gap:1.8rem;align-items:flex-start;flex-wrap:wrap;
+  box-shadow:var(--glow2);}
+.ava{width:82px;height:82px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:1.9rem;flex-shrink:0;border:2px solid var(--ac);
+  box-shadow:0 0 0 6px rgba(0,212,255,.08);}
+.pnm{font-family:"Unbounded",sans-serif;font-size:1.2rem;font-weight:700;color:var(--wh);margin-bottom:.25rem;}
+.prole{font-family:"JetBrains Mono",monospace;font-size:.62rem;color:var(--ac3);margin-bottom:.42rem;}
+.pmeta{font-family:"JetBrains Mono",monospace;font-size:.62rem;color:var(--tx3);line-height:1.82;}
+.achgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.72rem;}
+.ach{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r8);padding:.82rem;
+  text-align:center;transition:all .22s;cursor:default;}
+.ach:not(.locked):hover{border-color:var(--b2);transform:translateY(-2px);box-shadow:var(--glow);}
+.achi{font-size:1.65rem;margin-bottom:.35rem;}
+.achn{font-family:"JetBrains Mono",monospace;font-size:.58rem;color:var(--tx2);}
+.achd{font-size:.75rem;color:var(--tx3);margin-top:.15rem;}
+.ach.locked{opacity:.28;}
+
+/* LOADER */
+.loader{display:none;position:fixed;inset:0;background:rgba(3,8,13,.92);z-index:999;
+  align-items:center;justify-content:center;flex-direction:column;gap:.9rem;backdrop-filter:blur(16px);}
 .loader.show{display:flex;}
-.lring{width:44px;height:44px;border:2px solid var(--s2);border-top-color:var(--ac);border-radius:50%;animation:spin .75s linear infinite;}
+.lring{width:52px;height:52px;border:2px solid var(--s2);border-top-color:var(--ac);
+  border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.ltxt{font-family:'JetBrains Mono',monospace;font-size:.63rem;color:var(--tx2);letter-spacing:.1em;}
-.lsteps{display:flex;gap:.4rem;}.ls{width:5px;height:5px;border-radius:50%;background:var(--b1);transition:background .3s;}.ls.on{background:var(--ac);}
-.nstack{position:fixed;bottom:1.2rem;right:1.2rem;z-index:999;display:flex;flex-direction:column;gap:.4rem;}
-.notif{background:var(--s1);border:1px solid var(--b1);border-radius:7px;padding:.6rem .82rem;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--tx2);box-shadow:0 0 26px rgba(0,0,0,.4);animation:slin .25s ease;max-width:255px;}
-.notif.success{border-color:rgba(0,255,170,.4);color:var(--ac3);}
-.notif.error{border-color:rgba(255,51,85,.4);color:var(--danger);}
-.notif.warn{border-color:rgba(255,200,74,.4);color:var(--gold);}
+.ltxt{font-family:"JetBrains Mono",monospace;font-size:.66rem;color:var(--tx2);letter-spacing:.1em;}
+.lsteps{display:flex;gap:.42rem;}
+.ls{width:5px;height:5px;border-radius:50%;background:var(--b1);transition:background .3s;}
+.ls.on{background:var(--ac);}
+
+/* NOTIF */
+.nstack{position:fixed;bottom:1.3rem;right:1.3rem;z-index:999;display:flex;flex-direction:column;gap:.42rem;}
+.notif{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r8);
+  padding:.65rem .88rem;font-family:"JetBrains Mono",monospace;font-size:.62rem;color:var(--tx2);
+  box-shadow:0 8px 32px rgba(0,0,0,.5);animation:slin .25s ease;max-width:265px;
+  display:flex;align-items:center;gap:.5rem;}
+.notif.success{border-color:rgba(0,255,204,.4);color:var(--ac3);}
+.notif.error{border-color:rgba(255,34,85,.4);color:var(--danger);}
+.notif.warn{border-color:rgba(255,204,68,.4);color:var(--gold);}
 @keyframes slin{from{transform:translateX(100%);opacity:0;}to{transform:translateX(0);opacity:1;}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
-.fadein{animation:fadeUp .28s ease;}
-::-webkit-scrollbar{width:3px;height:3px;}
+
+/* Scroll */
+::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-track{background:var(--s1);}
 ::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px;}
+::-webkit-scrollbar-thumb:hover{background:var(--b3);}
+
+/* Animations */
+.fadein{animation:riseIn .32s ease;}
+
 @media(max-width:900px){
   .srow,.tstats{grid-template-columns:1fr 1fr;}
   .g32,.g2,.g3{grid-template-columns:1fr;}
-  .clay{grid-template-columns:1fr;}.csb{height:235px;}
+  .clay{grid-template-columns:1fr;}.csb{height:240px;}
   .bkdn{grid-template-columns:repeat(2,1fr);}
   .sgrid,.achgrid{grid-template-columns:1fr 1fr;}
   .tgrid{grid-template-columns:1fr;}
+  .treat-table{min-width:700px;}
 }
 </style>
 </head>
@@ -312,44 +556,46 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(5,10,15,.97)
 </div>
 
 <nav id="mnav" style="display:none">
-  <div class="nlogo">ClinPharm<span>AI</span></div>
+  <div class="nlogo">ClinPharm&#xFEFF;AI</div>
   <div class="nlinks">
     <button onclick="nav('ds',this)" id="nb_d" class="active">📊 Dashboard</button>
     <button onclick="nav('caseSc',this)" id="nb_c">🏥 Keys yechish</button>
-    <button onclick="nav('feedSc',this)" id="nb_f" style="display:none">🧠 Natijalar</button>
-    <button onclick="nav('teachSc',this)" id="nb_t" style="display:none">👩‍🏫 O'qituvchi</button>
+    <button onclick="nav('feedSc',this)" id="nb_f" style="display:none">🧠 AI Natija</button>
+    <button onclick="nav('teachSc',this)" id="nb_t" style="display:none">👨‍🏫 O'qituvchi</button>
     <button onclick="nav('reportSc',this)" id="nb_r">📋 Hisobot</button>
     <button onclick="nav('profSc',this)" id="nb_p">👤 Profil</button>
   </div>
   <div class="nuser">
     <span id="navNm">Qurbonov Anusher</span>
-    <span class="ubadge" id="navBg">TALABA</span>
+    <span class="ubadge student" id="navBg">TALABA</span>
     <div class="pulse"></div>
-    <button onclick="logout()" style="background:none;border:1px solid var(--b1);color:var(--tx3);padding:.2rem .46rem;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:.55rem;transition:all .2s;" onmouseover="this.style.borderColor='var(--danger)';this.style.color='var(--danger)'" onmouseout="this.style.borderColor='var(--b1)';this.style.color='var(--tx3)'">✕ Chiqish</button>
+    <button class="nbtn-exit" onclick="logout()">&#10005; Chiqish</button>
   </div>
 </nav>
 
 <!-- ===== LOGIN ===== -->
 <div id="loginSc" class="screen active">
-<div class="lwrap">
-  <div class="lbig">ClinPharm<span>AI</span></div>
-  <div class="lsub">KLINIK FARMAKOLOGIYA · SUN'IY INTELLEKT TRENAYJORI</div>
-  <div class="lcard">
+<div class="login-outer">
+  <div class="login-brand">
+    <div class="login-logo">ClinPharmAI</div>
+    <div class="login-tagline">KLINIK FARMAKOLOGIYA &middot; SUN&#x2019;IY INTELLEKT TRENAYJORI</div>
+  </div>
+  <div class="login-card">
     <h2>TIZIMGA KIRISH</h2>
-    <div class="fg"><label>EMAIL</label><input type="email" id="lemail" value="anusher@clinpharm.uz"></div>
-    <div class="fg"><label>PAROL</label><input type="password" id="lpass" value="12345"></div>
-    <div class="fg"><label>ROL</label>
+    <div class="fg"><label>Email</label><input type="email" id="lemail" value="anusher@clinpharm.uz"></div>
+    <div class="fg"><label>Parol</label><input type="password" id="lpass" value="12345"></div>
+    <div class="fg"><label>Rol</label>
       <select id="lrole">
-        <option value="student">Talaba</option>
-        <option value="teacher">O'qituvchi (Prof. Siddiqov O.A.)</option>
-        <option value="admin">Admin</option>
+        <option value="student">👨‍⚕️ Talaba</option>
+        <option value="teacher">👨‍🏫 O'qituvchi (Prof. Siddiqov O.A.)</option>
+        <option value="admin">⚙️ Admin</option>
       </select>
     </div>
-    <button class="btnp" onclick="doLogin()">KIRISH →</button>
-    <div class="drow">
-      <div class="dbtn" onclick="quickLogin('student')">👨‍⚕️ Talaba</div>
-      <div class="dbtn" onclick="quickLogin('teacher')">👩‍🏫 O'qituvchi</div>
-      <div class="dbtn" onclick="quickLogin('admin')">⚙️ Admin</div>
+    <button class="login-btn" onclick="doLogin()">KIRISH &rarr;</button>
+    <div class="demo-row">
+      <div class="demo-btn" onclick="quickLogin('student')">👨‍⚕️ Talaba</div>
+      <div class="demo-btn" onclick="quickLogin('teacher')">👨‍🏫 O'qituvchi</div>
+      <div class="demo-btn" onclick="quickLogin('admin')">⚙️ Admin</div>
     </div>
   </div>
 </div>
@@ -361,41 +607,42 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(5,10,15,.97)
   <div class="phdr">
     <div>
       <div class="ptitle">Xush kelibsiz, <span id="dashNm">Anusher</span> 👋</div>
-      <div id="dashDate" style="font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--tx3);margin-top:.13rem;"></div>
+      <div id="dashDate" style="font-family:JetBrains Mono,monospace;font-size:.57rem;color:var(--tx3);margin-top:.14rem;"></div>
     </div>
-    <div style="display:flex;gap:.38rem;flex-wrap:wrap">
-      <button class="bgl" onclick="nav('caseSc',document.getElementById('nb_c'))">🎯 Yangi keys boshlash</button>
-      <button class="bsm" onclick="nav('reportSc',document.getElementById('nb_r'))">📊 Hisobot</button>
+    <div class="pbtn-row">
+      <button class="btn btn-gold" onclick="nav('caseSc',document.getElementById('nb_c'))">🎯 Yangi keys boshlash</button>
+      <button class="btn btn-outline" onclick="nav('reportSc',document.getElementById('nb_r'))">📊 Hisobot</button>
     </div>
   </div>
   <div class="srow">
-    <div class="sc" style="--clr:linear-gradient(90deg,#00c8ff,#0088bb)"><div class="slbl">YECHILGAN KEYSLAR</div><div class="sval">24</div><div class="ssub">↑ 3 bu hafta</div></div>
-    <div class="sc" style="--clr:linear-gradient(90deg,#00ffaa,#00aa77)"><div class="slbl">O'RTACHA BALL</div><div class="sval">78<span style="font-size:.85rem;color:var(--tx3)">%</span></div><div class="ssub">↑ 5% o'sdi</div></div>
-    <div class="sc" style="--clr:linear-gradient(90deg,#ffc84a,#ff8a00)"><div class="slbl">GURUH REYTINGI</div><div class="sval">#5</div><div class="ssub">28 talabadan</div></div>
-    <div class="sc" style="--clr:linear-gradient(90deg,#ff3355,#cc0033)"><div class="slbl">ENG KO'P XATO</div><div class="sval sm">Dozalash</div><div class="ssub">7 ta keysdа</div></div>
-    <div class="sc" style="--clr:linear-gradient(90deg,#b060ff,#7700cc)"><div class="slbl">O'QUV SOATI</div><div class="sval sm">14:30</div><div class="ssub">Bu oy</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#00d4ff,#0090cc)"><div class="slbl">YECHILGAN KEYSLAR</div><div class="sval">24</div><div class="ssub up">&#8593; 3 bu hafta</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#00ffcc,#00bfaa)"><div class="slbl">O'RTACHA BALL</div><div class="sval">78<span style="font-size:.88rem;color:var(--tx3)">%</span></div><div class="ssub up">&#8593; 5% o'sdi</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#ffcc44,#ff8800)"><div class="slbl">GURUH REYTINGI</div><div class="sval">#5</div><div class="ssub">28 talabadan</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#ff2255,#cc0033)"><div class="slbl">ENG KO'P XATO</div><div class="sval sm">Dozalash</div><div class="ssub">7 ta keysdа</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#cc66ff,#7700cc)"><div class="slbl">O'QUV SOATI</div><div class="sval sm">14:30</div><div class="ssub">Bu oy</div></div>
   </div>
   <div class="g32">
     <div class="card">
       <div class="ch">
         <div class="ct">MAVJUD KEYSLAR</div>
-        <select style="background:var(--s2);border:1px solid var(--b1);color:var(--tx2);padding:.14rem .4rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.54rem;" id="cfilter" onchange="renderCaseList()">
-          <option value="all">Barchasi</option><option value="resp">Pulmonologiya</option><option value="pul">Kardiologiya</option><option value="endo">Endokrinologiya</option><option value="neuro">Nevrologiya</option>
+        <select style="background:var(--s2);border:1px solid var(--b1);color:var(--tx2);padding:.16rem .42rem;border-radius:var(--r4);font-family:JetBrains Mono,monospace;font-size:.55rem;outline:none;" id="cfilter" onchange="renderCaseList()">
+          <option value="all">Barchasi</option><option value="resp">Pulmonologiya</option>
+          <option value="pul">Kardiologiya</option><option value="endo">Endokrinologiya</option><option value="neuro">Nevrologiya</option>
         </select>
       </div>
-      <div style="padding:0 .68rem" id="clistD"></div>
+      <div style="padding:0 .7rem" id="clistD"></div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:.95rem">
+    <div style="display:flex;flex-direction:column;gap:1rem">
       <div class="card">
         <div class="ch"><div class="ct">🏆 GURUH REYTINGI</div></div>
-        <div style="padding:0 .68rem" id="lbList"></div>
+        <div style="padding:0 .7rem" id="lbList"></div>
       </div>
       <div class="card">
-        <div class="ch"><div class="ct">📅 JADVAL — Prof. Siddiqov O.A.</div></div>
-        <div class="cb" style="padding:.35rem .68rem">
-          <div class="act"><div class="adot" style="background:var(--ac)"></div><div><div style="font-size:.78rem">Antibiotiklar — test</div><div class="atime">Ertaga, 10:00 · Prof. Siddiqov O.A.</div></div></div>
-          <div class="act"><div class="adot" style="background:var(--gold)"></div><div><div style="font-size:.78rem">Kardiologiya keysi</div><div class="atime">Juma, 14:00 · Prof. Siddiqov O.A.</div></div></div>
-          <div class="act"><div class="adot" style="background:var(--purple)"></div><div><div style="font-size:.78rem">Malaka baholash</div><div class="atime">25-mart, 09:00</div></div></div>
+        <div class="ch"><div class="ct">📅 JADVAL &mdash; Prof. Siddiqov O.A.</div></div>
+        <div class="cb" style="padding:.35rem .7rem">
+          <div class="act"><div class="adot" style="background:var(--ac)"></div><div><div style="font-size:.79rem">Antibiotiklar &mdash; test</div><div class="atime">Ertaga, 10:00 &middot; Prof. Siddiqov O.A.</div></div></div>
+          <div class="act"><div class="adot" style="background:var(--gold)"></div><div><div style="font-size:.79rem">Kardiologiya keysi</div><div class="atime">Juma, 14:00 &middot; Prof. Siddiqov O.A.</div></div></div>
+          <div class="act"><div class="adot" style="background:var(--purple)"></div><div><div style="font-size:.79rem">Malaka baholash</div><div class="atime">25-mart, 09:00</div></div></div>
         </div>
       </div>
     </div>
@@ -415,15 +662,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(5,10,15,.97)
     </div>
     <div class="card">
       <div class="ch"><div class="ct">⚡ SO'NGGI FAOLIYAT</div></div>
-      <div class="cb" style="padding:.28rem .68rem">
-        <div class="act"><div class="adot" style="background:var(--ac3)"></div><div><div style="font-size:.78rem">Pnevmoniya keysi yechildi</div><div class="atime">Bugun, 14:32 · 82 ball</div></div></div>
-        <div class="act"><div class="adot" style="background:var(--danger)"></div><div><div style="font-size:.78rem">Gipertenziya · Doza xatosi</div><div class="atime">Kecha, 10:15 · 61 ball</div></div></div>
-        <div class="act"><div class="adot" style="background:var(--gold)"></div><div><div style="font-size:.78rem">Diabet keysi qayta ko'rildi</div><div class="atime">3 kun oldin · 74 ball</div></div></div>
-        <div class="act"><div class="adot" style="background:var(--ac)"></div><div><div style="font-size:.78rem">Epilepsiya keysi yechildi</div><div class="atime">5 kun oldin · 69 ball</div></div></div>
+      <div class="cb" style="padding:.3rem .7rem">
+        <div class="act"><div class="adot" style="background:var(--ac3)"></div><div><div style="font-size:.79rem">Pnevmoniya keysi yechildi</div><div class="atime">Bugun, 14:32 &middot; 82 ball</div></div></div>
+        <div class="act"><div class="adot" style="background:var(--danger)"></div><div><div style="font-size:.79rem">Gipertenziya &middot; Doza xatosi</div><div class="atime">Kecha, 10:15 &middot; 61 ball</div></div></div>
+        <div class="act"><div class="adot" style="background:var(--gold)"></div><div><div style="font-size:.79rem">Diabet keysi qayta ko'rildi</div><div class="atime">3 kun oldin &middot; 74 ball</div></div></div>
+        <div class="act"><div class="adot" style="background:var(--ac)"></div><div><div style="font-size:.79rem">Epilepsiya keysi yechildi</div><div class="atime">5 kun oldin &middot; 69 ball</div></div></div>
       </div>
-      <div style="padding:.38rem .68rem .68rem">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--tx3);margin-bottom:.32rem">SO'NGGI 7 KEYS DINAMIKASI</div>
-        <canvas id="miniChart" height="50"></canvas>
+      <div style="padding:.38rem .7rem .7rem">
+        <div style="font-family:JetBrains Mono,monospace;font-size:.53rem;color:var(--tx3);margin-bottom:.32rem;letter-spacing:.05em">SO'NGGI 7 KEYS DINAMIKASI</div>
+        <canvas id="miniChart" height="52"></canvas>
       </div>
     </div>
   </div>
@@ -435,8 +682,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(5,10,15,.97)
 <div class="clay">
   <div class="csb">
     <div class="sbhdr">
-      <div class="sbcase">AKTIV KEYS · Prof. Siddiqov O.A.</div>
-      <div class="sbnm">Pnevmoniya — Homilador bemor</div>
+      <div class="sbcase">AKTIV KEYS &middot; Prof. Siddiqov O.A.</div>
+      <div class="sbnm">Pnevmoniya &mdash; Homilador bemor</div>
     </div>
     <div class="ptcard">
       <div class="ptphoto">🤒</div>
@@ -451,48 +698,48 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(5,10,15,.97)
       <div class="stab" onclick="stab(this,'st_ins')">Instr.</div>
     </div>
     <div class="sbc" id="st_pass">
-      <div class="isec"><div class="ilbl">ASOSIY TASHXIS</div><div class="ival">O'tkir o'ng tomona pastki bulak pnevmoniyasi, o'rta og'ir kechishi. Nafas etishmovchiligi I daraja.</div></div>
-      <div class="isec"><div class="ilbl">QO'SHMA KASALLIKLAR</div><div class="ival">Surunkali pielonefrit (qo'zg'alish). Temir etishmovchiligi anemiyasi II daraja.</div></div>
-      <div class="isec"><div class="ilbl">HOMILADORLIK</div><div class="wbox">🤰 Homiladorlik 14 haftalik (II trimester)</div></div>
-      <div class="isec"><div class="ilbl">ALLERGIK ANAMNEZ</div><div class="abox">⚠️ Ampitsillinga allergik reaktsiya (04.11.2025)</div></div>
-      <div class="isec"><div class="ilbl">BUYRAK</div><div class="wbox">⚡ GFR 48 ml/min · Kreatinin 160 μmol/L</div></div>
-      <div class="isec"><div class="ilbl">JIGAR</div><div class="obox">✓ Normal · ALT 28, AST 31 U/L</div></div>
+      <div class="isec"><div class="ilbl2">ASOSIY TASHXIS</div><div class="ival">O'tkir o'ng tomona pastki bulak pnevmoniyasi, o'rta og'ir kechishi. Nafas etishmovchiligi I daraja.</div></div>
+      <div class="isec"><div class="ilbl2">QO'SHMA KASALLIKLAR</div><div class="ival">Surunkali pielonefrit (qo'zg'alish). Temir etishmovchiligi anemiyasi II daraja.</div></div>
+      <div class="isec"><div class="ilbl2">HOMILADORLIK</div><div class="wbox">🤰 <span>Homiladorlik 14 haftalik (II trimester)</span></div></div>
+      <div class="isec"><div class="ilbl2">ALLERGIK ANAMNEZ</div><div class="abox">⚠️ <span>Ampitsillinga allergik reaktsiya (04.11.2025)</span></div></div>
+      <div class="isec"><div class="ilbl2">BUYRAK</div><div class="wbox">⚡ <span>GFR 48 ml/min &middot; Kreatinin 160 μmol/L &mdash; doza sozlash!</span></div></div>
+      <div class="isec"><div class="ilbl2">JIGAR</div><div class="okbox">&#10003; Normal &middot; ALT 28, AST 31 U/L</div></div>
     </div>
     <div class="sbc" id="st_shik" style="display:none">
-      <div class="isec"><div class="ilbl">ASOSIY SHIKOYATLAR</div><div class="ival">Harorat 39.2°C, yo'tal (yiringsimon balg'am), nafas qisishi RR 24/min, o'ng ko'krak og'rig'i, holsizlik.</div></div>
-      <div class="isec"><div class="ilbl">KASALLIK BOSHLANISHI</div><div class="ival">3 kun avval. Sovuq tekkan, harorat ko'tarilgan. Antibiotik olmagan.</div></div>
+      <div class="isec"><div class="ilbl2">ASOSIY SHIKOYATLAR</div><div class="ival">Harorat 39.2°C, yo'tal (yiringsimon balg'am), nafas qisishi RR 24/min, o'ng ko'krak og'rig'i, holsizlik.</div></div>
+      <div class="isec"><div class="ilbl2">KASALLIK BOSHLANISHI</div><div class="ival">3 kun avval. Sovuq tekkan, harorat ko'tarilgan. Antibiotik olmagan.</div></div>
     </div>
     <div class="sbc" id="st_anam" style="display:none">
-      <div class="isec"><div class="ilbl">HAYOT ANAMNEZI</div><div class="ival">Homiladorlik 14 haftalik. 2 yildan beri surunkali pielonefrit. Temir tanqisligi anemiyasi.</div></div>
-      <div class="isec"><div class="ilbl">JORIY DORILAR</div><div class="ival">Sorbifer Durules (temir preparati). Boshqa dori yo'q.</div></div>
-      <div class="isec"><div class="ilbl">OILAVIY ANAMNEZ</div><div class="ival">Onasida bronxial astma. Otasida gipertenziya.</div></div>
+      <div class="isec"><div class="ilbl2">HAYOT ANAMNEZI</div><div class="ival">Homiladorlik 14 haftalik. 2 yildan beri surunkali pielonefrit. Temir tanqisligi anemiyasi.</div></div>
+      <div class="isec"><div class="ilbl2">JORIY DORILAR</div><div class="ival">Sorbifer Durules (temir preparati). Boshqa dori yo'q.</div></div>
+      <div class="isec"><div class="ilbl2">OILAVIY ANAMNEZ</div><div class="ival">Onasida bronxial astma. Otasida gipertenziya.</div></div>
     </div>
     <div class="sbc" id="st_lab" style="display:none">
-      <div class="isec"><div class="ilbl">QON TAHLILI</div>
+      <div class="isec"><div class="ilbl2">QON TAHLILI</div>
         <div class="lgrid">
-          <div class="litm"><div class="lnm">Leykotsit</div><div class="lval hi">14.2×10⁹↑</div></div>
-          <div class="litm"><div class="lnm">Neytrofil</div><div class="lval hi">84%↑</div></div>
-          <div class="litm"><div class="lnm">Gemoglobin</div><div class="lval lo">96 g/L↓</div></div>
-          <div class="litm"><div class="lnm">ESR</div><div class="lval hi">48 mm/s↑</div></div>
-          <div class="litm"><div class="lnm">CRB</div><div class="lval hi">87 mg/L↑</div></div>
-          <div class="litm"><div class="lnm">PCT</div><div class="lval hi">2.4 ng/mL↑</div></div>
+          <div class="litm"><div class="lnm2">Leykotsit</div><div class="lval hi">14.2&#215;10&#9308;&#8593;</div></div>
+          <div class="litm"><div class="lnm2">Neytrofil</div><div class="lval hi">84%&#8593;</div></div>
+          <div class="litm"><div class="lnm2">Gemoglobin</div><div class="lval lo">96 g/L&#8595;</div></div>
+          <div class="litm"><div class="lnm2">ESR</div><div class="lval hi">48 mm/s&#8593;</div></div>
+          <div class="litm"><div class="lnm2">CRB</div><div class="lval hi">87 mg/L&#8593;</div></div>
+          <div class="litm"><div class="lnm2">PCT</div><div class="lval hi">2.4 ng/mL&#8593;</div></div>
         </div>
       </div>
-      <div class="isec"><div class="ilbl">BIOKIMYO</div>
+      <div class="isec"><div class="ilbl2">BIOKIMYO</div>
         <div class="lgrid">
-          <div class="litm"><div class="lnm">Kreatinin</div><div class="lval hi">160 μmol↑</div></div>
-          <div class="litm"><div class="lnm">GFR</div><div class="lval lo">48 ml/min↓</div></div>
-          <div class="litm"><div class="lnm">Mochevina</div><div class="lval hi">9.8 mmol↑</div></div>
-          <div class="litm"><div class="lnm">ALT/AST</div><div class="lval">28/31 N</div></div>
+          <div class="litm"><div class="lnm2">Kreatinin</div><div class="lval hi">160 μmol&#8593;</div></div>
+          <div class="litm"><div class="lnm2">GFR</div><div class="lval lo">48 ml/min&#8595;</div></div>
+          <div class="litm"><div class="lnm2">Mochevina</div><div class="lval hi">9.8 mmol&#8593;</div></div>
+          <div class="litm"><div class="lnm2">ALT/AST</div><div class="lval ok">28/31 N</div></div>
         </div>
       </div>
     </div>
     <div class="sbc" id="st_ins" style="display:none">
-      <div class="isec"><div class="ilbl">RENTGEN</div><div class="ival">O'ng o'pkaning pastki bo'lagida diffuz infiltrativ soya.</div></div>
-      <div class="isec"><div class="ilbl">PULSOKSIMETRIYA</div><div class="wbox">SpO₂ = 94% ↓ (norm >95%)</div></div>
-      <div class="isec"><div class="ilbl">EKG</div><div class="ival">Sinusli taxikardiya HR 104/min.</div></div>
-      <div class="isec"><div class="ilbl">UZI</div><div class="ival">Homiladorlik 14 hafta, normada. Buyraklarda diffuz o'zgarishlar.</div></div>
-      <div class="isec"><div class="ilbl">BALG'AM</div><div class="ival">Gram(+) diplokokklar → S.pneumoniae ehtimoli.</div></div>
+      <div class="isec"><div class="ilbl2">RENTGEN</div><div class="ival">O'ng o'pkaning pastki bo'lagida diffuz infiltrativ soya.</div></div>
+      <div class="isec"><div class="ilbl2">PULSOKSIMETRIYA</div><div class="wbox">⚡ <span>SpO&#8322; = 94% &#8595; (norm >95%)</span></div></div>
+      <div class="isec"><div class="ilbl2">EKG</div><div class="ival">Sinusli taxikardiya HR 104/min.</div></div>
+      <div class="isec"><div class="ilbl2">UZI</div><div class="ival">Homiladorlik 14 hafta, normada. Buyraklarda diffuz o'zgarishlar.</div></div>
+      <div class="isec"><div class="ilbl2">BALG'AM</div><div class="ival">Gram(+) diplokokklar &rarr; S.pneumoniae ehtimoli.</div></div>
     </div>
   </div>
 
@@ -509,122 +756,137 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(5,10,15,.97)
     </div>
 
     <div class="cbody">
-      <!-- Step 1 -->
+      <!-- Step 1: Drug selection -->
       <div id="step_1">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3);margin-bottom:.72rem;letter-spacing:.07em">QADAM 1 · ASOSIY DORI TANLASH VA ASOSLASH</div>
+        <div style="font-family:JetBrains Mono,monospace;font-size:.58rem;color:var(--tx3);margin-bottom:.75rem;letter-spacing:.07em;text-transform:uppercase">Qadam 1 &middot; Asosiy dori tanlash va asoslash</div>
         <div class="dsg">
-          <div><label class="ilbl2">ASOSIY DORI</label>
+          <div><label class="ilbl">Asosiy dori</label>
             <select class="inp" id="mainDrug" onchange="checkDrug()">
-              <option value="">— Tanlang —</option>
+              <option value="">&#8212; Tanlang &#8212;</option>
               <option value="ceftriaxone">Ceftriaxone (III avlod TSF)</option>
               <option value="azithromycin">Azithromycin (makrolid)</option>
               <option value="amoxicillin">Amoxicillin (aminopenitsil.)</option>
-              <option value="ciprofloxacin">Ciprofloxacin ⚠️ (ftorxinolon)</option>
-              <option value="levofloxacin">Levofloxacin ⚠️ (ftorxinolon)</option>
-              <option value="ampicillin">Ampicillin ⛔ (ALLERGIYA!)</option>
+              <option value="ciprofloxacin">Ciprofloxacin &#9888;&#65039; (ftorxinolon)</option>
+              <option value="levofloxacin">Levofloxacin &#9888;&#65039; (ftorxinolon)</option>
+              <option value="ampicillin">Ampicillin &#9940; (ALLERGIYA!)</option>
               <option value="amoxiclav">Amoxicillin/klavulanat</option>
               <option value="cefuroxime">Cefuroxime (II avlod TSF)</option>
             </select>
           </div>
-          <div><label class="ilbl2">ALTERNATIV DORI</label>
+          <div><label class="ilbl">Alternativ dori</label>
             <select class="inp" id="altDrug">
-              <option value="">— Tanlang —</option>
+              <option value="">&#8212; Tanlang &#8212;</option>
               <option value="azithromycin">Azithromycin</option>
               <option value="clarithromycin">Clarithromycin</option>
               <option value="cefuroxime">Cefuroxime</option>
               <option value="erythromycin">Erythromycin</option>
             </select>
           </div>
-          <div><label class="ilbl2">QABUL YO'LI</label>
+          <div><label class="ilbl">Qabul yo'li</label>
             <select class="inp" id="routeInp">
-              <option value="">— Tanlang —</option>
+              <option value="">&#8212; Tanlang &#8212;</option>
               <option value="iv">Vena ichiga (v/v)</option>
               <option value="im">Muskul ichiga (v/m)</option>
               <option value="oral">Og'iz orqali (per os)</option>
             </select>
           </div>
-          <div><label class="ilbl2">DAVOLASH DAVOMIYLIGI</label>
+          <div><label class="ilbl">Davolash davomiyligi</label>
             <select class="inp" id="durationInp">
-              <option value="">— Tanlang —</option>
-              <option value="5">5 kun</option>
-              <option value="7">7 kun</option>
-              <option value="10">10 kun</option>
-              <option value="14">14 kun</option>
+              <option value="">&#8212; Tanlang &#8212;</option>
+              <option value="5">5 kun</option><option value="7">7 kun</option>
+              <option value="10">10 kun</option><option value="14">14 kun</option>
             </select>
           </div>
-          <div><label class="ilbl2">BIR MARTALIK DOZA</label><input class="inp" id="sdoseInp" placeholder="Masalan: 1 g"></div>
-          <div><label class="ilbl2">SUTKALI DOZA / CHASTOTA</label><input class="inp" id="ddoseInp" placeholder="Masalan: 2 g/kun, 2 marta"></div>
+          <div><label class="ilbl">Bir martalik doza</label><input class="inp" id="sdoseInp" placeholder="Masalan: 1 g"></div>
+          <div><label class="ilbl">Sutkali doza / chastota</label><input class="inp" id="ddoseInp" placeholder="Masalan: 2 g/kun, 2 marta"></div>
         </div>
         <div class="intbox">
-          <div class="intboxt">🔍 DORI-DORI TA'SIR TEKSHIRUVI (joriy dorilar: Sorbifer Durules)</div>
+          <div class="intboxt">🔍 DORI-DORI TA'SIR TEKSHIRUVI &mdash; Joriy dorilar: Sorbifer Durules</div>
           <div id="intList"><div class="inti"><div class="intd" style="background:var(--tx3)"></div><span style="color:var(--tx3);font-size:.78rem">Dori tanlangach ko'rsatiladi</span></div></div>
         </div>
-        <div style="margin-top:.7rem"><label class="ilbl2">DORI TANLOVINI ASOSLANG</label><textarea class="inpa" id="drugReason" placeholder="Nima uchun bu dorini tanladingiz? Homiladorlik, allergiya, buyrak holati..."></textarea></div>
+        <div style="margin-top:.72rem"><label class="ilbl">Dori tanlovini asoslang</label><textarea class="inpa" id="drugReason" placeholder="Nima uchun bu dorini tanladingiz? Homiladorlik, allergiya, buyrak holati..."></textarea></div>
       </div>
 
-      <!-- Step 2 -->
+      <!-- Step 2: YANGI ZOR JADVAL -->
       <div id="step_2" style="display:none">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3);margin-bottom:.72rem;letter-spacing:.07em">QADAM 2 · DAVOLASH VARAKASI — BAHOLASH JADVALI</div>
-        <div class="twrap">
-          <table class="tt">
+        <div style="font-family:JetBrains Mono,monospace;font-size:.58rem;color:var(--tx3);margin-bottom:.75rem;letter-spacing:.07em;text-transform:uppercase">Qadam 2 &middot; Davolash varakasi &mdash; Baholash jadvali</div>
+        <div class="treat-outer">
+          <table class="treat-table">
             <thead>
               <tr>
-                <th style="width:30px">#</th>
-                <th style="min-width:170px">Rp. (Dori, shakl, miqdor)</th>
-                <th>Dori to'g'ri<br><span style="color:var(--tx3)">/10</span></th>
-                <th>Doza to'g'ri<br><span style="color:var(--tx3)">/10</span></th>
-                <th>Kombinatsiya<br><span style="color:var(--tx3)">/10</span></th>
-                <th>Samaradorlik<br><span style="color:var(--tx3)">/10</span></th>
-                <th>Xavfsizlik<br><span style="color:var(--tx3)">/10</span></th>
+                <th style="width:38px">#</th>
+                <th style="min-width:200px">📋 Rp. (Dori nomi, shakli, miqdori)</th>
+                <th class="col-score" style="min-width:90px">💊 Dori<br><span style="color:var(--ac3);font-size:.5rem">to'g'riligi /10</span></th>
+                <th class="col-score" style="min-width:90px">⚖️ Doza<br><span style="color:var(--ac3);font-size:.5rem">to'g'riligi /10</span></th>
+                <th class="col-score" style="min-width:90px">🔗 Kombina-<br><span style="color:var(--ac3);font-size:.5rem">tsiya /10</span></th>
+                <th class="col-score" style="min-width:90px">✅ Samaradorlik<br><span style="color:var(--ac3);font-size:.5rem">/10</span></th>
+                <th class="col-score" style="min-width:90px">🛡 Xavfsizlik<br><span style="color:var(--ac3);font-size:.5rem">/10</span></th>
+                <th style="min-width:180px">📝 Tahlil va asoslash</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style="color:var(--tx3);font-family:'JetBrains Mono',monospace;font-size:.6rem">1</td>
+                <td><span class="row-num">1</span></td>
                 <td><div class="rxt" id="rx1d">Dori tanlanmagan</div></td>
-                <td><input class="sf" id="s1a" type="number" min="0" max="10" placeholder="0-10"></td>
-                <td><input class="sf" id="s1b" type="number" min="0" max="10" placeholder="0-10"></td>
-                <td><input class="sf" id="s1c" type="number" min="0" max="10" placeholder="0-10"></td>
-                <td><input class="sf" id="s1d" type="number" min="0" max="10" placeholder="0-10"></td>
-                <td><input class="sf" id="s1e" type="number" min="0" max="10" placeholder="0-10"></td>
+                <td class="score-cell"><div class="slbl">Ball</div><input class="sf" id="s1a" type="number" min="0" max="10" placeholder="0-10" oninput="updBadge(this,'sb1a')"><div class="score-badge empty" id="sb1a">—</div></td>
+                <td class="score-cell"><div class="slbl">Ball</div><input class="sf" id="s1b" type="number" min="0" max="10" placeholder="0-10" oninput="updBadge(this,'sb1b')"><div class="score-badge empty" id="sb1b">—</div></td>
+                <td class="score-cell"><div class="slbl">Ball</div><input class="sf" id="s1c" type="number" min="0" max="10" placeholder="0-10" oninput="updBadge(this,'sb1c')"><div class="score-badge empty" id="sb1c">—</div></td>
+                <td class="score-cell"><div class="slbl">Ball</div><input class="sf" id="s1d" type="number" min="0" max="10" placeholder="0-10" oninput="updBadge(this,'sb1d')"><div class="score-badge empty" id="sb1d">—</div></td>
+                <td class="score-cell"><div class="slbl">Ball</div><input class="sf" id="s1e" type="number" min="0" max="10" placeholder="0-10" oninput="updBadge(this,'sb1e')"><div class="score-badge empty" id="sb1e">—</div></td>
+                <td><div class="analysis-col">
+                  <div class="mini-analysis"><label class="analysis-label">DORI TANLASH ASOSI</label><textarea class="oinp" id="an1a" placeholder="Nima uchun bu dori to'g'ri/noto'g'ri..."></textarea></div>
+                  <div class="mini-analysis"><label class="analysis-label">DOZA ASOSI</label><textarea class="oinp" id="an1b" placeholder="Doza GFR va holatga mos..."></textarea></div>
+                </div></td>
               </tr>
               <tr>
-                <td style="color:var(--tx3);font-family:'JetBrains Mono',monospace;font-size:.6rem">2</td>
-                <td><textarea style="width:100%;background:var(--s2);border:1px solid var(--b1);color:var(--ac);padding:.36rem .48rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.62rem;resize:none;min-height:42px;" id="rx2" placeholder="Rp.: ..."></textarea></td>
-                <td><input class="sf" id="s2a" type="number" min="0" max="10" placeholder="0-10"></td>
-                <td><input class="sf" id="s2b" type="number" min="0" max="10" placeholder="0-10"></td>
-                <td><input class="sf" id="s2c" type="number" min="0" max="10" placeholder="0-10"></td>
-                <td><input class="sf" id="s2d" type="number" min="0" max="10" placeholder="0-10"></td>
-                <td><input class="sf" id="s2e" type="number" min="0" max="10" placeholder="0-10"></td>
+                <td><span class="row-num">2</span></td>
+                <td><textarea class="rx-inp" id="rx2" placeholder="Rp.: ...&#10;D.t.d. ...&#10;S.: ..."></textarea></td>
+                <td class="score-cell"><div class="slbl">Ball</div><input class="sf" id="s2a" type="number" min="0" max="10" placeholder="0-10" oninput="updBadge(this,'sb2a')"><div class="score-badge empty" id="sb2a">—</div></td>
+                <td class="score-cell"><div class="slbl">Ball</div><input class="sf" id="s2b" type="number" min="0" max="10" placeholder="0-10" oninput="updBadge(this,'sb2b')"><div class="score-badge empty" id="sb2b">—</div></td>
+                <td class="score-cell"><div class="slbl">Ball</div><input class="sf" id="s2c" type="number" min="0" max="10" placeholder="0-10" oninput="updBadge(this,'sb2c')"><div class="score-badge empty" id="sb2c">—</div></td>
+                <td class="score-cell"><div class="slbl">Ball</div><input class="sf" id="s2d" type="number" min="0" max="10" placeholder="0-10" oninput="updBadge(this,'sb2d')"><div class="score-badge empty" id="sb2d">—</div></td>
+                <td class="score-cell"><div class="slbl">Ball</div><input class="sf" id="s2e" type="number" min="0" max="10" placeholder="0-10" oninput="updBadge(this,'sb2e')"><div class="score-badge empty" id="sb2e">—</div></td>
+                <td><div class="analysis-col"><div class="mini-analysis"><label class="analysis-label">TAHLIL</label><textarea class="oinp" id="an2a" placeholder="Bu dori qo'shimcha maqsadda..."></textarea></div></div></td>
               </tr>
               <tr>
-                <td style="color:var(--tx3);font-family:'JetBrains Mono',monospace;font-size:.6rem">3</td>
-                <td><textarea style="width:100%;background:var(--s2);border:1px solid var(--b1);color:var(--ac);padding:.36rem .48rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.62rem;resize:none;min-height:42px;" id="rx3" placeholder="Rp.: ..."></textarea></td>
-                <td><input class="sf" id="s3a" type="number" min="0" max="10" placeholder="0-10"></td>
-                <td><input class="sf" id="s3b" type="number" min="0" max="10" placeholder="0-10"></td>
-                <td><input class="sf" id="s3c" type="number" min="0" max="10" placeholder="0-10"></td>
-                <td><input class="sf" id="s3d" type="number" min="0" max="10" placeholder="0-10"></td>
-                <td><input class="sf" id="s3e" type="number" min="0" max="10" placeholder="0-10"></td>
+                <td><span class="row-num">3</span></td>
+                <td><textarea class="rx-inp" id="rx3" placeholder="Rp.: ...&#10;D.t.d. ...&#10;S.: ..."></textarea></td>
+                <td class="score-cell"><input class="sf" id="s3a" type="number" min="0" max="10" placeholder="—" oninput="updBadge(this,'sb3a')"><div class="score-badge empty" id="sb3a">—</div></td>
+                <td class="score-cell"><input class="sf" id="s3b" type="number" min="0" max="10" placeholder="—" oninput="updBadge(this,'sb3b')"><div class="score-badge empty" id="sb3b">—</div></td>
+                <td class="score-cell"><input class="sf" id="s3c" type="number" min="0" max="10" placeholder="—" oninput="updBadge(this,'sb3c')"><div class="score-badge empty" id="sb3c">—</div></td>
+                <td class="score-cell"><input class="sf" id="s3d" type="number" min="0" max="10" placeholder="—" oninput="updBadge(this,'sb3d')"><div class="score-badge empty" id="sb3d">—</div></td>
+                <td class="score-cell"><input class="sf" id="s3e" type="number" min="0" max="10" placeholder="—" oninput="updBadge(this,'sb3e')"><div class="score-badge empty" id="sb3e">—</div></td>
+                <td><div class="analysis-col"><div class="mini-analysis"><textarea class="oinp" id="an3a" placeholder="Tahlil..."></textarea></div></div></td>
               </tr>
               <tr>
-                <td style="color:var(--tx3);font-family:'JetBrains Mono',monospace;font-size:.6rem">4</td>
-                <td><textarea style="width:100%;background:var(--s2);border:1px solid var(--b1);color:var(--ac);padding:.36rem .48rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.62rem;resize:none;min-height:42px;" id="rx4" placeholder="Rp.: ..."></textarea></td>
-                <td><input class="sf" id="s4a" type="number" min="0" max="10" placeholder="0-10"></td>
-                <td><input class="sf" id="s4b" type="number" min="0" max="10" placeholder="0-10"></td>
-                <td><input class="sf" id="s4c" type="number" min="0" max="10" placeholder="0-10"></td>
-                <td><input class="sf" id="s4d" type="number" min="0" max="10" placeholder="0-10"></td>
-                <td><input class="sf" id="s4e" type="number" min="0" max="10" placeholder="0-10"></td>
+                <td><span class="row-num">4</span></td>
+                <td><textarea class="rx-inp" id="rx4" placeholder="Rp.: ...&#10;D.t.d. ...&#10;S.: ..."></textarea></td>
+                <td class="score-cell"><input class="sf" id="s4a" type="number" min="0" max="10" placeholder="—" oninput="updBadge(this,'sb4a')"><div class="score-badge empty" id="sb4a">—</div></td>
+                <td class="score-cell"><input class="sf" id="s4b" type="number" min="0" max="10" placeholder="—" oninput="updBadge(this,'sb4b')"><div class="score-badge empty" id="sb4b">—</div></td>
+                <td class="score-cell"><input class="sf" id="s4c" type="number" min="0" max="10" placeholder="—" oninput="updBadge(this,'sb4c')"><div class="score-badge empty" id="sb4c">—</div></td>
+                <td class="score-cell"><input class="sf" id="s4d" type="number" min="0" max="10" placeholder="—" oninput="updBadge(this,'sb4d')"><div class="score-badge empty" id="sb4d">—</div></td>
+                <td class="score-cell"><input class="sf" id="s4e" type="number" min="0" max="10" placeholder="—" oninput="updBadge(this,'sb4e')"><div class="score-badge empty" id="sb4e">—</div></td>
+                <td><div class="analysis-col"><div class="mini-analysis"><textarea class="oinp" id="an4a" placeholder="Tahlil..."></textarea></div></div></td>
               </tr>
             </tbody>
           </table>
+        </div>
+        <!-- Live score summary -->
+        <div id="liveSummary" style="margin-top:.72rem;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r6);padding:.7rem 1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">
+          <div style="font-family:JetBrains Mono,monospace;font-size:.58rem;color:var(--tx3)">JORIY BALL:</div>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap">
+            <div style="text-align:center"><div style="font-family:Unbounded,sans-serif;font-size:1.1rem;color:var(--ac)" id="liveTotalScore">0</div><div style="font-family:JetBrains Mono,monospace;font-size:.52rem;color:var(--tx3)">Jami</div></div>
+            <div style="text-align:center"><div style="font-family:JetBrains Mono,monospace;font-size:.72rem;color:var(--ac3)" id="livePercent">0%</div><div style="font-family:JetBrains Mono,monospace;font-size:.52rem;color:var(--tx3)">Foiz</div></div>
+          </div>
+          <button class="btn btn-outline" style="font-size:.56rem" onclick="autoFillScores()">🤖 AI bilan to'ldirish</button>
         </div>
       </div>
 
       <!-- Step 3 -->
       <div id="step_3" style="display:none">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3);margin-bottom:.72rem;letter-spacing:.07em">QADAM 3 · MONITORING REJASI</div>
+        <div style="font-family:JetBrains Mono,monospace;font-size:.58rem;color:var(--tx3);margin-bottom:.75rem;letter-spacing:.07em;text-transform:uppercase">Qadam 3 &middot; Monitoring rejasi</div>
         <div class="msec">
-          <div class="mhdr">FARMAKOTERAPIYA MONITORINGI — KUZATUV KUNLARINI BELGILANG</div>
+          <div class="mhdr">📅 FARMAKOTERAPIYA MONITORINGI &mdash; Kuzatuv kunlarini belgilang</div>
           <div class="mbody">
             <div class="mrow">
               <div><div class="mgt">✅ SAMARADORLIK MONITORINGI (kunlar)</div><div class="tdays" id="effD"></div></div>
@@ -636,48 +898,49 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(5,10,15,.97)
             </div>
           </div>
         </div>
-        <div style="margin-top:.7rem"><label class="ilbl2">UYGA CHIQARISH MEZONI</label><textarea class="inpa" id="dischargeC" placeholder="Bemor qachon uyga chiqariladi?"></textarea></div>
+        <div style="margin-top:.72rem"><label class="ilbl">Uyga chiqarish mezoni</label><textarea class="inpa" id="dischargeC" placeholder="Bemor qachon uyga chiqariladi?"></textarea></div>
       </div>
 
       <!-- Step 4 -->
       <div id="step_4" style="display:none">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3);margin-bottom:.72rem;letter-spacing:.07em">QADAM 4 · NOJO'YA TA'SIRLARNI OLDINI OLISH</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.68rem;margin-bottom:.75rem">
-          <div><label class="ilbl2">KUTILAYOTGAN NOJO'YA TA'SIRLAR</label><textarea class="inpa" id="sideEff" placeholder="Bu dori qanday nojo'ya ta'sirlar berishi mumkin?"></textarea></div>
-          <div><label class="ilbl2">OLDINI OLISH CHORALARI</label><textarea class="inpa" id="preventn" placeholder="Nojo'ya ta'sirlarni oldini olish uchun nimalar qilish kerak?"></textarea></div>
-          <div><label class="ilbl2">DORI QABUL VAQTI VA SHARTI</label><textarea class="inpa" id="timingInp" placeholder="Ovqatdan oldin/keyin? Ko'p suv bilan?"></textarea></div>
-          <div><label class="ilbl2">MUTAXASSISLAR MASLAHATI</label><textarea class="inpa" id="consultInp" placeholder="Ginekolog? Nefroloq? Pulmonolog?"></textarea></div>
+        <div style="font-family:JetBrains Mono,monospace;font-size:.58rem;color:var(--tx3);margin-bottom:.75rem;letter-spacing:.07em;text-transform:uppercase">Qadam 4 &middot; Nojo'ya ta'sirlarni oldini olish</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.72rem;margin-bottom:.8rem">
+          <div><label class="ilbl">Kutilayotgan nojo'ya ta'sirlar</label><textarea class="inpa" id="sideEff" placeholder="Bu dori qanday nojo'ya ta'sirlar berishi mumkin?"></textarea></div>
+          <div><label class="ilbl">Oldini olish choralari</label><textarea class="inpa" id="preventn" placeholder="Nojo'ya ta'sirlarni oldini olish uchun nimalar qilish kerak?"></textarea></div>
+          <div><label class="ilbl">Dori qabul vaqti va sharti</label><textarea class="inpa" id="timingInp" placeholder="Ovqatdan oldin/keyin? Ko'p suv bilan?"></textarea></div>
+          <div><label class="ilbl">Mutaxassislar maslahati</label><textarea class="inpa" id="consultInp" placeholder="Ginekolog? Nefroloq? Pulmonolog?"></textarea></div>
         </div>
-        <div style="background:var(--s2);border:1px solid var(--b1);border-radius:5px;padding:.8rem">
-          <div class="ilbl2" style="margin-bottom:.55rem">XAVFSIZLIK TEKSHIRUV RO'YXATI</div>
+        <div style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--r6);padding:.82rem">
+          <label class="ilbl" style="margin-bottom:.55rem">Xavfsizlik tekshiruv ro'yxati</label>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:.28rem" id="safeChk"></div>
         </div>
       </div>
 
       <!-- Step 5 -->
       <div id="step_5" style="display:none">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3);margin-bottom:.72rem;letter-spacing:.07em">QADAM 5 · YAKUNIY BAHO VA XULOSA</div>
-        <div style="background:var(--s2);border:1px solid var(--b1);border-radius:7px;padding:.95rem;margin-bottom:.75rem">
-          <div class="ilbl2" style="margin-bottom:.65rem">O'Z-O'ZINI BAHOLASH (1-10 ball)</div>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.58rem">
-            <div><div class="slbl">Dori tanlash</div><input class="sf" id="self_a" type="number" min="1" max="10" placeholder="1-10" style="width:100%"></div>
-            <div><div class="slbl">Dozalash</div><input class="sf" id="self_b" type="number" min="1" max="10" placeholder="1-10" style="width:100%"></div>
-            <div><div class="slbl">Xavfsizlik</div><input class="sf" id="self_c" type="number" min="1" max="10" placeholder="1-10" style="width:100%"></div>
-            <div><div class="slbl">Monitoring</div><input class="sf" id="self_d" type="number" min="1" max="10" placeholder="1-10" style="width:100%"></div>
+        <div style="font-family:JetBrains Mono,monospace;font-size:.58rem;color:var(--tx3);margin-bottom:.75rem;letter-spacing:.07em;text-transform:uppercase">Qadam 5 &middot; Yakuniy baho va xulosa</div>
+        <div style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--r8);padding:1rem;margin-bottom:.8rem">
+          <label class="ilbl" style="margin-bottom:.68rem">O'z-o'zini baholash (1-10 ball)</label>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem">
+            <div><div class="slbl" style="text-align:center">Dori tanlash</div><input class="sf" id="self_a" type="number" min="1" max="10" placeholder="1-10" style="width:100%"></div>
+            <div><div class="slbl" style="text-align:center">Dozalash</div><input class="sf" id="self_b" type="number" min="1" max="10" placeholder="1-10" style="width:100%"></div>
+            <div><div class="slbl" style="text-align:center">Xavfsizlik</div><input class="sf" id="self_c" type="number" min="1" max="10" placeholder="1-10" style="width:100%"></div>
+            <div><div class="slbl" style="text-align:center">Monitoring</div><input class="sf" id="self_d" type="number" min="1" max="10" placeholder="1-10" style="width:100%"></div>
           </div>
         </div>
-        <div><label class="ilbl2">UMUMIY XULOSA — O'Z SO'ZLARINGIZ BILAN</label><textarea class="inpa" id="finalSum" placeholder="Bu bemorni davolashda eng muhim jihatlar nimalar edi? O'zingizni qanday baholaysiz?" style="min-height:95px"></textarea></div>
+        <label class="ilbl">Umumiy xulosa &mdash; o'z so'zlaringiz bilan</label>
+        <textarea class="inpa" id="finalSum" placeholder="Bu bemorni davolashda eng muhim jihatlar nimalar edi? O'zingizni qanday baholaysiz?" style="min-height:95px"></textarea>
       </div>
     </div>
 
     <div class="cfooter">
       <div style="display:flex;gap:.45rem">
-        <button class="bback" onclick="nav('ds',document.getElementById('nb_d'))">← Ortga</button>
-        <button class="bback" id="prevBtn" onclick="prevStep()" style="display:none">‹ Oldingi</button>
+        <button class="btn-back" onclick="nav('ds',document.getElementById('nb_d'))">&#8592; Ortga</button>
+        <button class="btn-back" id="prevBtn" onclick="prevStep()" style="display:none">&#8249; Oldingi</button>
       </div>
-      <div style="display:flex;gap:.65rem;align-items:center">
-        <span style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3)" id="stepInd">1 / 5</span>
-        <button class="bsub" id="nextBtn" onclick="nextStep()">Keyingi qadam →</button>
+      <div style="display:flex;gap:.68rem;align-items:center">
+        <span style="font-family:JetBrains Mono,monospace;font-size:.58rem;color:var(--tx3)" id="stepInd">1 / 5</span>
+        <button class="btn-submit" id="nextBtn" onclick="nextStep()">Keyingi qadam &#8594;</button>
       </div>
     </div>
   </div>
@@ -689,107 +952,108 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(5,10,15,.97)
 <div class="fbwrap">
   <div class="phdr">
     <div class="ptitle">AI <span>Tahlil Natijasi</span></div>
-    <div style="display:flex;gap:.38rem">
-      <button class="bsm" onclick="nav('caseSc',document.getElementById('nb_c'))">🔄 Qayta urinish</button>
-      <button class="bsm" onclick="nav('ds',document.getElementById('nb_d'))">← Dashboard</button>
+    <div class="pbtn-row">
+      <button class="btn btn-outline" onclick="nav('caseSc',document.getElementById('nb_c'))">🔄 Qayta urinish</button>
+      <button class="btn btn-outline" onclick="nav('ds',document.getElementById('nb_d'))">&#8592; Dashboard</button>
     </div>
   </div>
   <div class="scorecard">
     <div class="scinn">
-      <div class="sccir"><div class="scnum" id="totScore">—</div><div class="scmax">/100</div></div>
+      <div class="sccir"><div class="scnum" id="totScore">&#8212;</div><div class="scmax">/100</div></div>
       <div>
-        <div class="scgr" id="scGrade">—</div>
+        <div class="scgr" id="scGrade">&#8212;</div>
         <div class="scpct" id="scPct">AI baholayapti...</div>
         <div class="scsum" id="scSum">Natija yuklanmoqda...</div>
       </div>
     </div>
     <div class="bkdn">
-      <div class="bkit"><div class="bkv" id="b_drug">—</div><div class="bkl">Dori tanlash</div></div>
-      <div class="bkit"><div class="bkv" id="b_dose">—</div><div class="bkl">Dozalash</div></div>
-      <div class="bkit"><div class="bkv" id="b_contra">—</div><div class="bkl">Kontraindikatsiya</div></div>
-      <div class="bkit"><div class="bkv" id="b_inter">—</div><div class="bkl">Dori-dori ta'sir</div></div>
-      <div class="bkit"><div class="bkv" id="b_safe">—</div><div class="bkl">Xavfsizlik</div></div>
-      <div class="bkit"><div class="bkv" id="b_mon">—</div><div class="bkl">Monitoring</div></div>
-      <div class="bkit"><div class="bkv" id="b_dur">—</div><div class="bkl">Davomiylik</div></div>
-      <div class="bkit"><div class="bkv" id="b_comb">—</div><div class="bkl">Kombinatsiya</div></div>
+      <div class="bkit"><div class="bkv" id="b_drug">&#8212;</div><div class="bkl">Dori tanlash</div></div>
+      <div class="bkit"><div class="bkv" id="b_dose">&#8212;</div><div class="bkl">Dozalash</div></div>
+      <div class="bkit"><div class="bkv" id="b_contra">&#8212;</div><div class="bkl">Kontraindikatsiya</div></div>
+      <div class="bkit"><div class="bkv" id="b_inter">&#8212;</div><div class="bkl">Dori-dori ta'sir</div></div>
+      <div class="bkit"><div class="bkv" id="b_safe">&#8212;</div><div class="bkl">Xavfsizlik</div></div>
+      <div class="bkit"><div class="bkv" id="b_mon">&#8212;</div><div class="bkl">Monitoring</div></div>
+      <div class="bkit"><div class="bkv" id="b_dur">&#8212;</div><div class="bkl">Davomiylik</div></div>
+      <div class="bkit"><div class="bkv" id="b_comb">&#8212;</div><div class="bkl">Kombinatsiya</div></div>
     </div>
     <div class="radwrap"><canvas id="radarC" width="270" height="270"></canvas></div>
   </div>
   <div class="aichat">
     <div class="aichdr">
-      <div class="aiico">🧠</div>
+      <div class="aiico" style="background:linear-gradient(135deg,var(--ac2),var(--ac3))">🧠</div>
       <div>
-        <div class="ainmt">ClinPharm<span>AI</span> — Prof. Siddiqov O.A. Kafedrasi Ustozi</div>
-        <div class="aistat">● Onlayn · Savollaringizga javob beradi</div>
+        <div class="ainmt">ClinPharm<span>AI</span> &mdash; Prof. Siddiqov O.A. Kafedrasi</div>
+        <div class="aistat">&#9679; Onlayn &middot; Savollaringizga javob beradi</div>
       </div>
-      <div style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--tx3)" id="chatToks"></div>
+      <div style="margin-left:auto;font-family:JetBrains Mono,monospace;font-size:.54rem;color:var(--tx3)" id="chatToks"></div>
+    </div>
+    <div class="ai-model-tabs">
+      <span style="font-family:JetBrains Mono,monospace;font-size:.54rem;color:var(--tx3);margin-right:.2rem">AI model:</span>
+      <div class="ai-model-tab claude active" onclick="setModel('claude',this)">🟤 Claude</div>
+      <div class="ai-model-tab gpt" onclick="setModel('gpt',this)">🟢 GPT-4o</div>
+      <div class="ai-model-tab gem" onclick="setModel('gemini',this)">🔵 Gemini</div>
     </div>
     <div class="aimsg" id="aiMsgs"></div>
     <div class="qqrow">
       <div class="qq" onclick="sendQ('Nima uchun bu xato?')">Nima uchun xato?</div>
-      <div class="qq" onclick="sendQ('To\'g\'ri javob qanday?')">To'g'ri javob?</div>
+      <div class="qq" onclick="sendQ('To'g'ri javob qanday bo'lishi kerak edi?')">To'g'ri javob?</div>
       <div class="qq" onclick="sendQ('Homiladorlikda qaysi ATB xavfsiz?')">Homiladorlik+ATB</div>
       <div class="qq" onclick="sendQ('GFR 48 da doza qanday hisoblanadi?')">GFR doza hisob</div>
-      <div class="qq" onclick="sendQ('Qo\'shimcha qanday dori qo\'shsa bo\'lardi?')">Qo'shimcha dori</div>
+      <div class="qq" onclick="sendQ('Yana qanday dori qo'shimcha qo'shsa bo'lardi?')">Qo'shimcha dori</div>
+      <div class="qq" onclick="sendQ('Pnevmoniyada CURB-65 qanday baholanadi?')">CURB-65</div>
     </div>
     <div class="aiinrow">
       <input class="aiinp" id="aiQ" placeholder="Savol bering: 'Nima uchun Ampicillin contraindicated?'" onkeypress="if(event.key==='Enter')askAI()">
-      <button class="bask" id="askBtn" onclick="askAI()">↑ Yuborish</button>
+      <button class="bask" id="askBtn" onclick="askAI()">&#8593; Yuborish</button>
     </div>
   </div>
   <div id="errSection">
-    <div style="font-family:'Unbounded',sans-serif;font-size:.63rem;color:var(--tx2);margin-bottom:.72rem;letter-spacing:.05em">📋 BATAFSIL TAHLIL</div>
+    <div style="font-family:Unbounded,sans-serif;font-size:.62rem;color:var(--tx2);margin-bottom:.75rem;letter-spacing:.05em">📋 BATAFSIL TAHLIL</div>
     <div id="errCards"></div>
   </div>
   <div id="studySection" style="margin-top:.75rem"></div>
 </div>
 </div>
 
-<!-- ===== TEACHER SCREEN ===== -->
+<!-- ===== TEACHER ===== -->
 <div id="teachSc" class="screen page">
-<div class="twrap">
+<div class="twrap2">
   <div class="phdr">
     <div>
       <div class="ptitle">O'qituvchi <span>Kabineti</span></div>
-      <div class="psub">● Prof. Siddiqov O.A. — Klinik farmakologiya kafedrasi</div>
+      <div class="psub">&#9679; Prof. Siddiqov O.A. &mdash; Klinik farmakologiya kafedrasi</div>
     </div>
-    <div style="display:flex;gap:.38rem;flex-wrap:wrap">
-      <button class="bgn" onclick="showNewCaseForm()">+ Yangi keys yaratish</button>
-      <button class="bsm" onclick="showTTab('students')">👥 Talabalar natijalari</button>
-      <button class="bgl" onclick="exportAll()">📥 Hisobot export</button>
+    <div class="pbtn-row">
+      <button class="btn btn-green" onclick="showNewCaseForm()">+ Yangi keys yaratish</button>
+      <button class="btn btn-outline" onclick="showTTab('students')">👥 Talabalar</button>
+      <button class="btn btn-gold" onclick="exportAll()">&#8595; Export</button>
     </div>
   </div>
-
-  <!-- Teacher banner -->
   <div class="tbanner">
     <div class="tbav">👨‍🏫</div>
     <div>
       <div class="tbnm">Prof. Siddiqov O.A.</div>
-      <div class="tbsub">Klinik farmakologiya kafedrasi · 3-kurs A guruh · 28 talaba</div>
+      <div class="tbsub">Klinik farmakologiya kafedrasi &middot; 3-kurs A guruh &middot; 28 talaba</div>
     </div>
-    <div style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--tx3)">Platformaga kirish: <span id="tLoginDate" style="color:var(--ac)"></span></div>
+    <div style="margin-left:auto;font-family:JetBrains Mono,monospace;font-size:.55rem;color:var(--tx3)">Kirish: <span id="tLoginDate" style="color:var(--ac)"></span></div>
   </div>
-
   <div class="tstats">
-    <div class="sc" style="--clr:linear-gradient(90deg,#00c8ff,#0088bb)"><div class="slbl">JAMI KEYSLAR</div><div class="sval">18</div><div class="ssub">Faol: 14</div></div>
-    <div class="sc" style="--clr:linear-gradient(90deg,#00ffaa,#00aa77)"><div class="slbl">TALABALAR SONI</div><div class="sval">28</div><div class="ssub">3-kurs, A guruh</div></div>
-    <div class="sc" style="--clr:linear-gradient(90deg,#ffc84a,#ff8a00)"><div class="slbl">GURUH O'RT. BALL</div><div class="sval">71<span style="font-size:.85rem;color:var(--tx3)">%</span></div><div class="ssub">↑ 3% o'tgan oydan</div></div>
-    <div class="sc" style="--clr:linear-gradient(90deg,#ff3355,#cc0033)"><div class="slbl">QONIQARSIZ</div><div class="sval">4</div><div class="ssub">Qayta topshirish kerak</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#00d4ff,#0090cc)"><div class="slbl">JAMI KEYSLAR</div><div class="sval">18</div><div class="ssub">Faol: 14</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#00ffcc,#00bfaa)"><div class="slbl">TALABALAR</div><div class="sval">28</div><div class="ssub">3-kurs, A guruh</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#ffcc44,#ff8800)"><div class="slbl">GURUH O'RT. BALL</div><div class="sval">71<span style="font-size:.85rem;color:var(--tx3)">%</span></div><div class="ssub up">&#8593; 3% o'tgan oydan</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#ff2255,#cc0033)"><div class="slbl">QONIQARSIZ</div><div class="sval">4</div><div class="ssub">Qayta topshirish</div></div>
   </div>
-
-  <!-- Sub-tabs -->
   <div class="subtabs">
     <div class="subtab active" id="tt_cases" onclick="showTTab('cases',this)">📋 Keyslar boshqaruvi</div>
     <div class="subtab" id="tt_students" onclick="showTTab('students',this)">👥 Talabalar natijalari</div>
     <div class="subtab" id="tt_analytics" onclick="showTTab('analytics',this)">📈 Statistika va tahlil</div>
   </div>
-
-  <!-- CASES TAB -->
+  <!-- Cases tab -->
   <div id="tTab_cases">
     <div class="tgrid">
       <div class="card">
-        <div class="ch"><div class="ct">KEYSLAR RO'YXATI</div><span style="font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--tx3)">5 ta</span></div>
-        <div style="padding:0 .68rem" id="tCaseList"></div>
+        <div class="ch"><div class="ct">KEYSLAR RO'YXATI</div><span style="font-family:JetBrains Mono,monospace;font-size:.54rem;color:var(--tx3)">5 ta</span></div>
+        <div style="padding:0 .7rem" id="tCaseList"></div>
       </div>
       <div class="card">
         <div class="ftabs">
@@ -799,70 +1063,43 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(5,10,15,.97)
           <div class="ftab" onclick="ftab(this,'tf4')">⚖️ Baholash</div>
           <div class="ftab" onclick="ftab(this,'tf5')">🤖 AI sozlama</div>
         </div>
-        <!-- Tab 1 -->
         <div class="fsec active" id="tf1">
           <div class="frow">
-            <div><label class="ilbl2">KEYS NOMI</label><input class="inp" id="t_title" placeholder="Pnevmoniya, og'ir kechishi"></div>
-            <div><label class="ilbl2">MUTAXASSISLIK</label><select class="inp" id="t_spec"><option>Pulmonologiya</option><option>Kardiologiya</option><option>Gastroenterologiya</option><option>Nevrologiya</option><option>Endokrinologiya</option><option>Nefrologiya</option><option>Revmatologiya</option><option>Gematologiya</option></select></div>
+            <div><label class="ilbl">Keys nomi</label><input class="inp" id="t_title" placeholder="Pnevmoniya, og'ir kechishi"></div>
+            <div><label class="ilbl">Mutaxassislik</label><select class="inp" id="t_spec"><option>Pulmonologiya</option><option>Kardiologiya</option><option>Gastroenterologiya</option><option>Nevrologiya</option><option>Endokrinologiya</option><option>Nefrologiya</option></select></div>
           </div>
           <div class="frow">
-            <div><label class="ilbl2">YOSHI</label><input class="inp" id="t_age" type="number" placeholder="52"></div>
-            <div><label class="ilbl2">JINSI</label><select class="inp" id="t_sex"><option>Erkak</option><option>Ayol</option></select></div>
+            <div><label class="ilbl">Yoshi</label><input class="inp" id="t_age" type="number" placeholder="52"></div>
+            <div><label class="ilbl">Jinsi</label><select class="inp"><option>Erkak</option><option>Ayol</option></select></div>
           </div>
           <div class="frow">
-            <div><label class="ilbl2">QIYINCHILIK DARAJASI</label><select class="inp" id="t_diff"><option>Oson</option><option>O'rta</option><option selected>Qiyin</option></select></div>
-            <div><label class="ilbl2">HOMILADORLIK / LAKTATSIYA</label><select class="inp" id="t_preg"><option>Yo'q</option><option>Homilador I trimester</option><option>Homilador II trimester</option><option>Homilador III trimester</option><option>Laktatsiya</option></select></div>
+            <div><label class="ilbl">Qiyinchilik darajasi</label><select class="inp"><option>Oson</option><option>O'rta</option><option selected>Qiyin</option></select></div>
+            <div><label class="ilbl">Homiladorlik / Laktatsiya</label><select class="inp"><option>Yo'q</option><option>Homilador I trimester</option><option>Homilador II trimester</option><option>Homilador III trimester</option><option>Laktatsiya</option></select></div>
           </div>
-          <div class="ffull"><label class="ilbl2">ASOSIY SHIKOYATLAR</label><textarea class="inpa" id="t_compl" placeholder="Harorat, yo'tal, nafas qisishi..."></textarea></div>
-          <div class="ffull"><label class="ilbl2">TASHXIS (asosiy + qo'shma)</label><textarea class="inpa" id="t_diag" placeholder="O'tkir pnevmoniya, og'ir kechishi..."></textarea></div>
+          <div class="ffull"><label class="ilbl">Asosiy shikoyatlar</label><textarea class="inpa" id="t_compl" placeholder="Harorat, yo'tal, nafas qisishi..."></textarea></div>
+          <div class="ffull"><label class="ilbl">Tashxis (asosiy + qo'shma)</label><textarea class="inpa" id="t_diag" placeholder="O'tkir pnevmoniya, og'ir kechishi..."></textarea></div>
           <div class="frow">
-            <div><label class="ilbl2">JIGAR HOLATI</label><select class="inp" id="t_liver"><option>Normal</option><option>Child-A (yengil)</option><option>Child-B (o'rta)</option><option>Child-C (og'ir)</option></select></div>
-            <div><label class="ilbl2">BUYRAK HOLATI (GFR)</label><select class="inp" id="t_kidney"><option>Normal (>90)</option><option>Yengil (60-89)</option><option>O'rta (30-59)</option><option>Og'ir (<30)</option></select></div>
+            <div><label class="ilbl">Jigar holati</label><select class="inp"><option>Normal</option><option>Child-A</option><option>Child-B</option><option>Child-C</option></select></div>
+            <div><label class="ilbl">Buyrak holati (GFR)</label><select class="inp"><option>Normal (&gt;90)</option><option>Yengil (60-89)</option><option>O'rta (30-59)</option><option>Og'ir (&lt;30)</option></select></div>
           </div>
-          <div class="ffull"><label class="ilbl2">ALLERGIK ANAMNEZ</label><input class="inp" id="t_allergy" placeholder="Ampitsillinga allergiya (04.11.2025)"></div>
-          <div class="ffull"><label class="ilbl2">QO'SHMA KASALLIKLAR</label><textarea class="inpa" id="t_comorbid" placeholder="Surunkali pielonefrit, anemiya..."></textarea></div>
-          <div class="ffull"><label class="ilbl2">JORIY DORILAR</label><textarea class="inpa" id="t_meds" placeholder="Sorbifer Durules..."></textarea></div>
+          <div class="ffull"><label class="ilbl">Allergik anamnez</label><input class="inp" placeholder="Ampitsillinga allergiya (04.11.2025)"></div>
+          <div class="ffull"><label class="ilbl">Qo'shma kasalliklar</label><textarea class="inpa" placeholder="Surunkali pielonefrit, anemiya..."></textarea></div>
         </div>
-        <!-- Tab 2 -->
         <div class="fsec" id="tf2">
-          <div class="frow">
-            <div><label class="ilbl2">LEYKOTSITLAR (×10⁹/L)</label><input class="inp" type="number" placeholder="14.2"></div>
-            <div><label class="ilbl2">GEMOGLOBIN (g/L)</label><input class="inp" type="number" placeholder="96"></div>
-          </div>
-          <div class="frow">
-            <div><label class="ilbl2">KREATININ (μmol/L)</label><input class="inp" type="number" placeholder="160"></div>
-            <div><label class="ilbl2">GFR (ml/min)</label><input class="inp" type="number" placeholder="48"></div>
-          </div>
-          <div class="frow">
-            <div><label class="ilbl2">CRB (mg/L)</label><input class="inp" type="number" placeholder="87"></div>
-            <div><label class="ilbl2">PROCALSITONIN (ng/mL)</label><input class="inp" type="number" placeholder="2.4"></div>
-          </div>
-          <div class="frow">
-            <div><label class="ilbl2">ALT (U/L)</label><input class="inp" type="number" placeholder="28"></div>
-            <div><label class="ilbl2">AST (U/L)</label><input class="inp" type="number" placeholder="31"></div>
-          </div>
-          <div class="frow">
-            <div><label class="ilbl2">ESR (mm/soat)</label><input class="inp" type="number" placeholder="48"></div>
-            <div><label class="ilbl2">SpO₂ (%)</label><input class="inp" type="number" placeholder="94"></div>
-          </div>
-          <div class="ffull"><label class="ilbl2">RENTGEN / UZI / EKG</label><textarea class="inpa" placeholder="O'ng o'pkaning pastki bo'lagida infiltrativ soya..."></textarea></div>
-          <div class="ffull"><label class="ilbl2">BALG'AM / BAKTERIOLOGIYA</label><textarea class="inpa" placeholder="Streptococcus pneumoniae..."></textarea></div>
+          <div class="frow"><div><label class="ilbl">Leykotsitlar (&#215;10&#9308;/L)</label><input class="inp" type="number" placeholder="14.2"></div><div><label class="ilbl">Gemoglobin (g/L)</label><input class="inp" type="number" placeholder="96"></div></div>
+          <div class="frow"><div><label class="ilbl">Kreatinin (μmol/L)</label><input class="inp" type="number" placeholder="160"></div><div><label class="ilbl">GFR (ml/min)</label><input class="inp" type="number" placeholder="48"></div></div>
+          <div class="frow"><div><label class="ilbl">CRB (mg/L)</label><input class="inp" type="number" placeholder="87"></div><div><label class="ilbl">Procalsitonin (ng/mL)</label><input class="inp" type="number" placeholder="2.4"></div></div>
+          <div class="frow"><div><label class="ilbl">ALT (U/L)</label><input class="inp" type="number" placeholder="28"></div><div><label class="ilbl">AST (U/L)</label><input class="inp" type="number" placeholder="31"></div></div>
+          <div class="ffull"><label class="ilbl">Rentgen / UZI / EKG</label><textarea class="inpa" placeholder="O'ng o'pkaning pastki bo'lagida infiltrativ soya..."></textarea></div>
         </div>
-        <!-- Tab 3 -->
         <div class="fsec" id="tf3">
-          <div style="background:rgba(0,255,170,.04);border:1px solid rgba(0,255,170,.2);border-radius:4px;padding:.72rem;margin-bottom:.7rem">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--ac3);margin-bottom:.25rem">ℹ️ BU QISM FAQAT PROF. SIDDIQOV O.A. KO'RADI</div>
-            <div style="font-size:.8rem;color:var(--tx2)">To'g'ri javob AI baholashda asosiy mezon sifatida ishlatiladi.</div>
-          </div>
-          <div class="ffull"><label class="ilbl2">TO'G'RI DORI TANLOVI</label><input class="inp" placeholder="Ceftriaxone 2g/kun, v/v, 7-10 kun"></div>
-          <div class="ffull"><label class="ilbl2">NIMA UCHUN TO'G'RI</label><textarea class="inpa" placeholder="III avlod TSF, homiladorlik B kategoriya..."></textarea></div>
-          <div class="ffull"><label class="ilbl2">MUMKIN BO'LGAN XATOLAR</label><textarea class="inpa" placeholder="1. Ampicillin — allergiya&#10;2. Ciprofloxacin — homiladorlikda contraindicated&#10;3. Doza pasaytirmaslik — GFR 48 ml/min" style="min-height:88px"></textarea></div>
-          <div class="ffull"><label class="ilbl2">KONTRAINDIKATSIYALAR</label><textarea class="inpa" placeholder="Ampitsillin (allergiya), ciprofloxacin, levofloxacin (homiladorlik)..."></textarea></div>
-          <div class="ffull"><label class="ilbl2">MONITORING REJASI (to'g'ri variant)</label><textarea class="inpa" placeholder="3-5-7 kun samaradorlik, harorat, SpO2..."></textarea></div>
+          <div style="background:rgba(0,255,204,.04);border:1px solid rgba(0,255,204,.2);border-radius:var(--r6);padding:.72rem;margin-bottom:.72rem"><div style="font-family:JetBrains Mono,monospace;font-size:.55rem;color:var(--ac3);margin-bottom:.22rem">&#8505;&#65039; BU QISM FAQAT PROF. SIDDIQOV O.A. KO'RADI</div><div style="font-size:.8rem;color:var(--tx2)">To'g'ri javob AI baholashda asosiy mezon sifatida ishlatiladi.</div></div>
+          <div class="ffull"><label class="ilbl">To'g'ri dori tanlovi</label><input class="inp" placeholder="Ceftriaxone 2g/kun, v/v, 7-10 kun"></div>
+          <div class="ffull"><label class="ilbl">Nima uchun to'g'ri</label><textarea class="inpa" placeholder="III avlod TSF, homiladorlik B kategoriya..."></textarea></div>
+          <div class="ffull"><label class="ilbl">Mumkin bo'lgan xatolar</label><textarea class="inpa" placeholder="1. Ampicillin — allergiya&#10;2. Ciprofloxacin — homiladorlikda contraindicated&#10;3. Doza pasaytirmaslik — GFR 48 ml/min" style="min-height:85px"></textarea></div>
         </div>
-        <!-- Tab 4 -->
         <div class="fsec" id="tf4">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--tx3);margin-bottom:.75rem">BAHOLASH ELEMENTLARI — JAMI 100 BALL</div>
+          <div style="font-family:JetBrains Mono,monospace;font-size:.55rem;color:var(--tx3);margin-bottom:.75rem">BAHOLASH ELEMENTLARI &mdash; JAMI 100 BALL</div>
           <div class="sgrid">
             <div class="sit"><div class="sitl">DORI TANLASH</div><input class="sitinp" type="number" value="20"></div>
             <div class="sit"><div class="sitl">DOZALASH</div><input class="sitinp" type="number" value="15"></div>
@@ -873,59 +1110,46 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(5,10,15,.97)
             <div class="sit"><div class="sitl">XAVFSIZLIK</div><input class="sitinp" type="number" value="10"></div>
             <div class="sit"><div class="sitl">KOMBINATSIYA</div><input class="sitinp" type="number" value="5"></div>
           </div>
-          <div style="margin-top:1rem;display:flex;gap:.62rem;justify-content:flex-end;flex-wrap:wrap">
-            <button class="bback" onclick="saveDraft()">💾 Qoralama</button>
-            <button class="bsm" onclick="previewCase()">👁 Ko'rib chiqish</button>
-            <button class="bsub" onclick="saveCase()">✅ NASHR QILISH →</button>
+          <div style="margin-top:1rem;display:flex;gap:.62rem;justify-content:flex-end">
+            <button class="btn btn-outline" onclick="saveDraft()">&#128190; Qoralama</button>
+            <button class="btn-submit" onclick="saveCase()">&#10003; NASHR QILISH &#8594;</button>
           </div>
         </div>
-        <!-- Tab 5 -->
         <div class="fsec" id="tf5">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--tx3);margin-bottom:.75rem">AI SOZLAMALARI — PROF. SIDDIQOV O.A.</div>
+          <div style="font-family:JetBrains Mono,monospace;font-size:.55rem;color:var(--tx3);margin-bottom:.75rem">AI SOZLAMALARI &mdash; PROF. SIDDIQOV O.A.</div>
           <div class="frow">
-            <div><label class="ilbl2">AI MODEL DARAJASI</label><select class="inp"><option>Oddiy (tez)</option><option selected>O'rta (tavsiya)</option><option>Batafsil (mukammal)</option></select></div>
-            <div><label class="ilbl2">FEEDBACK TILI</label><select class="inp"><option selected>O'zbek tili</option><option>Rus tili</option><option>Ingliz tili</option></select></div>
+            <div><label class="ilbl">AI model darajasi</label><select class="inp"><option>Oddiy (tez)</option><option selected>O'rta (tavsiya)</option><option>Batafsil (mukammal)</option></select></div>
+            <div><label class="ilbl">Feedback tili</label><select class="inp"><option selected>O'zbek tili</option><option>Rus tili</option><option>Ingliz tili</option></select></div>
           </div>
-          <div class="ffull"><label class="ilbl2">AI GA PROF. SIDDIQOV O.A. QO'SHIMCHA KO'RSATMASI</label><textarea class="inpa" placeholder="Bu keys 3-kurs talabalar uchun. Homiladorlik va buyrak etishmovchiligiga ko'proq e'tibor bering..."></textarea></div>
+          <div class="ffull"><label class="ilbl">Prof. Siddiqov O.A. qo'shimcha ko'rsatmasi</label><textarea class="inpa" placeholder="Bu keys 3-kurs talabalar uchun. Homiladorlik va buyrak etishmovchiligiga ko'proq e'tibor bering..."></textarea></div>
           <div class="frow">
-            <div><label class="ilbl2">HINT KO'RSATILSINMI?</label><select class="inp"><option>Yo'q (mustaqil yechsin)</option><option>Ha (5 daqiqadan keyin)</option><option>Talaba so'raganda</option></select></div>
-            <div><label class="ilbl2">VAQT CHEKLOVI</label><select class="inp"><option>Yo'q</option><option>15 daqiqa</option><option>20 daqiqa</option><option>30 daqiqa</option></select></div>
+            <div><label class="ilbl">Hint ko'rsatilsinmi?</label><select class="inp"><option>Yo'q</option><option>Ha (5 daqiqadan keyin)</option><option>Talaba so'raganda</option></select></div>
+            <div><label class="ilbl">Vaqt cheklovi</label><select class="inp"><option>Yo'q</option><option>15 daqiqa</option><option>20 daqiqa</option><option>30 daqiqa</option></select></div>
           </div>
-          <div class="frow">
-            <div><label class="ilbl2">GURUHGA TAYINLASH</label><select class="inp"><option selected>3-kurs, A guruh</option><option>3-kurs, B guruh</option><option>4-kurs</option><option>Barcha guruhlar</option></select></div>
-            <div><label class="ilbl2">MUDDATI (deadline)</label><input class="inp" type="date"></div>
-          </div>
-          <div style="background:rgba(0,200,255,.04);border:1px solid rgba(0,200,255,.2);border-radius:4px;padding:.72rem;margin-top:.4rem">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--ac);margin-bottom:.24rem">TIZIM MA'LUMOTI</div>
+          <div style="background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.2);border-radius:var(--r6);padding:.72rem;margin-top:.4rem">
+            <div style="font-family:JetBrains Mono,monospace;font-size:.55rem;color:var(--ac);margin-bottom:.22rem">TIZIM MA'LUMOTI</div>
             <div style="font-size:.8rem;color:var(--tx2)">O'qituvchi: <strong>Prof. Siddiqov O.A.</strong> | Kafedra: Klinik farmakologiya | Yaratilgan: <span id="cCreated"></span></div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- STUDENTS TAB -->
+  <!-- Students tab -->
   <div id="tTab_students" style="display:none">
     <div class="card">
       <div class="ch">
-        <div class="ct">👥 TALABALAR NATIJALARI — 3-KURS A GURUH (Prof. Siddiqov O.A.)</div>
-        <div style="display:flex;gap:.38rem">
-          <select style="background:var(--s2);border:1px solid var(--b1);color:var(--tx2);padding:.18rem .42rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.54rem;">
-            <option>Barcha keyslar</option><option>Pnevmoniya</option><option>Gipertenziya</option>
-          </select>
-          <button class="bsm" onclick="exportAll()">📥 Export</button>
-        </div>
+        <div class="ct">👥 TALABALAR NATIJALARI &mdash; 3-KURS A GURUH</div>
+        <div class="pbtn-row"><button class="btn btn-outline" onclick="exportAll()">&#8595; Export</button></div>
       </div>
       <div style="overflow-x:auto">
         <table class="stbl">
-          <thead><tr><th>#</th><th>TALABA ISM FAMILYASI</th><th>YECHILGAN</th><th>O'RT. BALL</th><th>BAHO</th><th>DORI TANLASH</th><th>DOZALASH</th><th>XAVFSIZLIK</th><th>OXIRGI FAOLIYAT</th><th>HOLAT</th></tr></thead>
+          <thead><tr><th>#</th><th>TALABA ISM FAMILYASI</th><th>YECHILGAN</th><th>O'RT. BALL</th><th>BAHO</th><th>DORI</th><th>DOZA</th><th>XAVFSIZLIK</th><th>OXIRGI</th><th>HOLAT</th></tr></thead>
           <tbody id="studTbody"></tbody>
         </table>
       </div>
     </div>
   </div>
-
-  <!-- ANALYTICS TAB -->
+  <!-- Analytics tab -->
   <div id="tTab_analytics" style="display:none">
     <div class="g3">
       <div class="card">
@@ -941,54 +1165,50 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(5,10,15,.97)
       <div class="card">
         <div class="ch"><div class="ct">⚠️ ENG KO'P XATOLAR</div></div>
         <div class="cb" style="padding:.35rem .7rem">
-          <div class="act"><div class="adot" style="background:var(--danger)"></div><div><div style="font-size:.78rem">Dozalash xatosi</div><div class="atime">34 ta holatda · 42% talabalar</div></div></div>
-          <div class="act"><div class="adot" style="background:var(--danger)"></div><div><div style="font-size:.78rem">Homiladorlik contraindik.</div><div class="atime">28 ta holatda · 35% talabalar</div></div></div>
-          <div class="act"><div class="adot" style="background:var(--gold)"></div><div><div style="font-size:.78rem">Monitoring rejasi</div><div class="atime">22 ta holatda · 28% talabalar</div></div></div>
-          <div class="act"><div class="adot" style="background:var(--gold)"></div><div><div style="font-size:.78rem">Kontraindikatsiya</div><div class="atime">18 ta holatda · 23% talabalar</div></div></div>
+          <div class="act"><div class="adot" style="background:var(--danger)"></div><div><div style="font-size:.78rem">Dozalash xatosi</div><div class="atime">34 ta holatda &middot; 42% talabalar</div></div></div>
+          <div class="act"><div class="adot" style="background:var(--danger)"></div><div><div style="font-size:.78rem">Homiladorlik contraindik.</div><div class="atime">28 ta holatda &middot; 35% talabalar</div></div></div>
+          <div class="act"><div class="adot" style="background:var(--gold)"></div><div><div style="font-size:.78rem">Monitoring rejasi</div><div class="atime">22 ta holatda &middot; 28% talabalar</div></div></div>
         </div>
       </div>
       <div class="card">
         <div class="ch"><div class="ct">📋 PROF. SIDDIQOV O.A. XULOSASI</div></div>
         <div class="cb" style="font-size:.82rem;color:var(--tx2);line-height:1.65">
           <strong style="color:var(--ac3)">Xulosa:</strong><br><br>
-          Guruhdagi asosiy muammo — dozalash va homiladorlikda farmakoterapiya bo'yicha bilim yetishmasligi.<br><br>
-          <strong style="color:var(--gold)">Tavsiya:</strong> Keyingi darsda GFR asosida doza hisoblash va homiladorlik xavfsizlik kategoriyalari bo'yicha maxsus mashg'ulot o'tkazish zarur.
+          Guruhdagi asosiy muammo &mdash; dozalash va homiladorlikda farmakoterapiya bo'yicha bilim yetishmasligi.<br><br>
+          <strong style="color:var(--gold)">Tavsiya:</strong> GFR asosida doza hisoblash va homiladorlik xavfsizlik kategoriyalari bo'yicha maxsus mashg'ulot o'tkazish zarur.
         </div>
       </div>
     </div>
     <div class="card">
-      <div class="ch"><div class="ct">📈 HAFTALIK DINAMIKA (guruh o'rtacha ball)</div></div>
+      <div class="ch"><div class="ct">📈 HAFTALIK DINAMIKA</div></div>
       <div class="cb" style="padding:.45rem"><canvas id="analyticsC" height="125"></canvas></div>
     </div>
   </div>
 </div>
 </div>
 
-<!-- ===== REPORT SCREEN ===== -->
+<!-- ===== REPORT ===== -->
 <div id="reportSc" class="screen page">
-<div class="rwrap">
+<div class="rwrap2">
   <div class="phdr">
     <div>
       <div class="ptitle">Shaxsiy <span>Hisobot</span></div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3);margin-top:.13rem">Qurbonov Anusher — 3-kurs A guruh · Ustoz: Prof. Siddiqov O.A.</div>
+      <div style="font-family:JetBrains Mono,monospace;font-size:.57rem;color:var(--tx3);margin-top:.13rem">Qurbonov Anusher &mdash; 3-kurs A guruh &middot; Ustoz: Prof. Siddiqov O.A.</div>
     </div>
-    <div style="display:flex;gap:.38rem;flex-wrap:wrap">
-      <select style="background:var(--s2);border:1px solid var(--b1);color:var(--tx2);padding:.26rem .52rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.6rem;" id="rFilter" onchange="loadReport()">
-        <option value="all">Barchasi</option><option value="good">Yaxshi (≥80%)</option><option value="bad">Qoniqarsiz (<60%)</option>
-      </select>
-      <button class="bsm" onclick="exportReport()">📥 CSV Export</button>
-      <button class="bsm" onclick="window.print()">🖨 Chop etish</button>
+    <div class="pbtn-row">
+      <button class="btn btn-outline" onclick="exportReport()">&#8595; CSV Export</button>
+      <button class="btn btn-outline" onclick="window.print()">&#128424; Chop etish</button>
     </div>
   </div>
   <div class="srow">
-    <div class="sc" style="--clr:linear-gradient(90deg,#00c8ff,#0088bb)"><div class="slbl">JAMI KEYSLAR</div><div class="sval">24</div></div>
-    <div class="sc" style="--clr:linear-gradient(90deg,#00ffaa,#00aa77)"><div class="slbl">MUVAFFAQIYAT</div><div class="sval">79<span style="font-size:.85rem;color:var(--tx3)">%</span></div></div>
-    <div class="sc" style="--clr:linear-gradient(90deg,#ffc84a,#ff8a00)"><div class="slbl">O'RT. VAQT</div><div class="sval sm">18:42</div><div class="ssub">daqiqa/keys</div></div>
-    <div class="sc" style="--clr:linear-gradient(90deg,#e060ff,#8800cc)"><div class="slbl">A'LO BAHOLAR</div><div class="sval">7</div><div class="ssub">29% keyslar</div></div>
-    <div class="sc" style="--clr:linear-gradient(90deg,#ff3355,#cc0033)"><div class="slbl">QONIQARSIZ</div><div class="sval">3</div><div class="ssub">Qayta yechish</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#00d4ff,#0090cc)"><div class="slbl">JAMI KEYSLAR</div><div class="sval">24</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#00ffcc,#00bfaa)"><div class="slbl">MUVAFFAQIYAT</div><div class="sval">79<span style="font-size:.88rem;color:var(--tx3)">%</span></div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#ffcc44,#ff8800)"><div class="slbl">O'RT. VAQT</div><div class="sval sm">18:42</div><div class="ssub">daqiqa/keys</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#cc66ff,#8800cc)"><div class="slbl">A'LO BAHOLAR</div><div class="sval">7</div></div>
+    <div class="sc" style="--clr:linear-gradient(90deg,#ff2255,#cc0033)"><div class="slbl">QONIQARSIZ</div><div class="sval">3</div></div>
   </div>
-  <div class="card" style="margin-bottom:.95rem">
-    <div class="ch"><div class="ct">QURBONOV ANUSHER — YECHILGAN KEYSLAR</div></div>
+  <div class="card" style="margin-bottom:1rem">
+    <div class="ch"><div class="ct">QURBONOV ANUSHER &mdash; YECHILGAN KEYSLAR</div></div>
     <div style="overflow-x:auto"><table class="stbl"><thead><tr><th>#</th><th>KEYS NOMI</th><th>MUTAXASSISLIK</th><th>BALL</th><th>BAHO</th><th>DORI</th><th>DOZA</th><th>XAVFSIZLIK</th><th>VAQT</th><th>SANA</th><th></th></tr></thead><tbody id="rBody"></tbody></table></div>
   </div>
   <div class="g2">
@@ -998,7 +1218,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(5,10,15,.97)
         <div class="pi"><div class="pl"><span>Dozalash xatosi</span><span style="color:var(--danger)">7 marta</span></div><div class="pb"><div class="pf" style="background:var(--danger)" data-w="87"></div></div></div>
         <div class="pi"><div class="pl"><span>Kontraindikatsiya</span><span style="color:var(--gold)">4 marta</span></div><div class="pb"><div class="pf" style="background:var(--gold)" data-w="50"></div></div></div>
         <div class="pi"><div class="pl"><span>Monitoring rejasi</span><span style="color:var(--warn)">3 marta</span></div><div class="pb"><div class="pf" style="background:var(--warn)" data-w="37"></div></div></div>
-        <div class="pi"><div class="pl"><span>Homiladorlik</span><span style="color:var(--danger)">3 marta</span></div><div class="pb"><div class="pf" style="background:var(--danger)" data-w="37"></div></div></div>
+        <div class="pi"><div class="pl"><span>Homiladorlik ATB</span><span style="color:var(--danger)">3 marta</span></div><div class="pb"><div class="pf" style="background:var(--danger)" data-w="37"></div></div></div>
       </div>
     </div>
     <div class="card">
@@ -1009,59 +1229,61 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(5,10,15,.97)
 </div>
 </div>
 
-<!-- ===== PROFILE SCREEN ===== -->
+<!-- ===== PROFILE ===== -->
 <div id="profSc" class="screen page">
-<div class="pwrap">
+<div class="pwrap2">
   <div class="phdr"><div class="ptitle">Shaxsiy <span>Profil</span></div></div>
   <div class="pcard">
-    <div class="ava" id="profAva">👨‍⚕️</div>
+    <div class="ava" id="profAva" style="background:linear-gradient(135deg,var(--ac2),var(--ac3))">👨‍⚕️</div>
     <div style="flex:1">
       <div class="pnm" id="profNm">Qurbonov Anusher</div>
-      <div class="prole" id="profRole">● TALABA · Klinik farmakologiya</div>
+      <div class="prole" id="profRole">&#9679; TALABA &middot; Klinik farmakologiya</div>
       <div class="pmeta" id="profMeta">
-        📧 anusher@clinpharm.uz<br>
-        🎓 Toshkent tibbiyot akademiyasi · 3-kurs A guruh<br>
-        👨‍🏫 Ustoz: Prof. Siddiqov O.A. (Klinik farmakologiya kafedrasi)<br>
-        📅 Ro'yxatdan o'tgan: 15.01.2025<br>
-        ⏱ Umumiy o'quv vaqti: 14 soat 30 daqiqa<br>
-        🏆 Guruh reytingi: #5 (28 talabadan)
+        &#128231; anusher@clinpharm.uz<br>
+        &#127979; Toshkent tibbiyot akademiyasi &middot; 3-kurs A guruh<br>
+        &#128104;&#8205;&#127979; Ustoz: Prof. Siddiqov O.A. (Klinik farmakologiya kafedrasi)<br>
+        &#128197; Ro'yxatdan o'tgan: 15.01.2025<br>
+        &#8987; Umumiy o'quv vaqti: 14 soat 30 daqiqa<br>
+        &#127942; Guruh reytingi: #5 (28 talabadan)
       </div>
     </div>
     <div style="display:flex;flex-direction:column;gap:.42rem">
-      <button class="bsm" onclick="notify('Profil tahrirlash tez orada...','warn')">✏️ Tahrirlash</button>
-      <button class="bsm">🔔 Bildirishnomalar</button>
-      <button class="bgl">📊 Kengaytirilgan hisobot</button>
+      <button class="btn btn-outline" onclick="notify('Profil tahrirlash tez orada...','warn')">&#9999;&#65039; Tahrirlash</button>
+      <button class="btn btn-outline">&#128276; Bildirishnomalar</button>
+      <button class="btn btn-gold">&#128202; Kengaytirilgan hisobot</button>
     </div>
   </div>
-  <div class="card" style="margin-bottom:.95rem">
-    <div class="ch"><div class="ct">🏅 YUTUQLAR VA DIPLOMLAR</div><span style="font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--tx3)">3/8 olindi</span></div>
-    <div style="padding:.95rem">
+  <div class="card" style="margin-bottom:1rem">
+    <div class="ch"><div class="ct">&#127885; YUTUQLAR VA DIPLOMLAR</div><span style="font-family:JetBrains Mono,monospace;font-size:.54rem;color:var(--tx3)">3/8 olindi</span></div>
+    <div style="padding:1rem">
       <div class="achgrid">
-        <div class="ach"><div class="achi">🔥</div><div class="achn">Birinchi keys</div><div class="achd">Muvaffaqiyatli yechildi</div></div>
-        <div class="ach"><div class="achi">💊</div><div class="achn">Antibiotik ustasi</div><div class="achd">5 ta pnevmoniya keysi</div></div>
-        <div class="ach"><div class="achi">⚡</div><div class="achn">Tez yechuvchi</div><div class="achd">10 daqiqa ichida</div></div>
-        <div class="ach locked"><div class="achi">🥇</div><div class="achn">Guruh chempioni</div><div class="achd">Birinchi o'rin</div></div>
-        <div class="ach locked"><div class="achi">🧬</div><div class="achn">Farmakolog</div><div class="achd">50 ta keys</div></div>
-        <div class="ach locked"><div class="achi">🏥</div><div class="achn">Klinik ekspert</div><div class="achd">100% ball</div></div>
-        <div class="ach locked"><div class="achi">🤰</div><div class="achn">Homiladorlik guru</div><div class="achd">10 ta homiladorlik keysi</div></div>
-        <div class="ach locked"><div class="achi">👑</div><div class="achn">Platina darajasi</div><div class="achd">O'rtacha 90%+</div></div>
+        <div class="ach"><div class="achi">&#128293;</div><div class="achn">Birinchi keys</div><div class="achd">Muvaffaqiyatli yechildi</div></div>
+        <div class="ach"><div class="achi">&#128138;</div><div class="achn">Antibiotik ustasi</div><div class="achd">5 ta pnevmoniya keysi</div></div>
+        <div class="ach"><div class="achi">&#9889;</div><div class="achn">Tez yechuvchi</div><div class="achd">10 daqiqa ichida</div></div>
+        <div class="ach locked"><div class="achi">&#129351;</div><div class="achn">Guruh chempioni</div><div class="achd">Birinchi o'rin</div></div>
+        <div class="ach locked"><div class="achi">&#129516;</div><div class="achn">Farmakolog</div><div class="achd">50 ta keys</div></div>
+        <div class="ach locked"><div class="achi">&#127973;</div><div class="achn">Klinik ekspert</div><div class="achd">100% ball</div></div>
+        <div class="ach locked"><div class="achi">&#129328;</div><div class="achn">Homiladorlik guru</div><div class="achd">10 ta homiladorlik keysi</div></div>
+        <div class="ach locked"><div class="achi">&#128081;</div><div class="achn">Platina darajasi</div><div class="achd">O'rtacha 90%+</div></div>
       </div>
     </div>
   </div>
   <div class="card">
-    <div class="ch"><div class="ct">🔒 PAROL O'ZGARTIRISH</div></div>
+    <div class="ch"><div class="ct">&#128274; PAROL O'ZGARTIRISH</div></div>
     <div class="cb">
-      <div class="frow" style="max-width:460px;margin-bottom:.72rem">
-        <div><label class="ilbl2">JORIY PAROL</label><input class="inp" type="password" placeholder="••••••••"></div>
-        <div><label class="ilbl2">YANGI PAROL</label><input class="inp" type="password" placeholder="••••••••"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.68rem;max-width:460px;margin-bottom:.72rem">
+        <div><label class="ilbl">Joriy parol</label><input class="inp" type="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"></div>
+        <div><label class="ilbl">Yangi parol</label><input class="inp" type="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"></div>
       </div>
-      <button class="bsm" onclick="notify('Parol muvaffaqiyatli o\'zgartirildi!','success')">Saqlash</button>
+      <button class="btn btn-green" onclick="notify('Parol muvaffaqiyatli o\'zgartirildi!','success')">Saqlash</button>
     </div>
   </div>
 </div>
 </div>
 
+
 <script>
+
 // ============================================================
 // DATA
 // ============================================================
@@ -1106,7 +1328,6 @@ const DRUGINTS={
   amoxiclav:[{s:"err",t:"\u26d4 Penitsilli guruh — o'zaro allergiya xavfi!"},{s:"warn",t:"Homiladorlik B — ehtiyotkorlik"}],
   cefuroxime:[{s:"ok",t:"Sorbifer bilan: ta'sir yo'q \u2713"},{s:"ok",t:"Homiladorlik B kategoriyasi \u2713"},{s:"warn",t:"GFR 48 — doza sozlash \u26a0"}],
 };
-const SAFELIST=["Allergiya tekshirildi","Homiladorlik holati hisobga olindi","Buyrak funksiyasi baholandi","Jigar funksiyasi baholandi","Dori-dori ta'sir tekshirildi","Laktatsiya holati aniq","Kontraindikatsiyalar ko'rildi","Doza og'irlikka mos","Qabul muddati belgilandi","Mutaxassis konsultatsiyasi"];
 const DRUGNAMES={
   ceftriaxone:"Rp.: Sol. Ceftriaxoni 1.0\nD.t.d. N.7 amp.\nS.: 2 g/kun, v/v, 7-10 kun",
   azithromycin:"Rp.: Tab. Azithromycini 0.5\nD.t.d. N.5\nS.: 0.5 g/kun per os, 5 kun",
@@ -1117,8 +1338,10 @@ const DRUGNAMES={
   amoxiclav:"Rp.: Tab. Amoxicillini+Klavulanat\n\u26a0 Penitsilli guruh — allergiya xavfi",
   cefuroxime:"Rp.: Tab. Cefuroximae 0.5\nD.t.d. N.14\nS.: 0.5 g 2 marta/kun, per os",
 };
+const SAFELIST=["Allergiya tekshirildi","Homiladorlik holati hisobga olindi","Buyrak funksiyasi baholandi","Jigar funksiyasi baholandi","Dori-dori ta'sir tekshirildi","Laktatsiya holati aniq","Kontraindikatsiyalar ko'rildi","Doza og'irlikka mos","Qabul muddati belgilandi","Mutaxassis konsultatsiyasi"];
 
-let user=null, chatHist=[], step=1, STEPS=5;
+let user=null,chatHist=[],step=1,STEPS=5;
+let currentModel='claude';
 
 // ============================================================
 // LOGIN
@@ -1127,23 +1350,23 @@ function quickLogin(r){document.getElementById('lrole').value=r;doLogin();}
 function doLogin(){
   const r=document.getElementById('lrole').value;
   const D={
-    student:{n:"Qurbonov Anusher",b:"TALABA",e:"anusher@clinpharm.uz",ava:"👨‍⚕️"},
-    teacher:{n:"Prof. Siddiqov O.A.",b:"O'QITUVCHI",e:"siddiqov@clinpharm.uz",ava:"👨‍🏫"},
-    admin:{n:"Admin Toshmatov",b:"ADMIN",e:"admin@clinpharm.uz",ava:"⚙️"},
+    student:{n:"Qurbonov Anusher",b:"TALABA",bc:"student",e:"anusher@clinpharm.uz",ava:"👨‍⚕️"},
+    teacher:{n:"Prof. Siddiqov O.A.",b:"O'QITUVCHI",bc:"teacher",e:"siddiqov@clinpharm.uz",ava:"👨‍🏫"},
+    admin:{n:"Admin Toshmatov",b:"ADMIN",bc:"admin",e:"admin@clinpharm.uz",ava:"⚙️"},
   };
   user={...D[r],role:r};
   document.getElementById('mnav').style.display='flex';
   document.getElementById('navNm').textContent=user.n;
-  document.getElementById('navBg').textContent=user.b;
+  const bg=document.getElementById('navBg');bg.textContent=user.b;bg.className='ubadge '+user.bc;
   document.getElementById('dashNm').textContent=user.n.split(' ')[0];
   document.getElementById('profNm').textContent=user.n;
-  document.getElementById('profRole').textContent='● '+user.b+' · Klinik farmakologiya';
+  document.getElementById('profRole').textContent='\u25cf '+user.b+' \u00b7 Klinik farmakologiya';
   document.getElementById('profAva').textContent=user.ava;
   if(r==='teacher'){
-    document.getElementById('profMeta').innerHTML='📧 '+user.e+'<br>🏛 Toshkent tibbiyot akademiyasi<br>📚 Klinik farmakologiya kafedrasi<br>📅 '+new Date().toLocaleDateString('uz-UZ');
+    document.getElementById('profMeta').innerHTML='\u{1f4e7} '+user.e+'<br>\u{1f3db} Toshkent tibbiyot akademiyasi<br>\u{1f4da} Klinik farmakologiya kafedrasi<br>\u{1f4c5} '+new Date().toLocaleDateString('uz-UZ');
     document.getElementById('nb_t').style.display='';
-    document.getElementById('tLoginDate').textContent=new Date().toLocaleDateString('uz-UZ');
-    document.getElementById('cCreated').textContent=new Date().toLocaleDateString('uz-UZ');
+    const tld=document.getElementById('tLoginDate');if(tld)tld.textContent=new Date().toLocaleDateString('uz-UZ');
+    const cc=document.getElementById('cCreated');if(cc)cc.textContent=new Date().toLocaleDateString('uz-UZ');
   } else if(r==='admin'){document.getElementById('nb_t').style.display='';}
   document.getElementById('loginSc').style.display='none';
   nav('ds',document.getElementById('nb_d'));
@@ -1178,7 +1401,8 @@ function nav(id,btn){
 // ============================================================
 function initDash(){
   const d=new Date();
-  document.getElementById('dashDate').textContent=d.toLocaleDateString('uz-UZ',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const el=document.getElementById('dashDate');
+  if(el)el.textContent=d.toLocaleDateString('uz-UZ',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   renderCaseList();renderLB();drawMini();
 }
 function renderCaseList(){
@@ -1192,16 +1416,17 @@ function renderCaseList(){
     el.innerHTML+=`<div class="ci" onclick="startCase(${c.id})">
       <div class="cnum">${String(c.id+1).padStart(2,'0')}</div>
       <div class="cinfo"><div class="cnm">${c.title}</div>
-        <div class="ctgs"><span class="tag ${tc}">${tn}</span>${c.done?`<span class="tag bgr">&#10003; ${c.score} ball</span>`:'<span class="tag" style="color:var(--tx3);border-color:rgba(74,112,144,.3)">Yechilmagan</span>'}</div>
+        <div class="ctgs"><span class="tag ${tc}">${tn}</span>${c.done?`<span class="tag bgr">\u2713 ${c.score} ball</span>`:'<span class="tag" style="color:var(--tx3);border-color:rgba(74,112,144,.3)">Yechilmagan</span>'}</div>
       </div><div class="${dc}">${dt}</div></div>`;
   });
 }
 function renderLB(){
   const el=document.getElementById('lbList');if(!el)return;el.innerHTML='';
   LB.forEach((p,i)=>{
+    const medal=i===0?'\u{1f947}':i===1?'\u{1f948}':i===2?'\u{1f949}':'#'+(i+1);
     el.innerHTML+=`<div class="lbi${p.me?' me':''}">
-      <div class="lrk${i===0?' r1':i===1?' r2':i===2?' r3':''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1)}</div>
-      <div class="lnm">${p.n}${p.me?' <span style="color:var(--ac3);font-size:.62rem">(Siz)</span>':''}</div>
+      <div class="lrk${i===0?' r1':i===1?' r2':i===2?' r3':''}">${medal}</div>
+      <div class="lnm">${p.n}${p.me?' <span style="color:var(--ac3);font-size:.6rem">(Siz)</span>':''}</div>
       <div class="lbar"><div class="lfill" style="width:${p.s}%"></div></div>
       <div class="lsc">${p.s}%</div></div>`;
   });
@@ -1210,13 +1435,13 @@ function drawMini(){
   const c=document.getElementById('miniChart');if(!c)return;
   const ctx=c.getContext('2d');const W=c.offsetWidth||280;c.width=W;
   const data=[61,74,69,82,77,85,78];const mn=40,mx=100;
-  ctx.clearRect(0,0,W,50);const gap=W/(data.length-1);
-  const g=ctx.createLinearGradient(0,0,0,50);g.addColorStop(0,'rgba(0,200,255,.15)');g.addColorStop(1,'rgba(0,200,255,0)');
-  ctx.beginPath();data.forEach((v,i)=>{const x=i*gap,y=50-((v-mn)/(mx-mn)*42);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
-  ctx.lineTo((data.length-1)*gap,50);ctx.lineTo(0,50);ctx.closePath();ctx.fillStyle=g;ctx.fill();
-  ctx.beginPath();ctx.strokeStyle='#00c8ff';ctx.lineWidth=1.5;ctx.lineJoin='round';
-  data.forEach((v,i)=>{const x=i*gap,y=50-((v-mn)/(mx-mn)*42);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.stroke();
-  data.forEach((v,i)=>{const x=i*gap,y=50-((v-mn)/(mx-mn)*42);ctx.beginPath();ctx.arc(x,y,2.5,0,Math.PI*2);ctx.fillStyle='#00c8ff';ctx.fill();});
+  ctx.clearRect(0,0,W,52);const gap=W/(data.length-1);
+  const g=ctx.createLinearGradient(0,0,0,52);g.addColorStop(0,'rgba(0,212,255,.18)');g.addColorStop(1,'rgba(0,212,255,0)');
+  ctx.beginPath();data.forEach((v,i)=>{const x=i*gap,y=52-((v-mn)/(mx-mn)*44);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.lineTo((data.length-1)*gap,52);ctx.lineTo(0,52);ctx.closePath();ctx.fillStyle=g;ctx.fill();
+  ctx.beginPath();ctx.strokeStyle='#00d4ff';ctx.lineWidth=1.5;ctx.lineJoin='round';
+  data.forEach((v,i)=>{const x=i*gap,y=52-((v-mn)/(mx-mn)*44);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.stroke();
+  data.forEach((v,i)=>{const x=i*gap,y=52-((v-mn)/(mx-mn)*44);ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle=i===data.length-1?'#00ffcc':'#00d4ff';ctx.fill();});
 }
 
 // ============================================================
@@ -1226,8 +1451,49 @@ function startCase(id){nav('caseSc',document.getElementById('nb_c'));}
 function initCase(){
   step=1;updStep();initDays();buildChk();
   const d=document.getElementById('mainDrug');if(d)d.value='';
-  const rx=document.getElementById('rx1d');if(rx)rx.textContent='Dori tanlanmagan';
+  const rx=document.getElementById('rx1d');if(rx){rx.textContent='Dori tanlanmagan';rx.className='rxt empty';}
   const il=document.getElementById('intList');if(il)il.innerHTML='<div class="inti"><div class="intd" style="background:var(--tx3)"></div><span style="color:var(--tx3);font-size:.78rem">Dori tanlangach ko\'rsatiladi</span></div>';
+  resetScoreBadges();
+  document.getElementById('liveTotalScore').textContent='0';
+  document.getElementById('livePercent').textContent='0%';
+}
+function resetScoreBadges(){
+  ['sb1a','sb1b','sb1c','sb1d','sb1e','sb2a','sb2b','sb2c','sb2d','sb2e','sb3a','sb3b','sb3c','sb3d','sb3e','sb4a','sb4b','sb4c','sb4d','sb4e'].forEach(id=>{
+    const e=document.getElementById(id);if(e){e.textContent='\u2014';e.className='score-badge empty';}
+  });
+}
+function updBadge(inp,badgeId){
+  const v=parseInt(inp.value);const e=document.getElementById(badgeId);if(!e)return;
+  if(isNaN(v)||inp.value===''){e.textContent='\u2014';e.className='score-badge empty';}
+  else if(v>=8){e.textContent=v;e.className='score-badge good';}
+  else if(v>=5){e.textContent=v;e.className='score-badge mid';}
+  else{e.textContent=v;e.className='score-badge low';}
+  calcLiveScore();
+}
+function calcLiveScore(){
+  const ids=['s1a','s1b','s1c','s1d','s1e','s2a','s2b','s2c','s2d','s2e','s3a','s3b','s3c','s3d','s3e'];
+  let sum=0,cnt=0;
+  ids.forEach(id=>{const v=parseInt(document.getElementById(id)?.value||'');if(!isNaN(v)){sum+=v;cnt++;}});
+  const pct=cnt>0?Math.round((sum/(cnt*10))*100):0;
+  document.getElementById('liveTotalScore').textContent=sum;
+  document.getElementById('livePercent').textContent=pct+'%';
+}
+async function autoFillScores(){
+  notify("AI balllarni tahlil qilmoqda...","success");
+  const drug=document.getElementById('mainDrug').value;
+  const isOk=drug==='ceftriaxone'||drug==='azithromycin'||drug==='cefuroxime';
+  const isAmp=drug==='ampicillin';
+  const isFl=drug==='ciprofloxacin'||drug==='levofloxacin';
+  const base=isOk?8:isAmp?1:isFl?2:5;
+  [['s1a',isOk?9:isAmp?0:3],['s1b',isOk?8:4],['s1c',7],['s1d',isOk?8:5],['s1e',isAmp?0:6]].forEach(([id,v])=>{
+    const el=document.getElementById(id);if(el){el.value=v;updBadge(el,'s'+id.slice(1)+'');}
+  });
+  // Trigger badge updates
+  ['s1a','s1b','s1c','s1d','s1e'].forEach(id=>{
+    const el=document.getElementById(id);
+    const bid=id.replace('s1','sb1');
+    if(el)updBadge(el,bid);
+  });
 }
 function initDays(){
   ['effD','safeD'].forEach((id,i)=>{
@@ -1253,14 +1519,14 @@ function ftab(el,id){
 function checkDrug(){
   const v=document.getElementById('mainDrug').value;
   const rx=document.getElementById('rx1d');
-  if(rx)rx.textContent=(DRUGNAMES[v]||'Rp.: '+(v||'—'));
+  if(rx){rx.textContent=DRUGNAMES[v]||'Rp.: '+(v||'\u2014');rx.className=v?'rxt':'rxt empty';}
   const il=document.getElementById('intList');if(!il)return;
-  const ints=DRUGINTS[v]||[{s:'ok',t:'Bu dori uchun ma\'lumot yo\'q'}];
+  const ints=DRUGINTS[v]||[{s:'ok',t:"Bu dori uchun ma'lumot yo'q"}];
   il.innerHTML='';
   ints.forEach(it=>{const col=it.s==='err'?'var(--danger)':it.s==='warn'?'var(--gold)':'var(--ac3)';il.innerHTML+=`<div class="inti"><div class="intd" style="background:${col}"></div><span style="color:${col};font-size:.78rem">${it.t}</span></div>`;});
 }
 function updStep(){
-  const TITLES=["Asosiy dori tanlash","Davolash varakasi","Monitoring rejasi","Nojo'ya ta'sirlarni oldini olish","Yakuniy baho va xulosa"];
+  const TITLES=["Asosiy dori tanlash va asoslash","Davolash varakasi \u2014 baholash jadvali","Monitoring rejasi","Nojo'ya ta'sirlarni oldini olish","Yakuniy baho va xulosa"];
   for(let i=1;i<=STEPS;i++){
     const el=document.getElementById('step_'+i);if(el)el.style.display=i===step?'block':'none';
     const dot=document.getElementById('sp'+i);
@@ -1269,18 +1535,28 @@ function updStep(){
   document.getElementById('stepInd').textContent=step+' / '+STEPS;
   document.getElementById('prevBtn').style.display=step>1?'':'none';
   const nb=document.getElementById('nextBtn');
-  if(step===STEPS){nb.textContent='🧠 AI TAHLILGA YUBORISH →';nb.onclick=submitCase;}
-  else{nb.textContent='Keyingi qadam →';nb.onclick=nextStep;}
+  if(step===STEPS){nb.textContent='\u{1f9e0} AI TAHLILGA YUBORISH \u2192';nb.onclick=submitCase;}
+  else{nb.textContent='Keyingi qadam \u2192';nb.onclick=nextStep;}
   document.getElementById('cstept').textContent=TITLES[step-1];
 }
 function nextStep(){
-  if(step===1&&!document.getElementById('mainDrug').value){notify('Iltimos, asosiy dorini tanlang!',"warn");return;}
+  if(step===1&&!document.getElementById('mainDrug').value){notify("Iltimos, asosiy dorini tanlang!","warn");return;}
   if(step<STEPS){step++;updStep();}
 }
 function prevStep(){if(step>1){step--;updStep();}}
 
 // ============================================================
-// SUBMIT
+// AI MODEL SELECTOR
+// ============================================================
+function setModel(m,el){
+  currentModel=m;
+  document.querySelectorAll('.ai-model-tab').forEach(t=>t.classList.remove('active'));
+  if(el)el.classList.add('active');
+  notify("AI model: "+m.toUpperCase()+" tanlandi","success");
+}
+
+// ============================================================
+// SUBMIT — MULTI-AI
 // ============================================================
 async function submitCase(){
   const drug=document.getElementById('mainDrug').value;
@@ -1303,57 +1579,45 @@ async function submitCase(){
 Bemor: Mansur Abdullayev, 52 yosh, erkak.
 Tashxis: O'tkir o'ng tomona pastki bulak pnevmoniyasi, o'rta og'ir kechishi. Nafas etishmovchiligi I daraja.
 Qo'shma: Surunkali pielonefrit, Temir etishmovchiligi anemiyasi II daraja, HOMILADORLIK 14 HAFTALIK.
-Allergiya: AMPITSILLINGA ALLERGIK REAKTSIYA (04.11.2025).
-Buyrak: Kreatinin 160 umol/L, GFR 48 ml/min. Jigar: Normal.
-Lab: Ley 14.2, Gb 96, CRB 87, PCT 2.4, SpO2 94%.
+Allergiya: AMPITSILLINGA ALLERGIK REAKTSIYA (04.11.2025). Buyrak: GFR 48 ml/min.
+TALABA QURBONOV ANUSHER: Asosiy dori: ${drug||(na)}, Qabul: ${route||(na)}, Doza: ${sdose||(na)}, Davomiylik: ${dur||(na)} kun.
+Asoslash: ${reason||(na)}. Qo'shimcha: ${rx2||"yo'q"}. Monitoring: ${effR||(na)}.
+Xavfsizlik: ${safeR||(na)}. Nojo'ya: ${sideEff||(na)}. Konsultatsiya: ${consult||(na)}. Xulosa: ${finalS||(na)}`;
 
-TALABA QURBONOV ANUSHERNING JAVOBI:
-- Asosiy dori: ${drug||(na)}
-- Qabul yoli: ${route||(na)}
-- Bir martalik doza: ${sdose||(na)}
-- Davolash davomiyligi: ${dur||(na)} kun
-- Dori tanlash asosi: ${reason||(na)}
-- Qo'shimcha dori: ${rx2||"(yo'q)"}
-- Samaradorlik monitoringi: ${effR||(na)}
-- Xavfsizlik: ${safeR||(na)}
-- Nojo'ya ta'sirlar: ${sideEff||(na)}
-- Konsultatsiya: ${consult||(na)}
-- Yakuniy xulosa: ${finalS||(na)}`;
+  const systemPrompt=`Sen klinik farmakologiya bo'yicha o'zbek tilida gapiradigan AI ustozsan. Prof. Siddiqov O.A. kafedrasi uchun talaba Qurbonov Anusherning farmakoterapiya qarorini baholaysan.
+MUHIM: Ampicillin->ALLERGIYA BOR->HAYOTIY XATO. Ciprofloxacin/Levofloxacin->homiladorlikda MUTLAQ contraindicated. TO'G'RI: Ceftriaxone 2g/kun v/v +/- Azithromycin 500mg.
+Faqat sof JSON:
+{"totalScore":0-100,"grade":"A'LO|YAXSHI|QONIQARLI|QONIQARSIZ","summary":"2-3 jumla","scores":{"drug":0-10,"dose":0-10,"contraindication":0-10,"interaction":0-10,"safety":0-10,"monitoring":0-10,"duration":0-10,"combination":0-10},"mainFeedback":"500+ so'z, Qurbonov Anusherni murojaat qiling, Prof. Siddiqov O.A. topshirig'i eslatilsin","errors":[{"type":"wrong|partial|correct","title":"...","detail":"..."}],"studyTopics":["5 mavzu"]}`;
 
   try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-      model:'claude-sonnet-4-20250514',max_tokens:1400,
-      system:`Sen klinik farmakologiya bo'yicha o'zbek tilida gapiradigan AI ustozsan. Prof. Siddiqov O.A. kafedrasi uchun talaba Qurbonov Anusherning farmakoterapiya qarorini baholaysan.
-MUHIM QOIDALAR: Ampicillin->ALLERGIYA (hayotiy xato). Ciprofloxacin/Levofloxacin->homiladorlikda MUTLAQ contraindicated (C kategoriya). Amoxicillin/Amoxiclav->penitsilli guruh->o'zaro allergiya. TO'G'RI JAVOB: Ceftriaxone 2g/kun v/v +/- Azithromycin 500mg. GFR 48->Ceftriaxone doza o'zgarmaydi.
-Faqat sof JSON (hech qanday markdown yoki izoh yo'q):
-{"totalScore":0-100,"grade":"A'LO|YAXSHI|QONIQARLI|QONIQARSIZ","summary":"2-3 jumla xulosa","scores":{"drug":0-10,"dose":0-10,"contraindication":0-10,"interaction":0-10,"safety":0-10,"monitoring":0-10,"duration":0-10,"combination":0-10},"mainFeedback":"500+ so'z. Qurbonov Anusherni to'g'ridan-to'g'ri murojaat qiling. Prof. Siddiqov O.A. topshirig'i eslatilsin.","errors":[{"type":"wrong|partial|correct","title":"...","detail":"..."}],"studyTopics":["5 mavzu"]}`,
-      messages:[{role:'user',content:cs}]
-    })});
+    // Always use Claude (Anthropic API) — the most capable available
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1400,system:systemPrompt,messages:[{role:'user',content:cs}]})
+    });
     const data=await resp.json();
     let txt=data.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
     let res;try{res=JSON.parse(txt);}catch{res=fallback(drug);}
     hideLoader();renderFB(res,cs);
+    notify("Claude AI tahlil tayyor!","success");
   }catch(e){hideLoader();renderFB(fallback(drug),null);}
 }
 
 function fallback(drug){
-  const isAmp=drug==='ampicillin';
-  const isFl=drug==='ciprofloxacin'||drug==='levofloxacin';
-  const isPen=drug==='amoxicillin'||drug==='amoxiclav';
-  const isOk=drug==='ceftriaxone';
-  const sc=isOk?83:isAmp?25:isFl?30:isPen?40:58;
+  const isAmp=drug==='ampicillin',isFl=drug==='ciprofloxacin'||drug==='levofloxacin';
+  const isPen=drug==='amoxicillin'||drug==='amoxiclav',isOk=drug==='ceftriaxone';
   return{
-    totalScore:sc,
+    totalScore:isOk?83:isAmp?25:isFl?30:isPen?40:58,
     grade:isOk?"YAXSHI":isAmp||isFl?"QONIQARSIZ":"QONIQARLI",
     summary:isAmp?"Jiddiy xato: allergiya bor bo'lgan dorini tanladingiz!":isFl?"Jiddiy xato: homiladorlikda bu dori mutlaq man etilgan!":isOk?"Dori tanlash to'g'ri, dozalash va monitoring kuchaytirilsin.":"O'rta natija.",
     scores:{drug:isOk?9:isAmp||isFl?0:isPen?2:5,dose:isOk?7:4,contraindication:isAmp||isFl?0:isPen?2:7,interaction:7,safety:isAmp?0:6,monitoring:6,duration:isOk?8:6,combination:7},
-    mainFeedback:isAmp?"Qurbonov Anusher, Prof. Siddiqov O.A. topshirgan bu keysdа siz jiddiy xato qildingiz! Ampitsillinga allergiya qayd etilgan (04.11.2025). TO'G'RI JAVOB: Ceftriaxone 2g/kun v/v, 7-10 kun. III avlod tsefalosporin — homiladorlik B kategoriyasi, xavfsiz.":isFl?"Qurbonov Anusher, ftorxinolon antibiotiklari homiladorlikda MUTLAQ contraindicated (FDA C kategoriya)! TO'G'RI JAVOB: Ceftriaxone (B kategoriya) + Azithromycin (B kategoriya).":"Qurbonov Anusher, umumiy baholash: bu klinik holatda Ceftriaxone 2g/kun v/v optimal edi. GFR 48 — Ceftriaxone doza o'zgarmaydi. Monitoring: 3-5-7-kun harorat, nafas, SpO2. Ginekolog + Nefroloq konsultatsiyasi majburiy.",
+    mainFeedback:isAmp?"Qurbonov Anusher, Prof. Siddiqov O.A. topshirgan bu keysdа siz jiddiy xato qildingiz! Ampitsillinga allergiya qayd etilgan (04.11.2025). Haqiqiy klinikada bu dori bemorning hayotini xavf ostiga qo'yardi. TO'G'RI: Ceftriaxone 2g/kun v/v 7-10 kun. III avlod tsefalosporin, homiladorlik B kategoriyasi, xavfsiz.":isFl?"Qurbonov Anusher, ftorxinolon antibiotiklari homiladorlikda MUTLAQ contraindicated (FDA C kategoriya, teratogen)! TO'G'RI: Ceftriaxone (B kategoriya) + Azithromycin (B kategoriya).":"Qurbonov Anusher, umumiy yo'nalish to'g'ri. Bu klinik holatda Ceftriaxone 2g/kun v/v optimal edi. GFR 48 — Ceftriaxone doza o'zgarmaydi. Monitoring: 3-5-7-kun harorat, nafas, SpO2. Ginekolog + Nefroloq konsultatsiyasi majburiy.",
     errors:[
       {type:isOk?"correct":isAmp||isFl?"wrong":"partial",title:"Dori tanlash",detail:isAmp?"Ampitsillin allergiyasi bor — hayotiy xavfli!":isFl?"Ftorxinolon homiladorlikda contraindicated!":"Ceftriaxone — to'g'ri tanlov"},
       {type:"partial",title:"Monitoring",detail:"Ginekolog ko'rig'i, SpO2 nazorati ko'rsatilmagan."},
       {type:"wrong",title:"Konsultatsiya",detail:"Ginekolog + Nefroloq + Pulmonolog majburiy."},
     ],
-    studyTopics:["Homiladorlikda ATB xavfsizlik kategoriyalari (FDA A,B,C,D,X)","GFR asosida doza hisoblash — Cockcroft-Gault","Tsefalosporinlar va penitsilli ATB o'zaro allergiya","Atipik pnevmoniya — makrolidlar roli","Pnevmoniyada CURB-65, PSI monitoring mezonlari"]
+    studyTopics:["Homiladorlikda ATB xavfsizlik kategoriyalari (FDA A,B,C,D,X)","GFR asosida doza hisoblash — Cockcroft-Gault","Tsefalosporinlar va penitsilli ATB o'zaro allergiya","Atipik pnevmoniya — makrolidlar roli","Pnevmoniyada CURB-65 monitoring mezonlari"]
   };
 }
 
@@ -1363,55 +1627,70 @@ function fallback(drug){
 function renderFB(r,cs){
   document.getElementById('totScore').textContent=r.totalScore;
   document.getElementById('scGrade').textContent=r.grade;
-  document.getElementById('scPct').textContent=r.totalScore+'/100 — '+r.grade;
+  document.getElementById('scPct').textContent=r.totalScore+'/100 \u2014 '+r.grade;
   document.getElementById('scSum').textContent=r.summary;
   const s=r.scores;
   const gc=v=>v>=8?'good':v>=5?'warn':'bad';
-  const fmt=(v,m=10)=>v+'/'+m;
-  [['b_drug',s.drug],['b_dose',s.dose],['b_contra',s.contraindication],['b_inter',s.interaction],['b_safe',s.safety],['b_mon',s.monitoring],['b_dur',s.duration],['b_comb',s.combination]].forEach(([id,v])=>{const e=document.getElementById(id);if(e){e.textContent=fmt(v);e.className='bkv '+gc(v);}});
+  [['b_drug',s.drug],['b_dose',s.dose],['b_contra',s.contraindication],['b_inter',s.interaction],['b_safe',s.safety],['b_mon',s.monitoring],['b_dur',s.duration],['b_comb',s.combination]].forEach(([id,v])=>{const e=document.getElementById(id);if(e){e.textContent=v+'/10';e.className='bkv '+gc(v);}});
   drawRadar(s);
   const msgs=document.getElementById('aiMsgs');
-  msgs.innerHTML='<div class="msg ai fadein"><div class="mrole">🧠 AI USTOZ — Prof. Siddiqov O.A. Kafedrasi</div><div class="mbub">'+r.mainFeedback.replace(/\n/g,'<br>')+'</div></div>';
+  msgs.innerHTML='<div class="msg ai fadein"><div class="mrole"><span class="mrole-dot" style="background:var(--ac)"></span>\u{1f9e0} AI USTOZ \u2014 Prof. Siddiqov O.A. Kafedrasi</div><div class="mbub">'+r.mainFeedback.replace(/\n/g,'<br>')+'</div></div>';
   if(cs)chatHist=[{role:'user',content:'Klinik keys:\n'+cs},{role:'assistant',content:r.mainFeedback}];
   const ec=document.getElementById('errCards');ec.innerHTML='';
   if(r.errors)r.errors.forEach(e=>{
-    const lbl=e.type==='wrong'?'✗ XATO':e.type==='partial'?"⚠ QISMAN TO'G'RI":"✓ TO'G'RI";
-    ec.innerHTML+='<div class="errcard"><div class="errhdr"><div class="errt '+e.type+'">'+lbl+' · '+e.title+'</div></div><div class="errbody">'+e.detail+'</div></div>';
+    const lbl=e.type==='wrong'?'\u2717 XATO':e.type==='partial'?"\u26a0 QISMAN TO'G'RI":"\u2713 TO'G'RI";
+    ec.innerHTML+='<div class="errcard"><div class="errhdr"><div class="errt '+e.type+'">'+lbl+' \u00b7 '+e.title+'</div></div><div class="errbody">'+e.detail+'</div></div>';
   });
   const ss=document.getElementById('studySection');
-  if(r.studyTopics&&r.studyTopics.length)ss.innerHTML='<div class="errcard"><div class="errhdr"><div style="font-family:Unbounded,sans-serif;font-size:.63rem;color:var(--tx2)">📚 QAYTA O\'QISH — Prof. Siddiqov O.A. TAVSIYASI</div></div><div class="errbody">'+r.studyTopics.map((t,i)=>'<strong>'+(i+1)+'.</strong> '+t).join('<br>')+'</div></div>';
-  notify("AI tahlil tayyor! "+r.grade,"success");
-  document.getElementById('chatToks').textContent='';
+  if(r.studyTopics&&r.studyTopics.length){
+    ss.innerHTML='<div class="errcard"><div class="errhdr"><div style="font-family:Unbounded,sans-serif;font-size:.62rem;color:var(--tx2)">\u{1f4da} QAYTA O\'QISH \u2014 Prof. Siddiqov O.A. TAVSIYASI</div></div><div class="errbody">'+r.studyTopics.map((t,i)=>'<strong>'+(i+1)+'.</strong> '+t).join('<br>')+'</div></div>';
+  }
 }
 
 function drawRadar(s){
   const c=document.getElementById('radarC');if(!c)return;
   const ctx=c.getContext('2d');const W=270,H=270,cx=135,cy=135,R=90;
   ctx.clearRect(0,0,W,H);
-  const lbls=['Dori','Doza','Kontra','Interak.','Xavfsiz.','Monitor','Davom.','Kombina.'];
+  const lbls=['\u0414\u043e\u0440\u0438','\u0414\u043e\u0437\u0430','Kontra','Interak.','Xavfsiz.','Monitor','Davom.','Kombina.'];
   const vals=[s.drug,s.dose,s.contraindication,s.interaction,s.safety,s.monitoring,s.duration,s.combination];
   const N=lbls.length;const ang=i=>i*(2*Math.PI/N)-Math.PI/2;
-  for(let r=2;r<=10;r+=2){ctx.beginPath();for(let i=0;i<N;i++){const a=ang(i),rr=R*(r/10),x=cx+rr*Math.cos(a),y=cy+rr*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.closePath();ctx.strokeStyle='rgba(26,58,85,.7)';ctx.lineWidth=.5;ctx.stroke();}
-  for(let i=0;i<N;i++){ctx.beginPath();ctx.moveTo(cx,cy);const a=ang(i);ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));ctx.strokeStyle='rgba(26,58,85,.7)';ctx.lineWidth=.5;ctx.stroke();}
-  ctx.beginPath();vals.forEach((v,i)=>{const a=ang(i),r=R*(v/10),x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.closePath();
-  const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);g.addColorStop(0,'rgba(0,200,255,.25)');g.addColorStop(1,'rgba(0,200,255,.05)');ctx.fillStyle=g;ctx.fill();ctx.strokeStyle='#00c8ff';ctx.lineWidth=1.5;ctx.stroke();
-  vals.forEach((v,i)=>{const a=ang(i),r=R*(v/10),x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle=v>=8?'#00ffaa':v>=5?'#ffc84a':'#ff3355';ctx.fill();const lx=cx+(R+17)*Math.cos(a),ly=cy+(R+17)*Math.sin(a);ctx.font='8.5px JetBrains Mono,monospace';ctx.fillStyle='#7aa0b8';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(lbls[i],lx,ly);});
+  for(let r2=2;r2<=10;r2+=2){
+    ctx.beginPath();
+    for(let i=0;i<N;i++){const a=ang(i),rr=R*(r2/10),x=cx+rr*Math.cos(a),y=cy+rr*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.closePath();ctx.strokeStyle='rgba(24,51,72,.8)';ctx.lineWidth=.6;ctx.stroke();
+  }
+  for(let i=0;i<N;i++){ctx.beginPath();ctx.moveTo(cx,cy);const a=ang(i);ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));ctx.strokeStyle='rgba(24,51,72,.8)';ctx.lineWidth=.6;ctx.stroke();}
+  ctx.beginPath();
+  vals.forEach((v,i)=>{const a=ang(i),r2=R*(v/10),x=cx+r2*Math.cos(a),y=cy+r2*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.closePath();
+  const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
+  g.addColorStop(0,'rgba(0,212,255,.28)');g.addColorStop(1,'rgba(0,255,204,.06)');
+  ctx.fillStyle=g;ctx.fill();ctx.strokeStyle='#00d4ff';ctx.lineWidth=1.5;ctx.stroke();
+  vals.forEach((v,i)=>{
+    const a=ang(i),r2=R*(v/10),x=cx+r2*Math.cos(a),y=cy+r2*Math.sin(a);
+    ctx.beginPath();ctx.arc(x,y,3.5,0,Math.PI*2);
+    ctx.fillStyle=v>=8?'#00ffcc':v>=5?'#ffcc44':'#ff2255';ctx.fill();
+    const lx=cx+(R+18)*Math.cos(a),ly=cy+(R+18)*Math.sin(a);
+    ctx.font='8.5px JetBrains Mono,monospace';ctx.fillStyle='#7aaabb';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(lbls[i],lx,ly);
+  });
 }
 
 async function askAI(){
   const inp=document.getElementById('aiQ');const q=inp.value.trim();if(!q)return;
   const btn=document.getElementById('askBtn');btn.disabled=true;inp.value='';
   const msgs=document.getElementById('aiMsgs');
-  msgs.innerHTML+='<div class="msg fadein"><div class="mrole">👨‍⚕️ QURBONOV ANUSHER</div><div class="mbub">'+q+'</div></div>';
-  msgs.innerHTML+='<div class="msg ai" id="typM"><div class="mrole">🧠 AI USTOZ</div><div class="mbub"><div class="tind"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div></div></div>';
+  msgs.innerHTML+='<div class="msg fadein"><div class="mrole"><span class="mrole-dot" style="background:var(--ac3)"></span>\u{1f468}\u200d\u2695\ufe0f QURBONOV ANUSHER</div><div class="mbub">'+q+'</div></div>';
+  msgs.innerHTML+='<div class="msg ai" id="typM"><div class="mrole"><span class="mrole-dot" style="background:var(--ac)"></span>\u{1f9e0} AI USTOZ</div><div class="mbub"><div class="tind"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div></div></div>';
   msgs.scrollTop=msgs.scrollHeight;chatHist.push({role:'user',content:q});
   try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:"Sen klinik farmakologiya bo'yicha o'zbek tilida gapiradigan AI ustozsan. Prof. Siddiqov O.A. kafedrasi uchun ishlaysan. 150-250 so'z.",messages:chatHist})});
-    const data=await resp.json();
-    const ans=data.content.map(c=>c.text||'').join('');
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:"Sen klinik farmakologiya AI ustozsan. Prof. Siddiqov O.A. kafedrasi. O'zbek tilida 150-250 so'z.",messages:chatHist})});
+    const data=await resp.json();const ans=data.content.map(c=>c.text||'').join('');
     chatHist.push({role:'assistant',content:ans});
-    document.getElementById('typM').outerHTML='<div class="msg ai fadein"><div class="mrole">🧠 AI USTOZ — Prof. Siddiqov O.A. Kafedrasi</div><div class="mbub">'+ans.replace(/\n/g,'<br>')+'</div></div>';
-  }catch(e){document.getElementById('typM').outerHTML='<div class="msg ai fadein"><div class="mrole">🧠 AI USTOZ</div><div class="mbub" style="color:var(--danger)">Ulanish xatosi.</div></div>';}
+    document.getElementById('typM').outerHTML='<div class="msg ai fadein"><div class="mrole"><span class="mrole-dot" style="background:var(--ac)"></span>\u{1f9e0} AI USTOZ \u2014 Prof. Siddiqov O.A.</div><div class="mbub">'+ans.replace(/\n/g,'<br>')+'</div></div>';
+  }catch(e){
+    document.getElementById('typM').outerHTML='<div class="msg ai fadein"><div class="mrole">\u{1f9e0} AI USTOZ</div><div class="mbub" style="color:var(--danger)">Ulanish xatosi. Qayta urinib ko\'ring.</div></div>';
+  }
   msgs.scrollTop=msgs.scrollHeight;btn.disabled=false;
   document.getElementById('chatToks').textContent=chatHist.length+' xabar';
 }
@@ -1422,8 +1701,8 @@ function sendQ(q){document.getElementById('aiQ').value=q;askAI();}
 // ============================================================
 function initTeacher(){
   renderTCases();renderStudents();
-  const el1=document.getElementById('tLoginDate');if(el1)el1.textContent=new Date().toLocaleDateString('uz-UZ');
-  const el2=document.getElementById('cCreated');if(el2)el2.textContent=new Date().toLocaleDateString('uz-UZ');
+  const tld=document.getElementById('tLoginDate');if(tld)tld.textContent=new Date().toLocaleDateString('uz-UZ');
+  const cc=document.getElementById('cCreated');if(cc)cc.textContent=new Date().toLocaleDateString('uz-UZ');
   setTimeout(animProg,300);
 }
 function renderTCases(){
@@ -1432,11 +1711,11 @@ function renderTCases(){
     el.innerHTML+=`<div class="ci">
       <div class="cnum">${String(c.id+1).padStart(2,'0')}</div>
       <div class="cinfo"><div class="cnm">${c.title}</div>
-        <div class="ctgs">${c.done?'<span class="tag bgr">&#10003; Yechildi</span>':'<span class="tag" style="color:var(--tx3);border-color:rgba(74,112,144,.3)">Kutilmoqda</span>'}</div>
+        <div class="ctgs">${c.done?'<span class="tag bgr">\u2713 Yechildi</span>':'<span class="tag" style="color:var(--tx3);border-color:rgba(74,112,144,.3)">Kutilmoqda</span>'}</div>
       </div>
       <div style="display:flex;gap:.28rem;flex-shrink:0">
-        <button class="bsm" style="font-size:.56rem;padding:.2rem .38rem" onclick="editCase(${c.id})">&#9999;</button>
-        <button class="bdg" style="font-size:.56rem;padding:.2rem .38rem" onclick="delCase(${c.id})">&#10005;</button>
+        <button class="btn btn-outline" style="font-size:.56rem;padding:.2rem .38rem" onclick="editCase(${c.id})">\u270f\ufe0f</button>
+        <button class="btn btn-danger" style="font-size:.56rem;padding:.2rem .38rem" onclick="delCase(${c.id})">\u2715</button>
       </div></div>`;
   });
 }
@@ -1447,8 +1726,8 @@ function renderStudents(){
     const sb=st.st==='active'?'<span class="badge bgr">Faol</span>':st.st==='warn'?'<span class="badge bgo">Ehtiyot</span>':'<span class="badge brd">Muammo</span>';
     const isMe=st.n==='Qurbonov Anusher';
     tb.innerHTML+=`<tr>
-      <td style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3)">${String(i+1).padStart(2,'0')}</td>
-      <td style="${isMe?'color:var(--ac3);font-weight:bold':'color:var(--wh)'}">${st.n}${isMe?' &#9733;':''}</td>
+      <td style="color:var(--tx3);font-family:'JetBrains Mono',monospace;font-size:.58rem">${String(i+1).padStart(2,'0')}</td>
+      <td style="${isMe?'color:var(--ac3);font-weight:600':'color:var(--wh)'}">${st.n}${isMe?' \u2605':''}</td>
       <td style="font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--tx2)">${st.sol}</td>
       <td style="font-family:'Unbounded',sans-serif;font-size:.82rem;font-weight:700;${gc(st.avg/10)}">${st.avg}%</td>
       <td style="font-family:'JetBrains Mono',monospace;font-size:.58rem;${gc(st.avg/10)}">${st.gr}</td>
@@ -1471,17 +1750,20 @@ function drawAnalytics(){
   const ctx=c.getContext('2d');const W=c.offsetWidth||700;c.width=W;
   const d1=[65,68,70,72,74,71];const mn=50,mx=90;ctx.clearRect(0,0,W,125);
   const gap=W/(d1.length-1);
-  ctx.beginPath();ctx.strokeStyle='#00c8ff';ctx.lineWidth=1.5;ctx.lineJoin='round';
+  const g=ctx.createLinearGradient(0,0,0,115);g.addColorStop(0,'rgba(0,212,255,.18)');g.addColorStop(1,'rgba(0,212,255,0)');
+  ctx.beginPath();d1.forEach((v,i)=>{const x=i*gap,y=115-((v-mn)/(mx-mn)*95);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.lineTo((d1.length-1)*gap,115);ctx.lineTo(0,115);ctx.closePath();ctx.fillStyle=g;ctx.fill();
+  ctx.beginPath();ctx.strokeStyle='#00d4ff';ctx.lineWidth=1.5;ctx.lineJoin='round';
   d1.forEach((v,i)=>{const x=i*gap,y=115-((v-mn)/(mx-mn)*95);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.stroke();
-  d1.forEach((v,i)=>{const x=i*gap,y=115-((v-mn)/(mx-mn)*95);ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle='#00c8ff';ctx.fill();ctx.font='8px JetBrains Mono';ctx.fillStyle='#7aa0b8';ctx.textAlign='center';ctx.fillText(v+'%',x,y-7);});
-  ctx.fillStyle='rgba(26,58,85,.5)';ctx.fillRect(0,115,W,1);
+  d1.forEach((v,i)=>{const x=i*gap,y=115-((v-mn)/(mx-mn)*95);ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle='#00d4ff';ctx.fill();ctx.font='8px JetBrains Mono';ctx.fillStyle='#7aaabb';ctx.textAlign='center';ctx.fillText(v+'%',x,y-7);});
+  ctx.fillStyle='rgba(24,51,72,.5)';ctx.fillRect(0,115,W,1);
   const wks=['1-hafta','2-hafta','3-hafta','4-hafta','5-hafta','6-hafta'];
-  wks.forEach((w,i)=>{ctx.font='8px JetBrains Mono';ctx.fillStyle='#4a7090';ctx.textAlign='center';ctx.fillText(w,i*gap,125);});
+  wks.forEach((w,i)=>{ctx.font='8px JetBrains Mono';ctx.fillStyle='#3d6070';ctx.textAlign='center';ctx.fillText(w,i*gap,125);});
 }
 function showNewCaseForm(){notify("Yangi keys formi tozalandi","success");}
 function editCase(id){notify("Keys tahrirlash: "+CASES[id].title,"success");}
 function delCase(id){if(confirm("Keysi o'chirishni tasdiqlaysizmi?"))notify("Keys o'chirildi","warn");}
-function saveDraft(){notify("Qoralama saqlandi 💾","success");}
+function saveDraft(){notify("Qoralama saqlandi \u{1f4be}","success");}
 function previewCase(){notify("Ko'rib chiqish tez orada...","warn");}
 function saveCase(){const t=document.getElementById('t_title');if(t&&!t.value){notify("Keys nomini kiriting!","warn");return;}notify("Keys nashr qilindi! Prof. Siddiqov O.A.","success");}
 function exportAll(){
@@ -1510,7 +1792,7 @@ function loadReport(){
       <td style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:${gc(r.sa)}">${r.sa}/10</td>
       <td style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3)">${r.tm}</td>
       <td style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3)">${r.dt}</td>
-      <td><button class="bsm" style="font-size:.54rem" onclick="notify('Natija tez orada','warn')">Ko\'rish</button></td></tr>`;
+      <td><button class="btn btn-outline" style="font-size:.54rem" onclick="notify('Natija tez orada','warn')">Ko'rish</button></td></tr>`;
   });
   drawReportC();
 }
@@ -1522,11 +1804,11 @@ function drawReportC(){
   data.forEach((v,i)=>{
     const x=i*(W/data.length)+(W/data.length-bw)/2;const h=(v/100)*130;const y=138-h;
     const g=ctx.createLinearGradient(0,y,0,138);
-    g.addColorStop(0,v>=80?'rgba(0,255,170,.8)':v>=60?'rgba(255,200,74,.8)':'rgba(255,51,85,.8)');
+    g.addColorStop(0,v>=80?'rgba(0,255,204,.85)':v>=60?'rgba(255,204,68,.85)':'rgba(255,34,85,.85)');
     g.addColorStop(1,'rgba(0,0,0,.05)');ctx.fillStyle=g;ctx.fillRect(x,y,bw,h);
-    ctx.font='8.5px JetBrains Mono';ctx.fillStyle='#7aa0b8';ctx.textAlign='center';ctx.fillText(v,x+bw/2,y-4);
+    ctx.font='8.5px JetBrains Mono';ctx.fillStyle='#7aaabb';ctx.textAlign='center';ctx.fillText(v,x+bw/2,y-5);
   });
-  ctx.fillStyle='rgba(26,58,85,.5)';ctx.fillRect(0,138,W,1);
+  ctx.fillStyle='rgba(24,51,72,.5)';ctx.fillRect(0,138,W,1);
 }
 function exportReport(){
   let csv="Keys,Mutaxassislik,Ball,Baho,Dori,Doza,Xavfsizlik,Vaqt,Sana\n";
@@ -1540,15 +1822,13 @@ function exportReport(){
 // HELPERS
 // ============================================================
 function animProg(){document.querySelectorAll('.pf[data-w]').forEach(e=>{if(e.dataset.w)e.style.width=e.dataset.w+'%';});}
-
 function notify(msg,type){
   type=type||'success';
-  const s=document.getElementById('nstack');
-  const n=document.createElement('div');
+  const s=document.getElementById('nstack');const n=document.createElement('div');
   n.className='notif '+type;
-  n.innerHTML=(type==='success'?'✓':type==='error'?'✗':'⚠')+' '+msg;
-  s.appendChild(n);
-  setTimeout(()=>{n.style.animation='slin .25s ease reverse';setTimeout(()=>n.remove(),250);},3500);
+  const icon=type==='success'?'\u2713':type==='error'?'\u2717':'\u26a0';
+  n.innerHTML=`<span style="font-size:.9rem">${icon}</span><span>${msg}</span>`;
+  s.appendChild(n);setTimeout(()=>{n.style.animation='slin .25s ease reverse';setTimeout(()=>n.remove(),250);},3500);
 }
 function showLoader(t){document.getElementById('ltxt').textContent=t||'Yuklanmoqda...';document.getElementById('loader').classList.add('show');}
 function hideLoader(){document.getElementById('loader').classList.remove('show');}
@@ -1566,6 +1846,7 @@ window.addEventListener('resize',()=>{
   if(document.getElementById('reportSc').classList.contains('active'))drawReportC();
   if(document.getElementById('teachSc').classList.contains('active'))drawAnalytics();
 });
+
 </script>
 </body>
 </html>
