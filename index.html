@@ -3,642 +3,832 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ClinPharm AI Trainer</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>ClinPharmAI — Klinik Farmakologiya Simulyatori</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* ══════════════════════════════════════════════
+   SHARED BASE
+══════════════════════════════════════════════ */
 :root {
-  --bg: #0a1628;
-  --surface: #0f1e35;
-  --surface2: #142440;
-  --surface3: #1a2d4f;
-  --border: #1e3356;
-  --border2: #253e68;
-  --teal: #00d4aa;
-  --teal2: #00f0c0;
-  --teal-dim: rgba(0,212,170,0.12);
-  --cyan: #00bcd4;
-  --text: #dce8f8;
-  --text2: #7a9abf;
-  --text3: #4a6480;
-  --red: #ff4d6a;
-  --yellow: #ffb74d;
-  --gold: #ffd700;
-  --green: #00d4aa;
-  --card: #0c1a2e;
-  --nav-h: 56px;
+  --nav-h: 58px;
+  --font: 'Manrope', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-html, body { height:100%; font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); font-size:14px; }
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;font-family:var(--font);font-size:14px;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:rgba(0,0,0,.1);}
+::-webkit-scrollbar-thumb{border-radius:4px;}
 
-/* ════════════════ SCROLLBAR ════════════════ */
-::-webkit-scrollbar { width:4px; height:4px; }
-::-webkit-scrollbar-track { background:var(--surface); }
-::-webkit-scrollbar-thumb { background:var(--border2); border-radius:4px; }
-
-/* ════════════════ LOGIN ════════════════ */
-#login-page {
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  background: radial-gradient(ellipse 80% 60% at 50% 0%, #0d2647 0%, var(--bg) 70%);
-  position:relative;
-  overflow:hidden;
-}
-#login-page::before {
-  content:'ClinPharmAI';
-  position:absolute;
-  font-family:'JetBrains Mono',monospace;
-  font-size:140px;
-  font-weight:700;
-  color:rgba(0,212,170,0.03);
-  top:50%; left:50%;
-  transform:translate(-50%,-50%);
-  white-space:nowrap;
-  pointer-events:none;
-  letter-spacing:-4px;
-}
-.login-hero {
-  text-align:center;
-  margin-bottom:36px;
-  animation: fadeDown .6s ease;
-}
-.login-hero h1 {
-  font-family:'JetBrains Mono',monospace;
-  font-size:15px;
-  color:var(--teal);
-  letter-spacing:3px;
-  text-transform:uppercase;
-  margin-bottom:10px;
-}
-.login-hero h2 {
-  font-size:28px;
-  font-weight:800;
-  color:var(--text);
-  line-height:1.3;
-}
-.login-hero p { color:var(--text2); font-size:14px; margin-top:8px; }
-
-.login-box {
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:36px 40px;
-  width:440px;
-  max-width:96vw;
-  box-shadow:0 40px 100px rgba(0,0,0,.6), 0 0 0 1px rgba(0,212,170,.06);
-  animation: fadeUp .6s ease .1s both;
-}
-.login-box h3 { font-size:13px; font-weight:700; letter-spacing:2px; color:var(--text2); margin-bottom:24px; text-transform:uppercase; }
-.fl { margin-bottom:16px; }
-.fl label { display:block; font-size:11px; font-weight:700; color:var(--text3); letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
-.fl input, .fl select {
-  width:100%;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:12px 16px;
-  color:var(--text);
-  font-size:14px;
-  font-family:'Nunito',sans-serif;
-  outline:none;
-  transition:border-color .2s, box-shadow .2s;
-  appearance:none;
-}
-.fl input:focus, .fl select:focus { border-color:var(--teal); box-shadow:0 0 0 3px rgba(0,212,170,.1); }
-.fl input::placeholder { color:var(--text3); }
-.fl select option { background:var(--surface2); }
-
-.btn-login {
-  width:100%; margin-top:4px;
-  background:linear-gradient(90deg, var(--teal), var(--cyan));
-  border:none; border-radius:10px;
-  padding:13px; color:#061220;
-  font-size:14px; font-weight:800;
-  font-family:'Nunito',sans-serif;
-  letter-spacing:2px;
-  cursor:pointer; transition:all .2s;
-  box-shadow:0 8px 24px rgba(0,212,170,.3);
-  text-transform:uppercase;
-}
-.btn-login:hover { transform:translateY(-1px); box-shadow:0 14px 32px rgba(0,212,170,.4); }
-
-.role-quick { display:flex; gap:8px; margin-top:16px; }
-.rq-btn {
-  flex:1; padding:9px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:8px;
-  color:var(--text2); font-size:12px; font-weight:700;
-  cursor:pointer; transition:all .2s;
-  font-family:'Nunito',sans-serif;
-}
-.rq-btn:hover { border-color:var(--teal); color:var(--teal); }
-
-/* ════════════════ NAV ════════════════ */
-#app { display:none; flex-direction:column; height:100vh; overflow:hidden; }
-.nav {
-  height:var(--nav-h); background:var(--surface); border-bottom:1px solid var(--border);
-  display:flex; align-items:center; padding:0 20px;
-  gap:0; position:relative; z-index:50; flex-shrink:0;
-}
-.nav-logo {
-  font-family:'JetBrains Mono',monospace;
-  font-size:17px; font-weight:700;
-  color:var(--teal); letter-spacing:-0.5px;
-  margin-right:32px; white-space:nowrap;
-}
-.nav-links { display:flex; gap:2px; flex:1; }
-.nav-link {
-  display:flex; align-items:center; gap:7px;
-  padding:7px 14px; border-radius:8px;
-  font-size:13px; font-weight:600;
-  color:var(--text2); cursor:pointer;
-  transition:all .2s; border:none; background:transparent;
-  font-family:'Nunito',sans-serif; white-space:nowrap;
-}
-.nav-link:hover { color:var(--text); background:var(--surface2); }
-.nav-link.active { color:var(--teal); background:var(--teal-dim); }
-.nav-link svg { width:15px; height:15px; }
-
-.nav-user {
-  display:flex; align-items:center; gap:10px;
-  cursor:pointer; margin-left:auto;
-}
-.nav-name { font-size:13px; font-weight:700; text-align:right; }
-.nav-role-badge {
-  background:var(--teal); color:#061220;
-  padding:2px 10px; border-radius:20px;
-  font-size:11px; font-weight:800; letter-spacing:0.5px;
-}
-.nav-exit {
-  background:rgba(255,77,106,.12); border:1px solid rgba(255,77,106,.3);
-  color:var(--red); padding:5px 12px; border-radius:8px;
-  font-size:12px; font-weight:700; cursor:pointer;
-  font-family:'Nunito',sans-serif; transition:all .2s;
-}
-.nav-exit:hover { background:rgba(255,77,106,.22); }
-.nav-avatar {
-  width:36px; height:36px;
-  background:linear-gradient(135deg, var(--teal), var(--cyan));
-  border-radius:50%; display:flex; align-items:center;
-  justify-content:center; font-weight:800; font-size:13px; color:#061220;
-}
-
-/* ════════════════ PAGES ════════════════ */
-.page { display:none; flex:1; overflow:hidden; }
-.page.active { display:flex; }
-
-/* ════════════════ HOME PAGE ════════════════ */
-#page-home {
-  flex-direction:column; overflow-y:auto;
-  padding:32px; gap:24px;
-  background:radial-gradient(ellipse 60% 40% at 80% 10%, rgba(0,212,170,.04) 0%, transparent 60%);
-}
-.home-hero {
-  background:linear-gradient(135deg, var(--surface2), var(--surface3));
-  border:1px solid var(--border2);
-  border-radius:20px; padding:32px 36px;
-  display:flex; align-items:center; justify-content:space-between;
-  position:relative; overflow:hidden;
-}
-.home-hero::after {
-  content:'⚕';
-  position:absolute; right:24px; top:-10px;
-  font-size:120px; opacity:.06;
-}
-.home-hero h1 { font-size:26px; font-weight:800; line-height:1.3; }
-.home-hero h1 span { color:var(--teal); }
-.home-hero p { color:var(--text2); margin-top:8px; font-size:14px; }
-.hero-badges { display:flex; gap:8px; margin-top:16px; flex-wrap:wrap; }
-.hbadge {
-  background:rgba(0,212,170,.1); border:1px solid rgba(0,212,170,.25);
-  border-radius:20px; padding:5px 14px;
-  font-size:12px; font-weight:700; color:var(--teal);
-}
-.btn-start {
-  background:linear-gradient(135deg, var(--teal), var(--cyan));
-  border:none; border-radius:12px; padding:14px 28px;
-  color:#061220; font-size:14px; font-weight:800;
-  cursor:pointer; font-family:'Nunito',sans-serif;
-  white-space:nowrap; flex-shrink:0;
-  box-shadow:0 8px 24px rgba(0,212,170,.3);
-  transition:all .2s;
-}
-.btn-start:hover { transform:translateY(-2px); box-shadow:0 14px 32px rgba(0,212,170,.4); }
-
-.home-grid { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:16px; }
-.stat-card {
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:14px; padding:20px;
-  transition:all .2s;
-}
-.stat-card:hover { border-color:var(--border2); transform:translateY(-2px); box-shadow:0 12px 32px rgba(0,0,0,.3); }
-.sc-icon { font-size:22px; margin-bottom:10px; }
-.sc-label { font-size:11px; color:var(--text3); font-weight:700; text-transform:uppercase; letter-spacing:.8px; margin-bottom:6px; }
-.sc-val { font-family:'JetBrains Mono',monospace; font-size:32px; font-weight:700; color:var(--text); }
-.sc-sub { font-size:11px; color:var(--text2); margin-top:3px; }
-
-.h2 { font-size:12px; font-weight:800; color:var(--text3); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:12px; }
-.recent-list { display:flex; flex-direction:column; gap:8px; }
-.rc-card {
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:12px; padding:14px 18px;
-  display:flex; align-items:center; gap:14px;
-  cursor:pointer; transition:all .2s;
-}
-.rc-card:hover { border-color:var(--teal); background:var(--surface2); }
-.rc-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-.rc-info { flex:1; }
-.rc-name { font-size:14px; font-weight:700; }
-.rc-meta { font-size:12px; color:var(--text2); margin-top:2px; }
-.rc-score { font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:700; }
-
-/* ════════════════ KEYS PAGE (3-column) ════════════════ */
-#page-keys {
-  flex-direction:row; overflow:hidden;
-}
-
-/* LEFT SIDEBAR */
-.keys-sidebar {
-  width:220px; flex-shrink:0;
-  background:var(--surface);
-  border-right:1px solid var(--border);
-  display:flex; flex-direction:column;
-  overflow-y:auto;
-}
-.ks-section { padding:14px 16px; border-bottom:1px solid var(--border); }
-.ks-section-title {
-  font-size:10px; font-weight:800; letter-spacing:1.5px;
-  color:var(--text3); text-transform:uppercase; margin-bottom:10px;
-}
-.ks-cat-item {
-  padding:7px 10px; border-radius:8px;
-  font-size:13px; font-weight:600; color:var(--text2);
-  cursor:pointer; transition:all .2s;
-  display:flex; align-items:center; gap:8px;
-  margin-bottom:2px;
-}
-.ks-cat-item:hover { background:var(--surface2); color:var(--text); }
-.ks-cat-item.active { background:var(--teal-dim); color:var(--teal); }
-.ks-cat-icon { font-size:14px; width:18px; text-align:center; }
-
-.ks-sub-item {
-  padding:5px 10px 5px 32px;
-  font-size:12px; color:var(--text3);
-  cursor:pointer; border-radius:6px;
-  transition:all .2s; margin-bottom:1px;
-  display:flex; align-items:center; gap:6px;
-}
-.ks-sub-item:hover { background:var(--surface2); color:var(--text2); }
-.ks-sub-item.active { color:var(--teal); }
-.ks-sub-arrow { font-size:10px; opacity:.5; }
-
-.keys-section-list { padding:4px 0; }
-.ksl-item {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:8px 16px; cursor:pointer; transition:all .15s;
-  border-left:3px solid transparent;
-}
-.ksl-item:hover { background:var(--surface2); }
-.ksl-item.active { border-left-color:var(--teal); background:rgba(0,212,170,.06); }
-.ksl-item.done { border-left-color:var(--teal); }
-.ksl-left { display:flex; align-items:center; gap:9px; }
-.ksl-dot { width:8px; height:8px; border-radius:50%; background:var(--border2); flex-shrink:0; }
-.ksl-item.active .ksl-dot { background:var(--teal); box-shadow:0 0 6px var(--teal); }
-.ksl-item.done .ksl-dot { background:var(--teal); }
-.ksl-name { font-size:12px; font-weight:600; color:var(--text2); }
-.ksl-item.active .ksl-name { color:var(--text); }
-.ksl-expand { font-size:11px; color:var(--text3); }
-
-.baholash-block { padding:12px 16px; }
-.bb-title { font-size:10px; font-weight:800; letter-spacing:1.5px; color:var(--text3); text-transform:uppercase; margin-bottom:12px; }
-.bb-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-.bb-label { font-size:12px; color:var(--text2); }
-.bb-val { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; color:var(--text); }
-.progress-bar { height:4px; background:var(--border); border-radius:4px; overflow:hidden; margin-bottom:6px; }
-.progress-fill { height:100%; border-radius:4px; background:linear-gradient(90deg, var(--teal), var(--cyan)); transition:width .4s ease; }
-
-/* CENTER MAIN */
-.keys-main {
-  flex:1; display:flex; flex-direction:column; overflow:hidden;
+/* ══════════════════════════════════════════════
+   TALABA THEME — Deep Navy + Teal
+══════════════════════════════════════════════ */
+body.talaba {
+  --bg:#060e1c;
+  --surface:#0b1629;
+  --surface2:#0f1e36;
+  --surface3:#152540;
+  --border:#1a2f50;
+  --border2:#213660;
+  --accent:#00d4aa;
+  --accent2:#00e8ba;
+  --accent-rgb:0,212,170;
+  --accent-dim:rgba(0,212,170,.1);
+  --cyan:#00c4e8;
+  --text:#d8e8f8;
+  --text2:#7090b0;
+  --text3:#3d5570;
+  --red:#ff4d6a;
+  --yellow:#ffb74d;
+  --card:#080f1e;
   background:var(--bg);
+  color:var(--text);
 }
-.km-topbar {
-  background:var(--surface); border-bottom:1px solid var(--border);
-  padding:10px 20px; display:flex; align-items:center; gap:10px; flex-shrink:0;
+body.admin {
+  --bg:#0e0a1a;
+  --surface:#160e28;
+  --surface2:#1e1238;
+  --surface3:#261648;
+  --border:#2a1a4a;
+  --border2:#352060;
+  --accent:#a855f7;
+  --accent2:#c084fc;
+  --accent-rgb:168,85,247;
+  --accent-dim:rgba(168,85,247,.1);
+  --cyan:#e040fb;
+  --text:#ece0ff;
+  --text2:#8060a0;
+  --text3:#503870;
+  --red:#ff4d6a;
+  --yellow:#ffd740;
+  --card:#0a0614;
+  background:var(--bg);
+  color:var(--text);
 }
-.km-title { font-size:13px; font-weight:800; color:var(--text2); }
-.km-tabs { display:flex; gap:6px; margin-left:auto; }
-.km-tab-btn {
-  padding:7px 16px; border-radius:8px;
-  border:2px solid var(--border2);
-  background:transparent;
-  color:var(--text2); font-size:13px; font-weight:700;
-  cursor:pointer; font-family:'Nunito',sans-serif;
-  transition:all .2s;
+body.oqituvchi {
+  --bg:#0a160e;
+  --surface:#0e1e14;
+  --surface2:#12261a;
+  --surface3:#162e20;
+  --border:#1c3828;
+  --border2:#244836;
+  --accent:#22c55e;
+  --accent2:#4ade80;
+  --accent-rgb:34,197,94;
+  --accent-dim:rgba(34,197,94,.1);
+  --cyan:#06b6d4;
+  --text:#dcf0e4;
+  --text2:#609070;
+  --text3:#3a5a44;
+  --red:#ff4d6a;
+  --yellow:#fbbf24;
+  --card:#080e0b;
+  background:var(--bg);
+  color:var(--text);
 }
-.km-tab-btn.active { background:var(--teal); border-color:var(--teal); color:#061220; }
-.km-tab-btn.assistant { border-color:var(--border2); }
-.km-tab-btn.assistant.active { background:rgba(0,188,212,.15); border-color:var(--cyan); color:var(--cyan); }
 
-.km-actions { display:flex; gap:8px; margin-left:8px; }
-.act-btn {
-  padding:7px 14px; border-radius:8px;
-  font-size:12px; font-weight:700;
-  cursor:pointer; font-family:'Nunito',sans-serif; transition:all .2s;
-  display:flex; align-items:center; gap:5px; border:none;
-}
-.act-clear { background:rgba(255,77,106,.12); color:var(--red); }
-.act-clear:hover { background:rgba(255,77,106,.22); }
-.act-demo { background:rgba(0,212,170,.12); color:var(--teal); }
-.act-demo:hover { background:rgba(0,212,170,.22); }
+::-webkit-scrollbar-thumb{background:var(--border2);}
 
-/* Case content tabs (Pasport, Shikoyat etc) */
-.case-nav {
-  background:var(--surface);
+/* ══════════════════════════════════════════════
+   LOGIN
+══════════════════════════════════════════════ */
+#login-page{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0,212,170,.12), transparent 60%),
+             radial-gradient(ellipse 50% 40% at 90% 90%, rgba(0,196,232,.06), transparent 50%),
+             #060e1c;
+  position:relative;overflow:hidden;
+}
+.login-bg-text{
+  position:absolute;font-family:var(--mono);font-size:160px;font-weight:800;
+  color:rgba(0,212,170,.025);top:50%;left:50%;
+  transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;
+  letter-spacing:-8px;
+}
+.login-hero{text-align:center;margin-bottom:40px;animation:fadeDown .7s ease;}
+.login-hero .kichik{
+  font-family:var(--mono);font-size:11px;letter-spacing:4px;color:#00d4aa;
+  text-transform:uppercase;margin-bottom:14px;opacity:.8;
+}
+.login-hero h1{font-size:32px;font-weight:800;color:#d8e8f8;line-height:1.25;}
+.login-hero h1 em{color:#00d4aa;font-style:normal;}
+.login-hero p{color:#7090b0;font-size:13px;margin-top:10px;}
+.login-box{
+  background:rgba(11,22,41,.9);border:1px solid rgba(0,212,170,.15);
+  border-radius:20px;padding:40px;width:460px;max-width:96vw;
+  backdrop-filter:blur(20px);
+  box-shadow:0 50px 120px rgba(0,0,0,.8),0 0 0 1px rgba(0,212,170,.05);
+  animation:fadeUp .7s ease .1s both;
+}
+.login-box h3{font-size:11px;font-weight:800;letter-spacing:2.5px;color:#3d5570;margin-bottom:28px;text-transform:uppercase;}
+.fl{margin-bottom:18px;}
+.fl label{display:block;font-size:10px;font-weight:800;color:#3d5570;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;}
+.fl input,.fl select{
+  width:100%;background:#060e1c;border:1px solid #1a2f50;
+  border-radius:10px;padding:12px 16px;color:#d8e8f8;
+  font-size:14px;font-family:var(--font);outline:none;
+  transition:border-color .2s,box-shadow .2s;appearance:none;
+}
+.fl input:focus,.fl select:focus{border-color:#00d4aa;box-shadow:0 0 0 3px rgba(0,212,170,.1);}
+.fl input::placeholder{color:#3d5570;}
+.fl select option{background:#0b1629;}
+.btn-login{
+  width:100%;margin-top:6px;background:linear-gradient(135deg,#00d4aa,#00c4e8);
+  border:none;border-radius:12px;padding:14px;color:#04101f;
+  font-size:13px;font-weight:800;font-family:var(--font);letter-spacing:2px;
+  cursor:pointer;transition:all .2s;box-shadow:0 8px 28px rgba(0,212,170,.35);
+  text-transform:uppercase;
+}
+.btn-login:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,212,170,.45);}
+.role-row{display:flex;gap:8px;margin-top:18px;}
+.rq-btn{
+  flex:1;padding:10px 8px;background:#080f1e;border:1px solid #1a2f50;
+  border-radius:10px;color:#7090b0;font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .2s;font-family:var(--font);text-align:center;
+}
+.rq-btn:hover{border-color:#00d4aa;color:#00d4aa;background:rgba(0,212,170,.06);}
+
+/* ══════════════════════════════════════════════
+   APP SHELL
+══════════════════════════════════════════════ */
+#app{display:none;flex-direction:column;height:100vh;overflow:hidden;}
+.nav{
+  height:var(--nav-h);background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 22px;gap:0;position:relative;z-index:50;flex-shrink:0;
+}
+.nav-logo{
+  font-family:var(--mono);font-size:16px;font-weight:700;
+  color:var(--accent);letter-spacing:-.5px;margin-right:28px;white-space:nowrap;
+}
+.nav-role-tag{
+  font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  color:var(--text3);margin-right:24px;border-left:1px solid var(--border);
+  padding-left:16px;
+}
+.nav-links{display:flex;gap:2px;flex:1;overflow-x:auto;}
+.nav-links::-webkit-scrollbar{height:0;}
+.nav-link{
+  display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:8px;
+  font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;
+  transition:all .2s;border:none;background:transparent;
+  font-family:var(--font);white-space:nowrap;letter-spacing:.3px;
+}
+.nav-link:hover{color:var(--text);background:var(--surface2);}
+.nav-link.active{color:var(--accent);background:var(--accent-dim);}
+.nav-link svg{width:14px;height:14px;flex-shrink:0;}
+.nav-user{display:flex;align-items:center;gap:10px;cursor:pointer;margin-left:auto;}
+.nav-name{font-size:12px;font-weight:700;text-align:right;}
+.nav-role-badge{
+  background:var(--accent);color:var(--bg);
+  padding:2px 10px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:.5px;
+}
+.nav-avatar{
+  width:34px;height:34px;background:linear-gradient(135deg,var(--accent),var(--cyan));
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:12px;color:var(--bg);
+}
+.nav-exit{
+  background:rgba(255,77,106,.1);border:1px solid rgba(255,77,106,.25);
+  color:var(--red);padding:5px 12px;border-radius:8px;
+  font-size:11px;font-weight:700;cursor:pointer;
+  font-family:var(--font);transition:all .2s;margin-left:4px;
+}
+.nav-exit:hover{background:rgba(255,77,106,.2);}
+
+/* Pages */
+.page{display:none;flex:1;overflow:hidden;}
+.page.active{display:flex;}
+
+/* ══════════════════════════════════════════════
+   SHARED COMPONENTS
+══════════════════════════════════════════════ */
+.pg-scroll{flex:1;overflow-y:auto;padding:28px;}
+.h2{font-size:10px;font-weight:800;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;}
+.card-hdr{padding:12px 18px;border-bottom:1px solid var(--border);font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800;}
+.badge-accent{background:var(--accent-dim);border:1px solid rgba(var(--accent-rgb),.25);color:var(--accent);}
+.badge-yellow{background:rgba(255,183,77,.1);border:1px solid rgba(255,183,77,.3);color:var(--yellow);}
+.badge-red{background:rgba(255,77,106,.1);border:1px solid rgba(255,77,106,.3);color:var(--red);}
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent),var(--cyan));border:none;border-radius:10px;
+  padding:11px 22px;color:var(--bg);font-size:13px;font-weight:800;
+  cursor:pointer;font-family:var(--font);transition:all .2s;
+  box-shadow:0 6px 20px rgba(var(--accent-rgb),.3);
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(var(--accent-rgb),.4);}
+.btn-ghost{
+  background:var(--accent-dim);border:1px solid rgba(var(--accent-rgb),.3);
+  color:var(--accent);padding:9px 18px;border-radius:9px;
+  font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s;
+}
+.btn-ghost:hover{background:rgba(var(--accent-rgb),.18);}
+.btn-danger{
+  background:rgba(255,77,106,.1);border:1px solid rgba(255,77,106,.3);
+  color:var(--red);padding:9px 18px;border-radius:9px;
+  font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s;
+}
+.btn-danger:hover{background:rgba(255,77,106,.2);}
+.stat-num{font-family:var(--mono);font-size:30px;font-weight:700;}
+.info-row{display:flex;padding:10px 18px;border-bottom:1px solid var(--border);}
+.info-row:last-child{border-bottom:none;}
+.ir-k{color:var(--text2);font-size:12px;min-width:200px;}
+.ir-v{color:var(--text);font-size:13px;font-weight:600;}
+.ta{
+  width:100%;background:var(--surface2);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;color:var(--text);
+  font-size:13px;font-family:var(--font);line-height:1.7;
+  resize:vertical;min-height:100px;outline:none;transition:border-color .2s,box-shadow .2s;
+}
+.ta:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.1);}
+.ta::placeholder{color:var(--text3);}
+
+/* ══════════════════════════════════════════════
+   TALABA — HOME PAGE
+══════════════════════════════════════════════ */
+#t-home{flex-direction:column;gap:20px;background:radial-gradient(ellipse 70% 50% at 80% 0%, rgba(var(--accent-rgb),.04),transparent 60%);}
+.t-hero{
+  background:linear-gradient(135deg,var(--surface2),var(--surface3));
+  border:1px solid var(--border2);border-radius:18px;padding:28px 32px;
+  display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;
+}
+.t-hero::before{content:'⚕';position:absolute;right:24px;top:-20px;font-size:130px;opacity:.04;}
+.t-hero h1{font-size:24px;font-weight:800;line-height:1.3;}
+.t-hero h1 span{color:var(--accent);}
+.t-hero p{color:var(--text2);margin-top:6px;font-size:13px;}
+.t-hero-right{display:flex;flex-direction:column;gap:10px;align-items:flex-end;flex-shrink:0;}
+.streak-box{
+  background:rgba(var(--accent-rgb),.1);border:1px solid rgba(var(--accent-rgb),.25);
+  border-radius:12px;padding:10px 16px;text-align:center;
+}
+.streak-num{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--accent);}
+.streak-label{font-size:10px;color:var(--text2);font-weight:700;letter-spacing:1px;}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.scard{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:18px 20px;transition:all .2s;cursor:default;
+}
+.scard:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.4);}
+.sc-ic{font-size:20px;margin-bottom:10px;}
+.sc-lbl{font-size:10px;color:var(--text3);font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;}
+.sc-n{font-family:var(--mono);font-size:30px;font-weight:700;}
+.sc-s{font-size:11px;color:var(--text2);margin-top:3px;}
+.recent-wrap{display:flex;flex-direction:column;gap:8px;}
+.rc{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:13px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;
+}
+.rc:hover{border-color:var(--accent);background:var(--surface2);}
+.rc-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.rc-info{flex:1;}
+.rc-n{font-size:13px;font-weight:700;}
+.rc-m{font-size:11px;color:var(--text2);margin-top:2px;}
+.rc-sc{font-family:var(--mono);font-size:14px;font-weight:700;}
+
+/* Streak calendar (mini) */
+.streak-cal{display:flex;gap:4px;margin-top:14px;}
+.sc-day{
+  width:28px;height:28px;border-radius:6px;background:var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:700;color:var(--text3);transition:all .2s;
+}
+.sc-day.done{background:rgba(var(--accent-rgb),.2);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.3);}
+.sc-day.today{background:var(--accent);color:var(--bg);}
+
+/* ══════════════════════════════════════════════
+   TALABA — KEYS PAGE (3-col)
+══════════════════════════════════════════════ */
+#t-keys{flex-direction:row;}
+.ks-left{
+  width:220px;flex-shrink:0;background:var(--surface);
+  border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;
+}
+.ks-sec{padding:14px;border-bottom:1px solid var(--border);}
+.ks-sec-title{font-size:9px;font-weight:800;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.cat-item{
+  padding:7px 10px;border-radius:8px;font-size:12px;font-weight:700;
+  color:var(--text2);cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;gap:8px;margin-bottom:2px;
+}
+.cat-item:hover{background:var(--surface2);color:var(--text);}
+.cat-item.active{background:var(--accent-dim);color:var(--accent);}
+.cat-icon{font-size:13px;width:18px;text-align:center;}
+.sub-item{
+  padding:5px 10px 5px 32px;font-size:12px;color:var(--text3);
+  cursor:pointer;border-radius:6px;transition:all .2s;margin-bottom:1px;
+  display:flex;align-items:center;gap:6px;
+}
+.sub-item:hover{background:var(--surface2);color:var(--text2);}
+.sub-item.active{color:var(--accent);}
+.leaf-item{
+  padding:5px 10px 5px 44px;font-size:11px;color:var(--text3);
+  cursor:pointer;border-radius:5px;transition:all .2s;margin-bottom:1px;
+  display:flex;align-items:center;gap:5px;
+}
+.leaf-item:hover{background:var(--surface2);color:var(--text2);}
+.leaf-item.active{color:var(--accent);font-weight:700;}
+.prog-block{padding:14px;}
+.prog-title{font-size:9px;font-weight:800;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.pbar{height:3px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:10px;}
+.pbar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--cyan));transition:width .4s ease;}
+.mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.mst{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:9px;text-align:center;}
+.mst-v{font-family:var(--mono);font-size:16px;font-weight:700;}
+.mst-l{font-size:9px;color:var(--text3);margin-top:2px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+
+.km-center{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+.km-bar{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:10px 18px;display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.km-title{font-size:12px;font-weight:800;color:var(--text2);}
+.tab-pair{display:flex;gap:5px;margin-left:auto;}
+.tb{
+  padding:6px 16px;border-radius:8px;border:1px solid var(--border2);
+  background:transparent;color:var(--text2);font-size:12px;font-weight:700;
+  cursor:pointer;font-family:var(--font);transition:all .2s;
+}
+.tb.active{background:var(--accent);border-color:var(--accent);color:var(--bg);}
+.tb.ai.active{background:rgba(var(--accent-rgb),.12);border-color:var(--accent);color:var(--accent);}
+.act-row{display:flex;gap:6px;margin-left:8px;}
+.act-b{
+  padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;
+  cursor:pointer;font-family:var(--font);transition:all .2s;
+  display:flex;align-items:center;gap:4px;border:none;
+}
+.case-tabs{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;gap:3px;padding:8px 14px;overflow-x:auto;flex-shrink:0;
+}
+.case-tabs::-webkit-scrollbar{height:0;}
+.ctab{
+  padding:6px 14px;border-radius:8px;border:1px solid transparent;
+  background:transparent;color:var(--text3);font-size:11px;font-weight:700;
+  cursor:pointer;font-family:var(--font);transition:all .2s;white-space:nowrap;
+}
+.ctab:hover{color:var(--text2);background:var(--surface2);}
+.ctab.active{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.08);}
+.km-body{flex:1;overflow-y:auto;padding:20px;}
+.empty-st{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;text-align:center;color:var(--text3);}
+.empty-st .bi{font-size:56px;opacity:.25;}
+.empty-st h3{font-size:17px;font-weight:700;color:var(--text2);}
+.empty-st p{font-size:12px;max-width:280px;line-height:1.6;}
+.pat-hdr{
+  background:linear-gradient(135deg,var(--surface2),var(--surface3));
+  border:1px solid var(--border2);border-radius:14px;padding:16px 20px;
+  display:flex;align-items:center;gap:14px;margin-bottom:14px;position:relative;overflow:hidden;
+}
+.pat-hdr::after{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--accent),var(--cyan));}
+.p-av{
+  width:50px;height:50px;background:linear-gradient(135deg,#00a88a,#0090b0);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.p-name{font-size:18px;font-weight:800;}
+.p-meta{font-size:11px;color:var(--text2);margin-top:2px;}
+.p-bds{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap;}
+.note-yellow{
+  background:rgba(255,183,77,.06);border:1px solid rgba(255,183,77,.2);
+  border-radius:10px;padding:12px 16px;font-size:12px;color:var(--yellow);line-height:1.7;margin-bottom:14px;
+}
+.submit-btn{
+  width:100%;padding:13px;
+  background:linear-gradient(90deg,var(--accent),var(--cyan));
+  border:none;border-radius:10px;color:var(--bg);font-size:13px;font-weight:800;
+  cursor:pointer;font-family:var(--font);transition:all .2s;
+  box-shadow:0 6px 20px rgba(var(--accent-rgb),.25);
+}
+.submit-btn:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(var(--accent-rgb),.35);}
+
+.ks-right{
+  width:255px;flex-shrink:0;background:var(--surface);
+  border-left:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;
+}
+.kr-sec{padding:14px;border-bottom:1px solid var(--border);}
+.kr-title{font-size:9px;font-weight:800;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:12px;}
+.k-card{
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:12px;margin-bottom:8px;cursor:pointer;transition:all .2s;
+}
+.k-card:hover{border-color:var(--border2);background:var(--surface2);}
+.k-card-cat{font-size:11px;font-weight:800;color:var(--text2);margin-bottom:3px;}
+.k-card-dis{font-size:13px;font-weight:700;}
+.k-card-sub{font-size:11px;color:var(--text3);margin-top:1px;}
+.ai-box{
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:14px;text-align:center;
+}
+.ai-box .ai-ic{font-size:28px;margin-bottom:8px;}
+.ai-box p{font-size:11px;color:var(--text3);line-height:1.5;}
+.bah-card{
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:14px;text-align:center;
+}
+.bah-icon{font-size:32px;margin-bottom:8px;}
+.bah-title{font-size:13px;font-weight:700;margin-bottom:6px;}
+.bah-desc{font-size:11px;color:var(--text3);line-height:1.5;}
+
+/* Davo textarea labels */
+.ta-label{font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;margin-bottom:7px;display:block;}
+
+/* ══════════════════════════════════════════════
+   TALABA — HISOBOT
+══════════════════════════════════════════════ */
+#t-hisobot{flex-direction:column;gap:18px;background:radial-gradient(ellipse 50% 40% at 20% 80%, rgba(var(--accent-rgb),.03),transparent);}
+.hgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.hc{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.hc-hdr{padding:14px 18px;border-bottom:1px solid var(--border);font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;}
+.hc-body{padding:4px 0;}
+.rank-row{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--border);}
+.rank-row:last-child{border-bottom:none;}
+.rank-pos{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--text3);width:22px;}
+.rank-nm{flex:1;font-size:13px;font-weight:600;}
+.rank-sc{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);}
+.rank-row.me .rank-nm,.rank-row.me .rank-pos{color:var(--accent);}
+.rank-bar{height:3px;background:var(--border);border-radius:3px;margin-top:5px;}
+.rank-bar-fill{height:100%;border-radius:3px;background:var(--accent);}
+
+/* ══════════════════════════════════════════════
+   TALABA — PROFIL
+══════════════════════════════════════════════ */
+#t-profil{flex-direction:column;gap:18px;}
+.profil-grid{display:grid;grid-template-columns:300px 1fr;gap:18px;}
+.prof-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:26px 22px;text-align:center;
+}
+.prof-av{
+  width:78px;height:78px;
+  background:linear-gradient(135deg,var(--accent),var(--cyan));
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:28px;font-weight:800;color:var(--bg);margin:0 auto 14px;
+  box-shadow:0 8px 24px rgba(var(--accent-rgb),.3);
+}
+.prof-name{font-size:19px;font-weight:800;}
+.prof-email{font-size:12px;color:var(--text2);margin-top:3px;}
+.prof-bds{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:12px;}
+.prof-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px;}
+.ps{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px;}
+.ps-v{font-family:var(--mono);font-size:22px;font-weight:700;}
+.ps-l{font-size:10px;color:var(--text3);margin-top:2px;font-weight:700;}
+.menu-card2{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:14px;}
+.mc-title{padding:12px 16px;border-bottom:1px solid var(--border);font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;}
+.mi{
+  display:flex;align-items:center;gap:12px;padding:13px 16px;
+  border-bottom:1px solid var(--border);cursor:pointer;transition:all .2s;
+}
+.mi:last-child{border-bottom:none;}
+.mi:hover{background:var(--surface2);}
+.mi-ic{font-size:16px;width:28px;text-align:center;}
+.mi-t{flex:1;font-size:13px;font-weight:600;}
+.mi-a{color:var(--text3);font-size:15px;}
+.logout-btn{
+  width:100%;padding:13px;background:rgba(255,77,106,.1);border:1px solid rgba(255,77,106,.25);
+  border-radius:12px;color:var(--red);font-size:13px;font-weight:800;
+  cursor:pointer;font-family:var(--font);transition:all .2s;
+}
+.logout-btn:hover{background:rgba(255,77,106,.2);}
+
+/* ══════════════════════════════════════════════
+   ADMIN — DASHBOARD
+══════════════════════════════════════════════ */
+#a-dashboard{flex-direction:column;gap:18px;background:radial-gradient(ellipse 60% 50% at 50% 0%, rgba(168,85,247,.06),transparent 60%);}
+.admin-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.admin-stat{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;position:relative;overflow:hidden;
+}
+.admin-stat::before{
+  content:attr(data-icon);position:absolute;right:12px;top:6px;
+  font-size:40px;opacity:.08;
+}
+.as-lbl{font-size:10px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.as-n{font-family:var(--mono);font-size:32px;font-weight:700;}
+.as-sub{font-size:11px;color:var(--text2);margin-top:3px;}
+.admin-main-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.admin-table{width:100%;border-collapse:collapse;}
+.admin-table th{
+  text-align:left;font-size:9px;font-weight:800;letter-spacing:1.5px;
+  color:var(--text3);text-transform:uppercase;padding:10px 16px;
   border-bottom:1px solid var(--border);
-  display:flex; gap:4px; padding:8px 16px;
-  overflow-x:auto; flex-shrink:0;
 }
-.case-nav::-webkit-scrollbar { height:0; }
-.cn-btn {
-  padding:7px 16px; border-radius:8px;
-  border:1px solid transparent;
-  background:transparent;
-  color:var(--text3); font-size:12px; font-weight:700;
-  cursor:pointer; font-family:'Nunito',sans-serif;
-  transition:all .2s; white-space:nowrap;
-  display:flex; align-items:center; gap:6px;
-}
-.cn-btn:hover { color:var(--text2); background:var(--surface2); }
-.cn-btn.active { border-color:var(--teal); color:var(--teal); background:rgba(0,212,170,.08); }
-.cn-dot { width:7px; height:7px; border-radius:50%; }
+.admin-table td{padding:10px 16px;border-bottom:1px solid var(--border);font-size:12px;}
+.admin-table tr:last-child td{border-bottom:none;}
+.admin-table tr:hover td{background:var(--surface2);}
+.online-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:5px;box-shadow:0 0 5px #22c55e;}
+.offline-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);display:inline-block;margin-right:5px;}
 
-/* Case body */
-.km-body { flex:1; overflow-y:auto; padding:20px; }
+/* ══════════════════════════════════════════════
+   ADMIN — FOYDALANUVCHILAR
+══════════════════════════════════════════════ */
+#a-users{flex-direction:column;gap:0;overflow:hidden;}
+.a-users-inner{display:flex;flex:1;overflow:hidden;}
+.user-list-panel{
+  width:280px;flex-shrink:0;background:var(--surface);
+  border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;
+}
+.ulp-head{
+  padding:16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.ulp-title{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--text3);text-transform:uppercase;}
+.ulp-search{
+  margin:10px;background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:9px 12px;color:var(--text);font-size:12px;
+  font-family:var(--font);outline:none;width:calc(100% - 20px);
+}
+.ulp-search::placeholder{color:var(--text3);}
+.ulp-body{flex:1;overflow-y:auto;}
+.user-item{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 14px;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:all .2s;
+}
+.user-item:hover{background:var(--surface2);}
+.user-item.active{background:var(--accent-dim);border-left:3px solid var(--accent);}
+.u-av{
+  width:34px;height:34px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-weight:800;font-size:12px;flex-shrink:0;
+}
+.u-info{flex:1;}
+.u-name{font-size:12px;font-weight:700;}
+.u-role{font-size:10px;color:var(--text3);}
+.u-status{font-size:10px;margin-top:2px;}
+.user-detail{flex:1;overflow-y:auto;padding:24px;}
+.ud-hdr{
+  background:linear-gradient(135deg,var(--surface2),var(--surface3));
+  border:1px solid var(--border2);border-radius:14px;padding:20px;
+  display:flex;align-items:center;gap:16px;margin-bottom:18px;
+}
+.ud-av{
+  width:64px;height:64px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:24px;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--cyan));color:var(--bg);
+}
+.ud-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+.ud-stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+.ud-stat-v{font-family:var(--mono);font-size:22px;font-weight:700;}
+.ud-stat-l{font-size:10px;color:var(--text3);margin-top:3px;font-weight:700;}
+.action-row{display:flex;gap:8px;flex-wrap:wrap;}
 
-/* Empty state */
-.empty-state {
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  height:100%; gap:16px; text-align:center; color:var(--text3);
+/* ══════════════════════════════════════════════
+   ADMIN — KEYSLAR BOSHQARUV
+══════════════════════════════════════════════ */
+#a-cases{flex-direction:column;gap:0;overflow:hidden;}
+.a-cases-inner{display:flex;flex:1;overflow:hidden;}
+.case-list-panel{
+  width:300px;flex-shrink:0;background:var(--surface);
+  border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;
 }
-.empty-state .big-icon { font-size:64px; opacity:.3; }
-.empty-state h3 { font-size:18px; font-weight:700; color:var(--text2); }
-.empty-state p { font-size:13px; max-width:300px; line-height:1.6; }
+.clp-toolbar{display:flex;gap:6px;padding:10px;}
+.case-list-body{flex:1;overflow-y:auto;}
+.cl-item{
+  padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:all .2s;
+}
+.cl-item:hover{background:var(--surface2);}
+.cl-item.active{background:var(--accent-dim);border-left:3px solid var(--accent);}
+.cl-cat{font-size:10px;color:var(--text3);font-weight:700;margin-bottom:3px;}
+.cl-name{font-size:13px;font-weight:700;}
+.cl-meta{font-size:11px;color:var(--text2);margin-top:2px;}
+.case-editor{flex:1;overflow-y:auto;padding:22px;}
+.ce-form{display:flex;flex-direction:column;gap:14px;}
+.ce-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:9px;font-weight:800;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;}
+.form-input{
+  background:var(--surface2);border:1px solid var(--border);border-radius:9px;
+  padding:10px 14px;color:var(--text);font-size:13px;font-family:var(--font);outline:none;
+  transition:border-color .2s;
+}
+.form-input:focus{border-color:var(--accent);}
+.form-input::placeholder{color:var(--text3);}
+.form-ta{
+  background:var(--surface2);border:1px solid var(--border);border-radius:9px;
+  padding:10px 14px;color:var(--text);font-size:13px;font-family:var(--font);
+  outline:none;resize:vertical;min-height:80px;transition:border-color .2s;line-height:1.7;
+}
+.form-ta:focus{border-color:var(--accent);}
+.form-ta::placeholder{color:var(--text3);}
+.save-bar{display:flex;gap:8px;padding-top:8px;border-top:1px solid var(--border);}
 
-/* Patient header */
-.patient-hdr {
-  background:linear-gradient(135deg, var(--surface2), var(--surface3));
-  border:1px solid var(--border2);
-  border-radius:14px; padding:18px 22px;
-  display:flex; align-items:center; gap:16px;
-  margin-bottom:16px; position:relative; overflow:hidden;
+/* ══════════════════════════════════════════════
+   ADMIN — STATISTIKA VA HISOBOT
+══════════════════════════════════════════════ */
+#a-stat{flex-direction:column;gap:18px;}
+.stat-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.chart-placeholder{
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:20px;text-align:center;color:var(--text3);font-size:12px;
 }
-.patient-hdr::after { content:''; position:absolute; right:0; top:0; bottom:0; width:4px; background:linear-gradient(180deg, var(--teal), var(--cyan)); }
-.p-avatar {
-  width:54px; height:54px;
-  background:linear-gradient(135deg, #00a88a, #0090b0);
-  border-radius:50%; display:flex; align-items:center;
-  justify-content:center; font-size:22px; flex-shrink:0;
+.mini-chart{display:flex;align-items:flex-end;gap:4px;height:80px;margin-top:14px;}
+.mc-bar{
+  flex:1;background:rgba(var(--accent-rgb),.15);border-radius:4px 4px 0 0;
+  border:1px solid rgba(var(--accent-rgb),.25);transition:all .3s;
+  display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;
+  font-size:9px;color:var(--accent);font-weight:700;font-family:var(--mono);cursor:default;
+  position:relative;
 }
-.p-name { font-size:20px; font-weight:800; }
-.p-meta { font-size:12px; color:var(--text2); margin-top:3px; }
-.p-badges { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
-.pbadge {
-  padding:3px 10px; border-radius:20px;
-  font-size:11px; font-weight:700;
-  border:1px solid;
+.mc-bar:hover{background:rgba(var(--accent-rgb),.3);}
+.mc-bar-label{position:absolute;bottom:-18px;font-size:9px;color:var(--text3);white-space:nowrap;}
+
+/* ══════════════════════════════════════════════
+   ADMIN — SOZLAMALAR
+══════════════════════════════════════════════ */
+#a-settings{flex-direction:column;gap:18px;}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.setting-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;border-bottom:1px solid var(--border);
+}
+.setting-item:last-child{border-bottom:none;}
+.si-left{display:flex;flex-direction:column;gap:3px;}
+.si-title{font-size:13px;font-weight:700;}
+.si-desc{font-size:11px;color:var(--text3);}
+.toggle{
+  width:42px;height:22px;border-radius:11px;background:var(--border2);
+  position:relative;cursor:pointer;transition:background .3s;flex-shrink:0;
+}
+.toggle.on{background:var(--accent);}
+.toggle::after{
+  content:'';position:absolute;width:16px;height:16px;
+  background:white;border-radius:50%;top:3px;left:3px;transition:transform .3s;
+}
+.toggle.on::after{transform:translateX(20px);}
+
+/* ══════════════════════════════════════════════
+   O'QITUVCHI — DARSLAR
+══════════════════════════════════════════════ */
+#o-home{flex-direction:column;gap:18px;background:radial-gradient(ellipse 60% 50% at 80% 0%, rgba(var(--accent-rgb),.04),transparent);}
+.o-hero{
+  background:linear-gradient(135deg,var(--surface2),var(--surface3));
+  border:1px solid var(--border2);border-radius:18px;padding:24px 28px;
+  display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;
+}
+.o-hero::before{content:'📚';position:absolute;right:20px;top:-10px;font-size:100px;opacity:.06;}
+.o-hero h1{font-size:22px;font-weight:800;}
+.o-hero h1 span{color:var(--accent);}
+.o-hero p{color:var(--text2);font-size:13px;margin-top:5px;}
+.o-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.o-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;transition:all .2s;}
+.o-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.o-card-ic{font-size:20px;margin-bottom:10px;}
+.o-card-lbl{font-size:10px;color:var(--text3);font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;}
+.o-card-n{font-family:var(--mono);font-size:28px;font-weight:700;}
+.o-card-s{font-size:11px;color:var(--text2);margin-top:3px;}
+.o-main-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.student-prog{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--border);}
+.student-prog:last-child{border-bottom:none;}
+.sp-av{
+  width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--cyan));
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:var(--bg);
+}
+.sp-info{flex:1;}
+.sp-name{font-size:12px;font-weight:700;}
+.sp-meta{font-size:10px;color:var(--text3);margin-top:1px;}
+.sp-score{font-family:var(--mono);font-size:13px;font-weight:700;}
+.sp-pbar{height:3px;background:var(--border);border-radius:3px;margin-top:5px;}
+.sp-pfill{height:100%;border-radius:3px;background:var(--accent);}
+
+/* ══════════════════════════════════════════════
+   O'QITUVCHI — TALABALAR MONITORINGI
+══════════════════════════════════════════════ */
+#o-monitor{flex-direction:column;gap:0;overflow:hidden;}
+.o-mon-inner{display:flex;flex:1;overflow:hidden;}
+.mon-left{
+  width:260px;flex-shrink:0;background:var(--surface);
+  border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;
+}
+.mon-groups{flex:1;overflow-y:auto;}
+.group-item{
+  padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:all .2s;
+}
+.group-item:hover{background:var(--surface2);}
+.group-item.active{background:var(--accent-dim);border-left:3px solid var(--accent);}
+.gi-name{font-size:13px;font-weight:700;}
+.gi-meta{font-size:11px;color:var(--text2);margin-top:2px;}
+.mon-main{flex:1;overflow-y:auto;padding:20px;}
+.mon-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;}
+.mon-st{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;}
+.msv{font-family:var(--mono);font-size:26px;font-weight:700;}
+.msl{font-size:10px;color:var(--text3);margin-top:3px;font-weight:700;text-transform:uppercase;}
+.student-table{width:100%;border-collapse:collapse;}
+.student-table th{
+  text-align:left;font-size:9px;font-weight:800;letter-spacing:1.5px;
+  color:var(--text3);text-transform:uppercase;padding:10px 14px;
+  background:var(--surface2);border-bottom:1px solid var(--border);
+}
+.student-table td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:12px;}
+.student-table tr:last-child td{border-bottom:none;}
+.student-table tr:hover td{background:var(--surface2);}
+.st-av{
+  width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--cyan));
+  display:inline-flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:10px;color:var(--bg);margin-right:8px;vertical-align:middle;
 }
 
-/* Info table */
-.info-card {
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:12px; margin-bottom:14px; overflow:hidden;
+/* ══════════════════════════════════════════════
+   O'QITUVCHI — KEYS YARATISH
+══════════════════════════════════════════════ */
+#o-create{flex-direction:column;gap:0;overflow:hidden;}
+.oc-inner{display:flex;flex:1;overflow:hidden;}
+.oc-left{
+  width:260px;flex-shrink:0;background:var(--surface);
+  border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;
 }
-.info-card-hdr {
-  background:var(--surface2);
-  padding:10px 18px;
-  font-size:11px; font-weight:800; letter-spacing:1px;
-  color:var(--teal); text-transform:uppercase;
-  border-bottom:1px solid var(--border);
+.oc-list{flex:1;overflow-y:auto;}
+.oc-item{
+  padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:all .2s;
 }
-.info-row {
-  display:flex; padding:10px 18px;
-  border-bottom:1px solid var(--border);
-  transition:background .15s;
+.oc-item:hover{background:var(--surface2);}
+.oc-item.active{background:var(--accent-dim);border-left:3px solid var(--accent);}
+.oc-it-name{font-size:13px;font-weight:700;}
+.oc-it-meta{font-size:11px;color:var(--text3);margin-top:2px;}
+.oc-status{
+  display:inline-flex;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:800;
+  background:var(--accent-dim);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.25);
+  margin-top:4px;
 }
-.info-row:last-child { border-bottom:none; }
-.info-row:hover { background:rgba(255,255,255,.02); }
-.ir-key { color:var(--text2); font-size:13px; min-width:200px; flex-shrink:0; }
-.ir-val { color:var(--text); font-size:13px; font-weight:600; flex:1; }
+.oc-status.draft{background:rgba(255,183,77,.1);color:var(--yellow);border-color:rgba(255,183,77,.25);}
+.oc-main{flex:1;overflow-y:auto;padding:22px;}
+.oc-form{display:flex;flex-direction:column;gap:16px;}
+.section-divider{
+  font-size:9px;font-weight:800;letter-spacing:2px;color:var(--accent);
+  text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid var(--border);
+}
 
-/* Text block */
-.text-block {
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:12px; padding:18px 22px;
-  line-height:1.75; font-size:14px;
-  color:var(--text); margin-bottom:14px;
+/* ══════════════════════════════════════════════
+   O'QITUVCHI — HISOBOT VA NATIJALAR
+══════════════════════════════════════════════ */
+#o-results{flex-direction:column;gap:18px;}
+.results-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.result-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 16px;border-bottom:1px solid var(--border);
 }
-.text-block strong { color:var(--teal); }
+.result-item:last-child{border-bottom:none;}
+.ri-num{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--accent);width:48px;text-align:center;}
+.ri-info{flex:1;}
+.ri-name{font-size:13px;font-weight:700;}
+.ri-keys{font-size:11px;color:var(--text3);margin-top:2px;}
+.ri-bar{height:3px;background:var(--border);border-radius:3px;margin-top:6px;}
+.ri-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--cyan));}
+.filter-row{display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap;}
+.filter-select{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:7px 14px;color:var(--text2);font-size:12px;font-family:var(--font);
+  outline:none;cursor:pointer;
+}
+.filter-select:focus{border-color:var(--accent);}
 
-/* Textarea */
-.davo-label { font-size:11px; font-weight:800; letter-spacing:1px; color:var(--teal); text-transform:uppercase; margin-bottom:8px; display:block; }
-.davo-ta {
-  width:100%;
-  background:var(--surface2);
-  border:1px solid var(--border);
-  border-radius:10px; padding:14px 16px;
-  color:var(--text); font-size:13px;
-  font-family:'Nunito',sans-serif;
-  line-height:1.7; resize:vertical;
-  min-height:120px; outline:none;
-  transition:border-color .2s, box-shadow .2s;
-  margin-bottom:14px;
-}
-.davo-ta:focus { border-color:var(--teal); box-shadow:0 0 0 3px rgba(0,212,170,.1); }
-.davo-ta::placeholder { color:var(--text3); }
+/* ══════════════════════════════════════════════
+   SHARED UTILITY
+══════════════════════════════════════════════ */
+.flex{display:flex;}
+.flex-col{display:flex;flex-direction:column;}
+.gap8{gap:8px;}
+.gap12{gap:12px;}
+.gap16{gap:16px;}
+.mt12{margin-top:12px;}
+.mt16{margin-top:16px;}
+.teal{color:var(--accent);}
+.muted{color:var(--text3);}
+.bold{font-weight:700;}
+.divider{border:none;border-top:1px solid var(--border);margin:2px 0;}
 
-.submit-case {
-  width:100%; padding:13px;
-  background:linear-gradient(90deg, var(--teal), var(--cyan));
-  border:none; border-radius:10px;
-  color:#061220; font-size:14px; font-weight:800;
-  cursor:pointer; font-family:'Nunito',sans-serif;
-  transition:all .2s; box-shadow:0 6px 20px rgba(0,212,170,.25);
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);
+  background:var(--accent);color:var(--bg);padding:10px 22px;border-radius:30px;
+  font-weight:800;font-size:12px;opacity:0;transition:all .3s;z-index:9999;
+  pointer-events:none;box-shadow:0 8px 24px rgba(var(--accent-rgb),.4);
 }
-.submit-case:hover { transform:translateY(-1px); box-shadow:0 10px 28px rgba(0,212,170,.35); }
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* Special notes */
-.special-note {
-  background:rgba(255,183,77,.06);
-  border:1px solid rgba(255,183,77,.25);
-  border-radius:10px; padding:14px 18px;
-  font-size:13px; color:var(--yellow);
-  line-height:1.7;
-}
-.special-note strong { color:var(--yellow); }
-
-/* RIGHT SIDEBAR */
-.keys-right {
-  width:260px; flex-shrink:0;
-  background:var(--surface);
-  border-left:1px solid var(--border);
-  display:flex; flex-direction:column;
-  overflow-y:auto;
-}
-.kr-section { padding:16px; border-bottom:1px solid var(--border); }
-.kr-title { font-size:11px; font-weight:800; letter-spacing:1.5px; color:var(--text3); text-transform:uppercase; margin-bottom:12px; }
-
-.korib-card {
-  background:var(--card); border:1px solid var(--border);
-  border-radius:10px; padding:12px 14px; margin-bottom:8px;
-  cursor:pointer; transition:all .2s;
-}
-.korib-card:hover { border-color:var(--border2); background:var(--surface2); }
-.korib-cat { font-size:12px; font-weight:800; color:var(--text2); margin-bottom:4px; }
-.korib-dis { font-size:13px; font-weight:700; color:var(--text); }
-.korib-stage { font-size:11px; color:var(--text3); margin-top:2px; }
-.korib-diff { display:inline-flex; align-items:center; padding:2px 9px; border-radius:20px; font-size:10px; font-weight:700; margin-top:6px; }
-.korib-score { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; float:right; }
-
-.baholash-card {
-  background:var(--card); border:1px solid var(--border);
-  border-radius:10px; padding:14px 16px; margin-bottom:10px;
-  text-align:center;
-}
-.bah-status { font-size:12px; color:var(--text2); margin-bottom:8px; }
-.bah-icon { font-size:36px; margin-bottom:8px; }
-.bah-title { font-size:14px; font-weight:700; color:var(--text3); }
-.bah-desc { font-size:12px; color:var(--text3); margin-top:6px; line-height:1.5; }
-
-.si-card {
-  background:var(--card); border:1px solid var(--border);
-  border-radius:10px; padding:14px 16px; text-align:center;
-}
-.si-icon { font-size:32px; margin-bottom:8px; }
-.si-text { font-size:12px; color:var(--text3); line-height:1.5; }
-
-/* ════════════════ HISOBOT (REPORT) PAGE ════════════════ */
-#page-hisobot {
-  flex-direction:column; overflow-y:auto; padding:32px; gap:24px;
-  background:radial-gradient(ellipse 60% 40% at 20% 80%, rgba(0,188,212,.04) 0%, transparent 60%);
-}
-.hisobot-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
-.hc { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:20px; }
-.hc h3 { font-size:11px; font-weight:800; letter-spacing:1px; color:var(--text3); text-transform:uppercase; margin-bottom:14px; }
-.rank-item { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); }
-.rank-item:last-child { border-bottom:none; }
-.rank-num { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; color:var(--text3); width:20px; }
-.rank-name { flex:1; font-size:13px; font-weight:600; }
-.rank-score { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; color:var(--teal); }
-.rank-item.me .rank-name { color:var(--teal); }
-.rank-item.me .rank-num { color:var(--teal); }
-
-/* ════════════════ PROFILE PAGE ════════════════ */
-#page-profil {
-  flex-direction:column; overflow-y:auto; padding:32px; gap:24px;
-}
-.profil-layout { display:grid; grid-template-columns:320px 1fr; gap:24px; }
-.profil-card {
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:16px; padding:28px 24px; text-align:center;
-}
-.prof-av {
-  width:80px; height:80px;
-  background:linear-gradient(135deg, var(--teal), var(--cyan));
-  border-radius:50%; display:flex; align-items:center;
-  justify-content:center; font-size:30px; font-weight:800;
-  color:#061220; margin:0 auto 16px;
-  box-shadow:0 8px 24px rgba(0,212,170,.3);
-}
-.prof-name { font-size:20px; font-weight:800; }
-.prof-email { font-size:13px; color:var(--text2); margin-top:4px; }
-.prof-badges { display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin-top:14px; }
-.prof-badge {
-  background:rgba(0,212,170,.1); border:1px solid rgba(0,212,170,.25);
-  border-radius:20px; padding:4px 12px;
-  font-size:12px; font-weight:700; color:var(--teal);
-}
-.prof-stats { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px; }
-.ps { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px; }
-.ps-val { font-family:'JetBrains Mono',monospace; font-size:24px; font-weight:700; }
-.ps-label { font-size:11px; color:var(--text3); margin-top:3px; }
-
-.profil-right { display:flex; flex-direction:column; gap:16px; }
-.menu-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
-.menu-card-title { padding:14px 18px; border-bottom:1px solid var(--border); font-size:11px; font-weight:800; letter-spacing:1px; color:var(--text3); text-transform:uppercase; }
-.mi {
-  display:flex; align-items:center; gap:12px;
-  padding:14px 18px; border-bottom:1px solid var(--border);
-  cursor:pointer; transition:all .2s;
-}
-.mi:last-child { border-bottom:none; }
-.mi:hover { background:var(--surface2); }
-.mi-icon { font-size:18px; width:30px; text-align:center; }
-.mi-text { flex:1; font-size:14px; font-weight:600; }
-.mi-arrow { color:var(--text3); font-size:16px; }
-.logout-big {
-  width:100%; padding:14px;
-  background:rgba(255,77,106,.1);
-  border:1px solid rgba(255,77,106,.3);
-  border-radius:12px; color:var(--red);
-  font-size:14px; font-weight:800;
-  cursor:pointer; font-family:'Nunito',sans-serif;
-  transition:all .2s;
-}
-.logout-big:hover { background:rgba(255,77,106,.2); }
-
-/* ════════════════ TOAST ════════════════ */
-.toast {
-  position:fixed; bottom:24px; left:50%;
-  transform:translateX(-50%) translateY(10px);
-  background:var(--teal); color:#061220;
-  padding:10px 22px; border-radius:30px;
-  font-weight:800; font-size:13px;
-  opacity:0; transition:all .3s;
-  z-index:9999; pointer-events:none;
-  box-shadow:0 8px 24px rgba(0,212,170,.4);
-}
-.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-
-/* ════════════════ ANIMATIONS ════════════════ */
-@keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
-@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-@keyframes fadeIn { from{opacity:0} to{opacity:1} }
-.fade-in { animation:fadeIn .3s ease; }
-
-/* ════════════════ UTIL ════════════════ */
-.flex { display:flex; }
-.flex-col { display:flex; flex-direction:column; }
-.gap8 { gap:8px; }
-.mt8 { margin-top:8px; }
-.mt16 { margin-top:16px; }
-.bold { font-weight:700; }
-.teal { color:var(--teal); }
-.muted { color:var(--text3); }
+/* Animations */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.fade-in{animation:fadeIn .3s ease;}
 </style>
 </head>
 <body>
 
-<!-- ════════ LOGIN ════════ -->
+<!-- ════════════════════════════════════════
+     LOGIN
+════════════════════════════════════════ -->
 <div id="login-page">
+  <div class="login-bg-text">ClinPharmAI</div>
   <div class="login-hero">
-    <h1>Pharmacotherapy AISL</h1>
-    <h2>ClinPharmAI<br><span style="color:var(--teal2)">Simulator for learning rational pharmacotherapy</span></h2>
+    <div class="kichik">Pharmacotherapy AISL · v2.0</div>
+    <h1>ClinPharmAI — <em>Klinik farmakologiya</em><br>simulyatori</h1>
+    <p>Ratsional farmakoterapiyani o'rganish uchun AI-powered platforma</p>
   </div>
-
   <div class="login-box">
     <h3>Tizimga kirish</h3>
     <div class="fl">
       <label>Email</label>
-      <input type="email" id="l-email" placeholder="anusher@clinpharm.uz" value="anusher@clinpharm.uz">
+      <input type="email" id="l-email" placeholder="email@clinpharm.uz" value="anusher@clinpharm.uz">
     </div>
     <div class="fl">
       <label>Parol</label>
@@ -653,7 +843,7 @@ html, body { height:100%; font-family:'Nunito',sans-serif; background:var(--bg);
       </select>
     </div>
     <button class="btn-login" onclick="doLogin()">KIRISH →</button>
-    <div class="role-quick">
+    <div class="role-row">
       <button class="rq-btn" onclick="quickLogin('Talaba')">👤 Talaba</button>
       <button class="rq-btn" onclick="quickLogin('O\'qituvchi')">👨‍🏫 O'qituvchi</button>
       <button class="rq-btn" onclick="quickLogin('Admin')">⚙️ Admin</button>
@@ -661,896 +851,1419 @@ html, body { height:100%; font-family:'Nunito',sans-serif; background:var(--bg);
   </div>
 </div>
 
-<!-- ════════ APP ════════ -->
+<!-- ════════════════════════════════════════
+     APP
+════════════════════════════════════════ -->
 <div id="app">
-
-  <!-- NAV -->
   <nav class="nav">
     <div class="nav-logo">ClinPharmAI</div>
-    <div class="nav-links">
-      <button class="nav-link active" id="nl-home" onclick="goPage('home')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        Bosh sahifa
-      </button>
-      <button class="nav-link" id="nl-keys" onclick="goPage('keys')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-        Keys yechish
-      </button>
-      <button class="nav-link" id="nl-hisobot" onclick="goPage('hisobot')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-        Hisobot
-      </button>
-      <button class="nav-link" id="nl-profil" onclick="goPage('profil')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-        Profil
-      </button>
-    </div>
-    <div class="nav-user" onclick="goPage('profil')">
+    <span class="nav-role-tag" id="nav-role-tag">—</span>
+    <div class="nav-links" id="nav-links"></div>
+    <div class="nav-user">
       <div>
-        <div class="nav-name" id="nav-name">Qurbonov Anusher</div>
-        <div style="display:flex;gap:6px;justify-content:flex-end;margin-top:3px">
-          <span class="nav-role-badge" id="nav-role">TALABA</span>
-        </div>
+        <div class="nav-name" id="nav-name">—</div>
+        <div style="text-align:right;margin-top:3px"><span class="nav-role-badge" id="nav-role-badge">—</span></div>
       </div>
-      <div class="nav-avatar" id="nav-av">QA</div>
-      <button class="nav-exit" onclick="event.stopPropagation();doLogout()">× Chiqish</button>
+      <div class="nav-avatar" id="nav-av">—</div>
+      <button class="nav-exit" onclick="doLogout()">× Chiqish</button>
     </div>
   </nav>
 
-  <!-- ════ HOME ════ -->
-  <div class="page" id="page-home">
-    <div class="home-hero">
+  <!-- ═══════════════ TALABA PAGES ═══════════════ -->
+
+  <!-- T: Bosh sahifa -->
+  <div class="page pg-scroll" id="t-home">
+    <div class="t-hero">
       <div>
-        <h1>Xush kelibsiz,<br><span id="hero-name">Qurbonov Anusher!</span></h1>
-        <p>Bugun ham klinik farmakologiyani mashq qilamizmi? 💊</p>
-        <div class="hero-badges">
-          <span class="hbadge">🔥 5 kun streak</span>
-          <span class="hbadge">🏆 Guruhda #5</span>
-          <span class="hbadge">SamDChTI · PHD q-2</span>
+        <h1>Salom, <span id="t-hero-name">Anusher!</span></h1>
+        <p id="t-hero-sub">Bugun ham klinik farmakologiyani mashq qilamizmi? 💊</p>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+          <span class="badge badge-accent">🔥 5 kun streak</span>
+          <span class="badge badge-accent">🏆 Guruhda #5</span>
+          <span class="badge badge-accent">SamDChTI · PHD q-2</span>
         </div>
       </div>
-      <button class="btn-start" onclick="goPage('keys')">🧠 Keys yechishni boshlash →</button>
+      <div class="t-hero-right">
+        <div class="streak-box">
+          <div class="streak-num">🔥5</div>
+          <div class="streak-label">STREAK KUN</div>
+        </div>
+        <button class="btn-primary" onclick="goPage('t-keys')">🧠 Keys yechish →</button>
+      </div>
     </div>
 
-    <div class="home-grid">
-      <div class="stat-card">
-        <div class="sc-icon">📋</div>
-        <div class="sc-label">Keys yechildi</div>
-        <div class="sc-val">24</div>
-        <div class="sc-sub">jami yechilgan</div>
+    <div style="display:flex;gap:12px;margin-top:2px">
+      <div style="flex:1">
+        <div class="h2">Haftalik faollik</div>
+        <div class="streak-cal">
+          <div class="sc-day done">Du</div><div class="sc-day done">Se</div>
+          <div class="sc-day done">Ch</div><div class="sc-day done">Pa</div>
+          <div class="sc-day today">Ju</div><div class="sc-day">Sh</div>
+          <div class="sc-day">Ya</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="sc-icon">⭐</div>
-        <div class="sc-label">O'rtacha ball</div>
-        <div class="sc-val">78</div>
-        <div class="sc-sub">dan 100</div>
-      </div>
-      <div class="stat-card">
-        <div class="sc-icon">💊</div>
-        <div class="sc-label">Dorilar o'rganildi</div>
-        <div class="sc-val">45</div>
-        <div class="sc-sub">preparatlar</div>
-      </div>
-      <div class="stat-card">
-        <div class="sc-icon">⚠️</div>
-        <div class="sc-label">Xatolar soni</div>
-        <div class="sc-val" style="color:var(--red)">12</div>
-        <div class="sc-sub">tahlil qilish lozim</div>
-      </div>
+    </div>
+
+    <div class="grid4">
+      <div class="scard"><div class="sc-ic">📋</div><div class="sc-lbl">Keys yechildi</div><div class="sc-n">24</div><div class="sc-s">jami yechilgan</div></div>
+      <div class="scard"><div class="sc-ic">⭐</div><div class="sc-lbl">O'rtacha ball</div><div class="sc-n" style="color:var(--accent)">78%</div><div class="sc-s">dan 100</div></div>
+      <div class="scard"><div class="sc-ic">💊</div><div class="sc-lbl">Dorilar</div><div class="sc-n">45</div><div class="sc-s">preparatlar o'rganildi</div></div>
+      <div class="scard"><div class="sc-ic">⚠️</div><div class="sc-lbl">Xatolar</div><div class="sc-n" style="color:var(--red)">12</div><div class="sc-s">tahlil qilish lozim</div></div>
     </div>
 
     <div>
       <div class="h2">So'nggi yechilgan keyslar</div>
-      <div class="recent-list">
-        <div class="rc-card" onclick="goPage('keys');selectCase('gipertoniya','giper_1')">
-          <div class="rc-dot" style="background:var(--text3)"></div>
-          <div class="rc-info">
-            <div class="rc-name">Gipertoniya kasalligi · 1-bosqichi</div>
-            <div class="rc-meta">Kardiologiya · Engil darajali keys · 27.03.2026</div>
-          </div>
-          <span style="font-size:12px;color:var(--text3)">Baholanmagan</span>
-        </div>
-        <div class="rc-card" onclick="goPage('keys')">
-          <div class="rc-dot" style="background:var(--teal)"></div>
-          <div class="rc-info">
-            <div class="rc-name">Bronxial astma · Engil darajali</div>
-            <div class="rc-meta">Pulmonologiya · O'rta og'ir keys · 26.03.2026</div>
-          </div>
-          <span class="rc-score" style="color:var(--teal)">85</span>
-        </div>
-        <div class="rc-card" onclick="goPage('keys')">
-          <div class="rc-dot" style="background:var(--yellow)"></div>
-          <div class="rc-info">
-            <div class="rc-name">Oshqozon yarasi · H.pylori pozitiv</div>
-            <div class="rc-meta">Gastroenterologiya · Engil darajali keys · 25.03.2026</div>
-          </div>
-          <span class="rc-score" style="color:var(--yellow)">72</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ════ KEYS ════ -->
-  <div class="page" id="page-keys">
-
-    <!-- LEFT -->
-    <div class="keys-sidebar">
-      <div class="ks-section">
-        <div class="ks-section-title">Bo'limlar</div>
-        <div id="cat-list"></div>
-      </div>
-
-      <div class="ks-section" id="keys-sections-panel" style="display:none">
-        <div class="ks-section-title">Keys bo'limlari</div>
-        <div class="keys-section-list" id="ksl"></div>
-      </div>
-
-      <div class="baholash-block" id="baholash-block" style="display:none">
-        <div class="bb-title">Baholash holati</div>
-        <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-        <div class="bb-row"><span class="bb-label">Boyitilganlik</span><span class="bb-val" id="prog-pct">0%</span></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center">
-            <div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Umumiy ball</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--text);margin-top:4px" id="score-val">—</div>
-          </div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center">
-            <div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Baho</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--text);margin-top:4px" id="baho-val">—</div>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center">
-            <div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Dorilar</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--text);margin-top:4px" id="dori-val">0</div>
-          </div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center">
-            <div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Xatolar</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--red);margin-top:4px" id="xato-val">0</div>
-          </div>
-        </div>
+      <div class="recent-wrap">
+        <div class="rc" onclick="goPage('t-keys')"><div class="rc-dot" style="background:var(--text3)"></div><div class="rc-info"><div class="rc-n">Gipertoniya kasalligi · 1-bosqichi</div><div class="rc-m">Kardiologiya · 27.03.2026</div></div><span style="font-size:11px;color:var(--text3)">Baholanmagan</span></div>
+        <div class="rc" onclick="goPage('t-keys')"><div class="rc-dot" style="background:var(--accent)"></div><div class="rc-info"><div class="rc-n">Bronxial astma · Engil darajali</div><div class="rc-m">Pulmonologiya · 26.03.2026</div></div><span class="rc-sc" style="color:var(--accent)">85</span></div>
+        <div class="rc" onclick="goPage('t-keys')"><div class="rc-dot" style="background:var(--yellow)"></div><div class="rc-info"><div class="rc-n">Oshqozon yarasi · H.pylori pozitiv</div><div class="rc-m">Gastroenterologiya · 25.03.2026</div></div><span class="rc-sc" style="color:var(--yellow)">72</span></div>
       </div>
     </div>
 
-    <!-- CENTER -->
-    <div class="keys-main">
-      <div class="km-topbar">
-        <span class="km-title" id="km-title">Klinik keys ma'lumotlari</span>
-        <div class="km-tabs" id="bm-tabs">
-          <button class="km-tab-btn active" id="tab-bemor" onclick="switchBemor('bemor')">Bemor</button>
-          <button class="km-tab-btn assistant" id="tab-assist" onclick="switchBemor('assist')">Assistent 🤖</button>
-        </div>
-        <div class="km-actions">
-          <button class="act-btn act-clear" onclick="clearDavo()">🗑 Tozalash</button>
-          <button class="act-btn act-demo" onclick="fillDemo()">✨ Demo to'ldirish</button>
-        </div>
-      </div>
-
-      <!-- Case nav tabs -->
-      <div class="case-nav" id="case-nav" style="display:none">
-        <button class="cn-btn active" onclick="switchCaseSection('pasport',this)">
-          <span class="cn-dot" style="background:#7a9abf"></span>Pasport qismi
-        </button>
-        <button class="cn-btn" onclick="switchCaseSection('shikoyat',this)">
-          <span class="cn-dot" style="background:#7a9abf"></span>Shikoyatlari
-        </button>
-        <button class="cn-btn" onclick="switchCaseSection('obyektiv',this)">
-          <span class="cn-dot" style="background:#7a9abf"></span>Ob'ektiv belgilari
-        </button>
-        <button class="cn-btn" onclick="switchCaseSection('laborator',this)">
-          <span class="cn-dot" style="background:#7a9abf"></span>Laborator tekshiruv natijalari
-        </button>
-        <button class="cn-btn" onclick="switchCaseSection('instrumental',this)">
-          <span class="cn-dot" style="background:#7a9abf"></span>Klinik-instrumental tekshiruv natijalari
-        </button>
-      </div>
-
-      <div class="km-body" id="km-body">
-        <div class="empty-state">
-          <div class="big-icon">🏥</div>
-          <h3>Keys tanlanmagan</h3>
-          <p>Chap paneldan kategoriya va kasallik turini tanlang, so'ng keys yechishni boshlang.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- RIGHT -->
-    <div class="keys-right">
-      <div class="kr-section">
-        <div class="kr-title">Ko'rib chiqilgan keyslar</div>
-        <div class="korib-card" onclick="selectCase('gipertoniya','giper_1')">
-          <div class="korib-cat">Kardiologiya</div>
-          <div class="korib-dis">Gipertoniya kasalligi</div>
-          <div class="korib-stage">1-bosqichi</div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px">
-            <span class="korib-diff" style="background:rgba(0,212,170,.12);color:var(--teal);border-color:rgba(0,212,170,.3)">Engil darajali keys</span>
-            <span style="font-size:11px;color:var(--text3)">ball</span>
-          </div>
-          <div style="font-size:11px;color:var(--text3);margin-top:6px">Keys to'ldirib, «SI tahlil qilsin» tugmasini bosing.</div>
-        </div>
-        <div class="korib-card" onclick="goPage('keys')">
-          <div class="korib-cat">Pulmonologiya</div>
-          <div class="korib-dis">Bronxial astma</div>
-          <div class="korib-stage">Engil darajali BA</div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px">
-            <span class="korib-diff" style="background:rgba(255,183,77,.12);color:var(--yellow);border-color:rgba(255,183,77,.3)">O'rta og'ir keys</span>
-            <span class="rc-score" style="color:var(--teal)">85</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="kr-section">
-        <div class="kr-title">Umumiy baholash</div>
-        <div class="baholash-card">
-          <div class="bah-status">Tahlil kutilmoqda</div>
-          <div class="bah-icon">📊</div>
-          <div class="bah-title">Tahlil qilinmagan</div>
-          <div class="bah-desc">Keys to'ldirib, «SI tahlil qilsin» tugmasini bosing.<br><br>Tahlildan so'ng kriteriyalar ko'rsatiladi</div>
-        </div>
-      </div>
-
-      <div class="kr-section">
-        <div class="kr-title">🤖 SI tahlili va izohlar</div>
-        <div class="si-card">
-          <div class="si-icon">🤖</div>
-          <div class="si-text">Tahlil natijalari bu yerda ko'rinadi.<br>Keys ma'lumotlarini kiritib tahlil boshlang</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ════ HISOBOT ════ -->
-  <div class="page" id="page-hisobot">
     <div>
-      <div class="h2" style="margin-bottom:20px">Hisobot va statistika</div>
-      <div class="hisobot-grid">
-        <div class="hc">
-          <h3>Guruh reytingi</h3>
-          <div class="rank-item"><span class="rank-num">#1</span><span class="rank-name">Yusupov Jasur</span><span class="rank-score">94</span></div>
-          <div class="rank-item"><span class="rank-num">#2</span><span class="rank-name">Karimova Dilnoza</span><span class="rank-score">91</span></div>
-          <div class="rank-item"><span class="rank-num">#3</span><span class="rank-name">Toshmatov Bobur</span><span class="rank-score">88</span></div>
-          <div class="rank-item"><span class="rank-num">#4</span><span class="rank-name">Xoliqova Munira</span><span class="rank-score">85</span></div>
-          <div class="rank-item me"><span class="rank-num">#5</span><span class="rank-name">Qurbonov Anusher ← siz</span><span class="rank-score">78</span></div>
-          <div class="rank-item"><span class="rank-num">#6</span><span class="rank-name">Ergashev Sherzod</span><span class="rank-score">74</span></div>
+      <div class="h2">Kategoriyalar bo'yicha progress</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div class="card"><div class="card-hdr">❤️ Kardiologiya</div>
+          <div style="padding:14px">
+            <div class="pbar"><div class="pbar-fill" style="width:82%"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;margin-top:4px"><span style="color:var(--text2)">8 ta keys</span><span style="color:var(--accent);font-weight:800">82%</span></div>
+          </div>
         </div>
-        <div class="hc">
-          <h3>Kategoriyalar bo'yicha</h3>
-          <div class="rank-item"><span class="rank-name">Kardiologiya</span><span class="rank-score">82%</span></div>
-          <div class="rank-item"><span class="rank-name">Pulmonologiya</span><span class="rank-score">85%</span></div>
-          <div class="rank-item"><span class="rank-name">Gastroenterologiya</span><span class="rank-score">72%</span></div>
-          <div class="rank-item"><span class="rank-name">Revmotologiya</span><span class="rank-score">—</span></div>
-          <div class="rank-item"><span class="rank-name">Gepatologiya</span><span class="rank-score">—</span></div>
-          <div class="rank-item"><span class="rank-name">Nefrologiya</span><span class="rank-score">—</span></div>
+        <div class="card"><div class="card-hdr">🫁 Pulmonologiya</div>
+          <div style="padding:14px">
+            <div class="pbar"><div class="pbar-fill" style="width:85%"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;margin-top:4px"><span style="color:var(--text2)">6 ta keys</span><span style="color:var(--accent);font-weight:800">85%</span></div>
+          </div>
         </div>
-        <div class="hc">
-          <h3>So'nggi faollik</h3>
-          <div class="rank-item"><span class="rank-name">27.03.2026 — Gipertoniya</span><span style="font-size:11px;color:var(--text3)">Topshirilmadi</span></div>
-          <div class="rank-item"><span class="rank-name">26.03.2026 — Bronxial astma</span><span class="rank-score">85</span></div>
-          <div class="rank-item"><span class="rank-name">25.03.2026 — Oshqozon yarasi</span><span class="rank-score">72</span></div>
+        <div class="card"><div class="card-hdr">💊 Gastroenterologiya</div>
+          <div style="padding:14px">
+            <div class="pbar"><div class="pbar-fill" style="width:72%"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;margin-top:4px"><span style="color:var(--text2)">5 ta keys</span><span style="color:var(--accent);font-weight:800">72%</span></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ════ PROFIL ════ -->
-  <div class="page" id="page-profil">
-    <div class="h2" style="margin-bottom:4px">Profil</div>
-    <div class="profil-layout">
-      <div class="flex-col" style="gap:16px">
-        <div class="profil-card">
-          <div class="prof-av" id="prof-av">QA</div>
-          <div class="prof-name" id="prof-name">Qurbonov Anusher</div>
-          <div class="prof-email" id="prof-email">anusher@clinpharm.uz</div>
-          <div class="prof-badges">
-            <span class="prof-badge" id="prof-role-b">Talaba</span>
-            <span class="prof-badge">SamDChTI</span>
-            <span class="prof-badge">PHD q-2</span>
+  <!-- T: Keys yechish -->
+  <div class="page" id="t-keys">
+    <div class="ks-left">
+      <div class="ks-sec">
+        <div class="ks-sec-title">Bo'limlar</div>
+        <div id="t-cat-list"></div>
+      </div>
+      <div class="ks-sec" id="t-ksl-sec" style="display:none">
+        <div class="ks-sec-title">Bulimlari</div>
+        <div id="t-ksl"></div>
+      </div>
+      <div class="prog-block" id="t-prog" style="display:none">
+        <div class="prog-title">Jarayon</div>
+        <div class="pbar"><div class="pbar-fill" id="t-pbar" style="width:0%"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:12px">
+          <span style="color:var(--text2)">Boyitilganlik</span>
+          <span style="color:var(--accent);font-weight:800" id="t-pct">0%</span>
+        </div>
+        <div class="mini-stats">
+          <div class="mst"><div class="mst-v" id="t-score-v">—</div><div class="mst-l">Ball</div></div>
+          <div class="mst"><div class="mst-v" id="t-baho-v">—</div><div class="mst-l">Baho</div></div>
+          <div class="mst"><div class="mst-v" id="t-dori-v">0</div><div class="mst-l">Dorilar</div></div>
+          <div class="mst"><div class="mst-v" id="t-xato-v" style="color:var(--red)">0</div><div class="mst-l">Xatolar</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="km-center">
+      <div class="km-bar">
+        <span class="km-title" id="t-km-title">Klinik keys ma'lumotlari</span>
+        <div class="tab-pair" id="t-bm-tabs">
+          <button class="tb active" id="t-tb-bemor" onclick="tSwitchMode('bemor')">Bemor</button>
+          <button class="tb ai" id="t-tb-ai" onclick="tSwitchMode('ai')">🤖 AI Yordam</button>
+        </div>
+        <div class="act-row">
+          <button class="act-b btn-danger" onclick="tClear()">🗑 Tozalash</button>
+          <button class="act-b btn-ghost" onclick="tDemo()">✨ Demo</button>
+        </div>
+      </div>
+      <div class="case-tabs" id="t-case-tabs" style="display:none">
+        <button class="ctab active" onclick="tSection('pasport',this)">📋 Pasport</button>
+        <button class="ctab" onclick="tSection('shikoyat',this)">💬 Shikoyatlar</button>
+        <button class="ctab" onclick="tSection('obyektiv',this)">🩺 Ob'ektiv</button>
+        <button class="ctab" onclick="tSection('laborator',this)">🧪 Laborator</button>
+        <button class="ctab" onclick="tSection('instrumental',this)">📊 Instrumental</button>
+        <button class="ctab" onclick="tSection('davo',this)">💊 Davo</button>
+        <button class="ctab" onclick="tSection('adabiyot',this)">📚 Adabiyot</button>
+      </div>
+      <div class="km-body" id="t-km-body">
+        <div class="empty-st"><div class="bi">🏥</div><h3>Keys tanlanmagan</h3><p>Chap paneldan kategoriya va kasallik turini tanlang.</p></div>
+      </div>
+    </div>
+
+    <div class="ks-right">
+      <div class="kr-sec">
+        <div class="kr-title">Ko'rib chiqilgan keyslar</div>
+        <div class="k-card" onclick="tSelectCase('gipertoniya','giper_1')">
+          <div class="k-card-cat">❤️ Kardiologiya</div>
+          <div class="k-card-dis">Gipertoniya kasalligi</div>
+          <div class="k-card-sub">1-bosqichi</div>
+          <div style="margin-top:7px;display:flex;justify-content:space-between;align-items:center">
+            <span class="badge badge-accent" style="font-size:9px">Engil</span>
+            <span style="font-size:10px;color:var(--text3)">Topshirilmagan</span>
+          </div>
+        </div>
+        <div class="k-card" onclick="tSelectCase('bronxial','ba_engil')">
+          <div class="k-card-cat">🫁 Pulmonologiya</div>
+          <div class="k-card-dis">Bronxial astma</div>
+          <div class="k-card-sub">Engil darajali</div>
+          <div style="margin-top:7px;display:flex;justify-content:space-between;align-items:center">
+            <span class="badge badge-yellow" style="font-size:9px">O'rta og'ir</span>
+            <span style="font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accent)">85</span>
+          </div>
+        </div>
+      </div>
+      <div class="kr-sec">
+        <div class="kr-title">Baholash</div>
+        <div class="bah-card" id="t-bah-card">
+          <div class="bah-icon">📊</div>
+          <div class="bah-title" style="color:var(--text2)">Tahlil qilinmagan</div>
+          <div class="bah-desc">Keys to'ldiring va «SI ga topshirish» tugmasini bosing.</div>
+        </div>
+      </div>
+      <div class="kr-sec">
+        <div class="kr-title">🤖 SI tahlili</div>
+        <div class="ai-box" id="t-ai-box">
+          <div class="ai-ic">🤖</div>
+          <p>Tahlil natijalari bu yerda ko'rinadi.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- T: Hisobot -->
+  <div class="page pg-scroll" id="t-hisobot">
+    <div class="h2" style="margin-bottom:16px">Hisobot va statistika</div>
+    <div class="hgrid">
+      <div class="hc">
+        <div class="hc-hdr">🏆 Guruh reytingi</div>
+        <div class="hc-body">
+          <div class="rank-row"><span class="rank-pos">#1</span><div style="flex:1"><div class="rank-nm">Yusupov Jasur</div><div class="rank-bar"><div class="rank-bar-fill" style="width:94%"></div></div></div><span class="rank-sc">94</span></div>
+          <div class="rank-row"><span class="rank-pos">#2</span><div style="flex:1"><div class="rank-nm">Karimova Dilnoza</div><div class="rank-bar"><div class="rank-bar-fill" style="width:91%"></div></div></div><span class="rank-sc">91</span></div>
+          <div class="rank-row"><span class="rank-pos">#3</span><div style="flex:1"><div class="rank-nm">Toshmatov Bobur</div><div class="rank-bar"><div class="rank-bar-fill" style="width:88%"></div></div></div><span class="rank-sc">88</span></div>
+          <div class="rank-row"><span class="rank-pos">#4</span><div style="flex:1"><div class="rank-nm">Xoliqova Munira</div><div class="rank-bar"><div class="rank-bar-fill" style="width:85%"></div></div></div><span class="rank-sc">85</span></div>
+          <div class="rank-row me"><span class="rank-pos">#5</span><div style="flex:1"><div class="rank-nm">Qurbonov Anusher ← siz</div><div class="rank-bar"><div class="rank-bar-fill" style="width:78%"></div></div></div><span class="rank-sc">78</span></div>
+          <div class="rank-row"><span class="rank-pos">#6</span><div style="flex:1"><div class="rank-nm">Ergashev Sherzod</div><div class="rank-bar"><div class="rank-bar-fill" style="width:74%"></div></div></div><span class="rank-sc">74</span></div>
+        </div>
+      </div>
+      <div class="hc">
+        <div class="hc-hdr">📚 Kategoriyalar</div>
+        <div class="hc-body">
+          <div class="rank-row"><span class="rank-nm">❤️ Kardiologiya</span><div style="flex:0 0 60px"><div class="rank-bar" style="margin-bottom:0"><div class="rank-bar-fill" style="width:82%"></div></div></div><span class="rank-sc">82%</span></div>
+          <div class="rank-row"><span class="rank-nm">🫁 Pulmonologiya</span><div style="flex:0 0 60px"><div class="rank-bar" style="margin-bottom:0"><div class="rank-bar-fill" style="width:85%"></div></div></div><span class="rank-sc">85%</span></div>
+          <div class="rank-row"><span class="rank-nm">💊 Gastroenterologiya</span><div style="flex:0 0 60px"><div class="rank-bar" style="margin-bottom:0"><div class="rank-bar-fill" style="width:72%"></div></div></div><span class="rank-sc">72%</span></div>
+          <div class="rank-row"><span class="rank-nm">🦴 Revmotologiya</span><span style="font-size:11px;color:var(--text3)">O'rganilmagan</span></div>
+          <div class="rank-row"><span class="rank-nm">🔬 Gepatologiya</span><span style="font-size:11px;color:var(--text3)">O'rganilmagan</span></div>
+          <div class="rank-row"><span class="rank-nm">💧 Nefrologiya</span><span style="font-size:11px;color:var(--text3)">O'rganilmagan</span></div>
+        </div>
+      </div>
+      <div class="hc">
+        <div class="hc-hdr">📅 So'nggi faollik</div>
+        <div class="hc-body">
+          <div class="rank-row"><div><div class="rank-nm">27.03 — Gipertoniya</div><div class="rank-bar"><div class="rank-bar-fill" style="width:0%"></div></div></div><span style="font-size:10px;color:var(--text3)">Jarayonda</span></div>
+          <div class="rank-row"><div><div class="rank-nm">26.03 — Bronxial astma</div><div class="rank-bar"><div class="rank-bar-fill" style="width:85%"></div></div></div><span class="rank-sc">85</span></div>
+          <div class="rank-row"><div><div class="rank-nm">25.03 — Oshqozon yarasi</div><div class="rank-bar"><div class="rank-bar-fill" style="width:72%"></div></div></div><span class="rank-sc">72</span></div>
+          <div class="rank-row"><div><div class="rank-nm">24.03 — BA og'ir darajali</div><div class="rank-bar"><div class="rank-bar-fill" style="width:91%"></div></div></div><span class="rank-sc">91</span></div>
+          <div class="rank-row"><div><div class="rank-nm">23.03 — YuIK</div><div class="rank-bar"><div class="rank-bar-fill" style="width:68%"></div></div></div><span class="rank-sc" style="color:var(--yellow)">68</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="hc">
+        <div class="hc-hdr">🎯 Maqsadlar</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span style="color:var(--text2)">Haftalik keys maqsadi</span><span style="color:var(--accent);font-weight:800">5/7</span></div>
+            <div class="pbar"><div class="pbar-fill" style="width:71%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span style="color:var(--text2)">Oylik keys maqsadi</span><span style="color:var(--accent);font-weight:800">24/30</span></div>
+            <div class="pbar"><div class="pbar-fill" style="width:80%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span style="color:var(--text2)">Streak maqsadi (30 kun)</span><span style="color:var(--yellow);font-weight:800">5/30</span></div>
+            <div class="pbar"><div class="pbar-fill" style="width:17%;background:var(--yellow)"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="hc">
+        <div class="hc-hdr">💊 Ko'p uchraydigan xatolar</div>
+        <div style="padding:4px 0">
+          <div class="rank-row"><span style="width:20px;font-size:16px">1.</span><div class="rank-nm" style="font-size:12px">Doza noto'g'ri belgilangan</div><span class="badge badge-red">4x</span></div>
+          <div class="rank-row"><span style="width:20px;font-size:16px">2.</span><div class="rank-nm" style="font-size:12px">Kontraindikatsiya hisobga olinmagan</div><span class="badge badge-red">3x</span></div>
+          <div class="rank-row"><span style="width:20px;font-size:16px">3.</span><div class="rank-nm" style="font-size:12px">O'zaro ta'sir e'tiborga olinmagan</div><span class="badge badge-yellow">2x</span></div>
+          <div class="rank-row"><span style="width:20px;font-size:16px">4.</span><div class="rank-nm" style="font-size:12px">Muddat ko'rsatilmagan</div><span class="badge badge-yellow">2x</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- T: Profil -->
+  <div class="page pg-scroll" id="t-profil">
+    <div class="h2" style="margin-bottom:4px">Mening profilim</div>
+    <div class="profil-grid">
+      <div>
+        <div class="prof-card">
+          <div class="prof-av" id="t-prof-av">QA</div>
+          <div class="prof-name" id="t-prof-name">Qurbonov Anusher</div>
+          <div class="prof-email" id="t-prof-email">anusher@clinpharm.uz</div>
+          <div class="prof-bds">
+            <span class="badge badge-accent" id="t-prof-role-b">Talaba</span>
+            <span class="badge badge-accent">SamDChTI</span>
+            <span class="badge badge-accent">PHD q-2</span>
           </div>
           <div class="prof-stats">
-            <div class="ps"><div class="ps-val">24</div><div class="ps-label">Keys yechildi</div></div>
-            <div class="ps"><div class="ps-val">78%</div><div class="ps-label">O'rtacha ball</div></div>
-            <div class="ps"><div class="ps-val" style="color:var(--teal)">🔥5</div><div class="ps-label">Streak kun</div></div>
-            <div class="ps"><div class="ps-val" style="color:var(--red)">12</div><div class="ps-label">Xatolar</div></div>
+            <div class="ps"><div class="ps-v">24</div><div class="ps-l">Keys yechildi</div></div>
+            <div class="ps"><div class="ps-v">78%</div><div class="ps-l">O'rtacha ball</div></div>
+            <div class="ps"><div class="ps-v" style="color:var(--accent)">🔥5</div><div class="ps-l">Streak</div></div>
+            <div class="ps"><div class="ps-v" style="color:var(--red)">12</div><div class="ps-l">Xatolar</div></div>
           </div>
         </div>
       </div>
-      <div class="profil-right">
-        <div class="menu-card">
-          <div class="menu-card-title">Mening akkauntim</div>
-          <div class="mi"><span class="mi-icon">📊</span><span class="mi-text">Batafsil statistika</span><span class="mi-arrow">›</span></div>
-          <div class="mi"><span class="mi-icon">💊</span><span class="mi-text">O'rganilgan dorilar (45 ta)</span><span class="mi-arrow">›</span></div>
-          <div class="mi"><span class="mi-icon">🏆</span><span class="mi-text">Guruh reytingi (#5)</span><span class="mi-arrow">›</span></div>
-          <div class="mi"><span class="mi-icon">📅</span><span class="mi-text">Keys tarixi</span><span class="mi-arrow">›</span></div>
+      <div>
+        <div class="menu-card2">
+          <div class="mc-title">Mening akkauntim</div>
+          <div class="mi"><span class="mi-ic">📊</span><span class="mi-t">Batafsil statistika</span><span class="mi-a">›</span></div>
+          <div class="mi"><span class="mi-ic">💊</span><span class="mi-t">O'rganilgan dorilar (45 ta)</span><span class="mi-a">›</span></div>
+          <div class="mi"><span class="mi-ic">🏆</span><span class="mi-t">Guruh reytingi (#5)</span><span class="mi-a">›</span></div>
+          <div class="mi"><span class="mi-ic">📅</span><span class="mi-t">Keys tarixi (24 ta)</span><span class="mi-a">›</span></div>
+          <div class="mi"><span class="mi-ic">🎯</span><span class="mi-t">Maqsadlar va streak</span><span class="mi-a">›</span></div>
         </div>
-        <div class="menu-card">
-          <div class="menu-card-title">Sozlamalar</div>
-          <div class="mi"><span class="mi-icon">🔔</span><span class="mi-text">Bildirishnomalar</span><span class="mi-arrow">›</span></div>
-          <div class="mi"><span class="mi-icon">🔒</span><span class="mi-text">Xavfsizlik va parol</span><span class="mi-arrow">›</span></div>
-          <div class="mi"><span class="mi-icon">🌐</span><span class="mi-text">Til sozlamalari</span><span class="mi-arrow">›</span></div>
+        <div class="menu-card2">
+          <div class="mc-title">O'quv materiali</div>
+          <div class="mi"><span class="mi-ic">📖</span><span class="mi-t">Xatolar tahlili</span><span class="mi-a">›</span></div>
+          <div class="mi"><span class="mi-ic">💡</span><span class="mi-t">AI tavsiyalar</span><span class="mi-a">›</span></div>
+          <div class="mi"><span class="mi-ic">📋</span><span class="mi-t">Klinik protokollar</span><span class="mi-a">›</span></div>
         </div>
-        <button class="logout-big" onclick="doLogout()">🚪 Tizimdan chiqish</button>
+        <div class="menu-card2">
+          <div class="mc-title">Sozlamalar</div>
+          <div class="mi"><span class="mi-ic">🔔</span><span class="mi-t">Bildirishnomalar</span><span class="mi-a">›</span></div>
+          <div class="mi"><span class="mi-ic">🔒</span><span class="mi-t">Parol o'zgartirish</span><span class="mi-a">›</span></div>
+          <div class="mi"><span class="mi-ic">🌐</span><span class="mi-t">Til sozlamalari</span><span class="mi-a">›</span></div>
+        </div>
+        <button class="logout-btn" onclick="doLogout()">🚪 Tizimdan chiqish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ ADMIN PAGES ═══════════════ -->
+
+  <!-- A: Dashboard -->
+  <div class="page pg-scroll" id="a-dashboard">
+    <div class="h2" style="margin-bottom:16px">Boshqaruv paneli</div>
+    <div class="admin-grid">
+      <div class="admin-stat" data-icon="👤"><div class="as-lbl">Jami foydalanuvchi</div><div class="as-n">148</div><div class="as-sub">+3 bu hafta</div></div>
+      <div class="admin-stat" data-icon="📋"><div class="as-lbl">Jami keyslar</div><div class="as-n">86</div><div class="as-sub">24 ta yangi</div></div>
+      <div class="admin-stat" data-icon="🏥"><div class="as-lbl">Faol guruhlar</div><div class="as-n">12</div><div class="as-sub">SamDChTI, ToshTiT</div></div>
+      <div class="admin-stat" data-icon="✅"><div class="as-lbl">Bugun topshirildi</div><div class="as-n" style="color:var(--accent)">34</div><div class="as-sub">keys baholandi</div></div>
+    </div>
+    <div class="admin-main-grid">
+      <div class="card">
+        <div class="card-hdr">👥 Tizimda faol foydalanuvchilar</div>
+        <table class="admin-table">
+          <thead><tr><th>Ism</th><th>Rol</th><th>Holat</th><th>So'nggi kirish</th></tr></thead>
+          <tbody>
+            <tr><td>Qurbonov Anusher</td><td><span class="badge badge-accent" style="font-size:9px">Talaba</span></td><td><span class="online-dot"></span>Onlayn</td><td>Hozir</td></tr>
+            <tr><td>Yusupov Jasur</td><td><span class="badge badge-accent" style="font-size:9px">Talaba</span></td><td><span class="online-dot"></span>Onlayn</td><td>2 daqiqa oldin</td></tr>
+            <tr><td>Dr. Toshpulatov B.</td><td><span class="badge" style="font-size:9px;background:rgba(var(--accent-rgb),.15);border:1px solid rgba(var(--accent-rgb),.3);color:var(--accent)">O'qituvchi</span></td><td><span class="online-dot"></span>Onlayn</td><td>5 daqiqa oldin</td></tr>
+            <tr><td>Karimova Dilnoza</td><td><span class="badge badge-accent" style="font-size:9px">Talaba</span></td><td><span class="offline-dot"></span>Oflayn</td><td>1 soat oldin</td></tr>
+            <tr><td>Prof. Nazarov A.</td><td><span class="badge" style="font-size:9px;background:rgba(var(--accent-rgb),.15);border:1px solid rgba(var(--accent-rgb),.3);color:var(--accent)">O'qituvchi</span></td><td><span class="offline-dot"></span>Oflayn</td><td>3 soat oldin</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-hdr">📊 Haftalik faollik (keyslar soni)</div>
+        <div style="padding:16px">
+          <div class="mini-chart" style="height:100px">
+            <div class="mc-bar" style="height:60%">12<div class="mc-bar-label">Du</div></div>
+            <div class="mc-bar" style="height:75%">18<div class="mc-bar-label">Se</div></div>
+            <div class="mc-bar" style="height:45%">9<div class="mc-bar-label">Ch</div></div>
+            <div class="mc-bar" style="height:90%">22<div class="mc-bar-label">Pa</div></div>
+            <div class="mc-bar" style="height:100%;background:rgba(var(--accent-rgb),.3);border-color:var(--accent)">34<div class="mc-bar-label">Ju</div></div>
+            <div class="mc-bar" style="height:15%">3<div class="mc-bar-label">Sh</div></div>
+            <div class="mc-bar" style="height:10%">2<div class="mc-bar-label">Ya</div></div>
+          </div>
+          <div style="margin-top:26px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+            <div style="text-align:center;background:var(--surface2);border-radius:8px;padding:10px">
+              <div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--accent)">100</div>
+              <div style="font-size:10px;color:var(--text3)">Bu hafta jami</div>
+            </div>
+            <div style="text-align:center;background:var(--surface2);border-radius:8px;padding:10px">
+              <div style="font-family:var(--mono);font-size:18px;font-weight:700">76%</div>
+              <div style="font-size:10px;color:var(--text3)">O'rtacha ball</div>
+            </div>
+            <div style="text-align:center;background:var(--surface2);border-radius:8px;padding:10px">
+              <div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--red)">18%</div>
+              <div style="font-size:10px;color:var(--text3)">Xato darajasi</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hdr">🔔 Tizim xabarlari va so'nggi voqealar</div>
+      <div style="padding:4px 0">
+        <div class="rank-row"><span style="font-size:16px;width:24px">✅</span><div><div style="font-size:12px;font-weight:700">Yangi foydalanuvchi ro'yxatdan o'tdi</div><div style="font-size:11px;color:var(--text3)">Ergasheva Mohira · Talaba · 27.03.2026 10:24</div></div></div>
+        <div class="rank-row"><span style="font-size:16px;width:24px">📋</span><div><div style="font-size:12px;font-weight:700">Yangi keys qo'shildi</div><div style="font-size:11px;color:var(--text3)">Podagra · O'tkir artrit · Dr. Nazarov · 27.03.2026 09:15</div></div></div>
+        <div class="rank-row"><span style="font-size:16px;width:24px">⚠️</span><div><div style="font-size:12px;font-weight:700">Tizim yangilanishi</div><div style="font-size:11px;color:var(--text3)">AI model v2.1 o'rnatildi · 26.03.2026 23:00</div></div></div>
+        <div class="rank-row"><span style="font-size:16px;width:24px">📊</span><div><div style="font-size:12px;font-weight:700">Oylik hisobot tayyor</div><div style="font-size:11px;color:var(--text3)">Mart 2026 statistikasi · Ko'rish uchun bosing</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- A: Foydalanuvchilar -->
+  <div class="page" id="a-users">
+    <div class="a-users-inner">
+      <div class="user-list-panel">
+        <div class="ulp-head">
+          <span class="ulp-title">Foydalanuvchilar</span>
+          <button class="btn-ghost" style="padding:5px 10px;font-size:11px" onclick="showToast('➕ Yangi foydalanuvchi')">+Yangi</button>
+        </div>
+        <input class="ulp-search" placeholder="🔍 Qidirish...">
+        <div style="display:flex;gap:4px;padding:6px 10px;border-bottom:1px solid var(--border)">
+          <button class="btn-ghost" style="padding:4px 10px;font-size:10px">Hammasi</button>
+          <button class="btn-ghost" style="padding:4px 10px;font-size:10px;background:transparent;border-color:var(--border)">Talabalar</button>
+          <button class="btn-ghost" style="padding:4px 10px;font-size:10px;background:transparent;border-color:var(--border)">O'qituvchilar</button>
+        </div>
+        <div class="ulp-body">
+          <div class="user-item active" onclick="showUser(this,{name:'Qurbonov Anusher',role:'Talaba',email:'anusher@clinpharm.uz',keys:24,avg:78,group:'PHD q-2',online:true})">
+            <div class="u-av" style="background:linear-gradient(135deg,var(--accent),var(--cyan));color:var(--bg)">QA</div>
+            <div class="u-info"><div class="u-name">Qurbonov Anusher</div><div class="u-role">Talaba · PHD q-2</div><div class="u-status" style="color:#22c55e">● Onlayn</div></div>
+          </div>
+          <div class="user-item" onclick="showUser(this,{name:'Yusupov Jasur',role:'Talaba',email:'jasur@clinpharm.uz',keys:32,avg:94,group:'PHD q-2',online:true})">
+            <div class="u-av" style="background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff">YJ</div>
+            <div class="u-info"><div class="u-name">Yusupov Jasur</div><div class="u-role">Talaba · PHD q-2</div><div class="u-status" style="color:#22c55e">● Onlayn</div></div>
+          </div>
+          <div class="user-item" onclick="showUser(this,{name:'Dr. Toshpulatov B.',role:'O\'qituvchi',email:'toshpulatov@samdchti.uz',keys:0,avg:0,group:'Kardiologiya kafedrasi',online:true})">
+            <div class="u-av" style="background:linear-gradient(135deg,var(--accent),#00a8ff);color:var(--bg)">TB</div>
+            <div class="u-info"><div class="u-name">Dr. Toshpulatov B.</div><div class="u-role">O'qituvchi · Kardiologiya</div><div class="u-status" style="color:#22c55e">● Onlayn</div></div>
+          </div>
+          <div class="user-item" onclick="showUser(this,{name:'Karimova Dilnoza',role:'Talaba',email:'dilnoza@clinpharm.uz',keys:28,avg:91,group:'PHD q-2',online:false})">
+            <div class="u-av" style="background:linear-gradient(135deg,#ec4899,#a855f7);color:#fff">KD</div>
+            <div class="u-info"><div class="u-name">Karimova Dilnoza</div><div class="u-role">Talaba · PHD q-2</div><div class="u-status" style="color:var(--text3)">● Oflayn</div></div>
+          </div>
+          <div class="user-item" onclick="showUser(this,{name:'Ergashev Sherzod',role:'Talaba',email:'sherzod@clinpharm.uz',keys:18,avg:74,group:'PHD q-1',online:false})">
+            <div class="u-av" style="background:linear-gradient(135deg,#06b6d4,#3b82f6);color:#fff">ES</div>
+            <div class="u-info"><div class="u-name">Ergashev Sherzod</div><div class="u-role">Talaba · PHD q-1</div><div class="u-status" style="color:var(--text3)">● Oflayn</div></div>
+          </div>
+          <div class="user-item" onclick="showUser(this,{name:'Prof. Nazarov A.',role:'O\'qituvchi',email:'nazarov@samdchti.uz',keys:0,avg:0,group:'Gastroenterologiya',online:false})">
+            <div class="u-av" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff">NA</div>
+            <div class="u-info"><div class="u-name">Prof. Nazarov A.</div><div class="u-role">O'qituvchi · Gastroenterologiya</div><div class="u-status" style="color:var(--text3)">● Oflayn</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="user-detail" id="a-user-detail">
+        <div class="ud-hdr">
+          <div class="ud-av" id="ud-av">QA</div>
+          <div>
+            <div style="font-size:20px;font-weight:800" id="ud-name">Qurbonov Anusher</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:3px" id="ud-email">anusher@clinpharm.uz</div>
+            <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap" id="ud-badges">
+              <span class="badge badge-accent">Talaba</span>
+              <span class="badge badge-accent">PHD q-2</span>
+              <span class="badge badge-accent" style="background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.3);color:#22c55e">Onlayn</span>
+            </div>
+          </div>
+          <div style="margin-left:auto;display:flex;gap:8px;flex-direction:column">
+            <button class="btn-ghost" onclick="showToast('✏️ Tahrirlash rejimi')">✏️ Tahrirlash</button>
+            <button class="btn-danger" onclick="showToast('🚫 Foydalanuvchi bloklandi')">🚫 Bloklash</button>
+          </div>
+        </div>
+        <div class="ud-stats">
+          <div class="ud-stat"><div class="ud-stat-v" id="ud-keys">24</div><div class="ud-stat-l">Keys yechildi</div></div>
+          <div class="ud-stat"><div class="ud-stat-v" id="ud-avg" style="color:var(--accent)">78%</div><div class="ud-stat-l">O'rtacha ball</div></div>
+          <div class="ud-stat"><div class="ud-stat-v">🔥5</div><div class="ud-stat-l">Streak</div></div>
+          <div class="ud-stat"><div class="ud-stat-v" style="color:var(--red)">12</div><div class="ud-stat-l">Xatolar</div></div>
+        </div>
+        <div class="action-row">
+          <button class="btn-primary" onclick="showToast('📊 Batafsil hisobot ko\'rilmoqda')">📊 Batafsil hisobot</button>
+          <button class="btn-ghost" onclick="showToast('📧 Email yuborildi')">📧 Email yuborish</button>
+          <button class="btn-ghost" onclick="showToast('🔑 Parol tiklandi')">🔑 Parol tiklash</button>
+          <button class="btn-ghost" onclick="showToast('👥 Guruh o\'zgartirildi')">👥 Guruh o'zgartirish</button>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="card-hdr">📅 So'nggi faollik</div>
+          <table class="admin-table">
+            <thead><tr><th>Sana</th><th>Keys nomi</th><th>Ball</th><th>Vaqt</th></tr></thead>
+            <tbody>
+              <tr><td>27.03.2026</td><td>Gipertoniya kasalligi 1-bosq.</td><td><span style="color:var(--text3)">Jarayonda</span></td><td>14:30</td></tr>
+              <tr><td>26.03.2026</td><td>Bronxial astma engil</td><td><span style="color:var(--accent);font-weight:800">85</span></td><td>11:15</td></tr>
+              <tr><td>25.03.2026</td><td>Oshqozon yarasi H.pylori+</td><td><span style="color:var(--yellow);font-weight:800">72</span></td><td>16:40</td></tr>
+              <tr><td>24.03.2026</td><td>BA og'ir darajali</td><td><span style="color:var(--accent);font-weight:800">91</span></td><td>10:00</td></tr>
+              <tr><td>23.03.2026</td><td>YuIK Stabil stenokardiya</td><td><span style="color:var(--yellow);font-weight:800">68</span></td><td>15:22</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- A: Keyslar boshqaruvi -->
+  <div class="page" id="a-cases">
+    <div class="a-cases-inner">
+      <div class="case-list-panel">
+        <div class="ulp-head">
+          <span class="ulp-title">Keyslar</span>
+          <button class="btn-ghost" style="padding:5px 10px;font-size:11px" onclick="showToast('➕ Yangi keys')">+Yangi</button>
+        </div>
+        <div class="clp-toolbar">
+          <input class="ulp-search" placeholder="🔍 Qidirish..." style="margin:0;flex:1">
+          <select class="filter-select" style="padding:7px 10px;font-size:11px">
+            <option>Hammasi</option>
+            <option>Kardiologiya</option>
+            <option>Pulmonologiya</option>
+          </select>
+        </div>
+        <div class="case-list-body">
+          <div class="cl-item active" onclick="selectAdminCase(this,'Gipertoniya kasalligi · 1-bosqichi','Kardiologiya')">
+            <div class="cl-cat">❤️ Kardiologiya</div><div class="cl-name">Gipertoniya kasalligi</div>
+            <div class="cl-meta">1-bosqichi · Engil</div>
+            <div class="oc-status" style="margin-top:4px">Faol</div>
+          </div>
+          <div class="cl-item" onclick="selectAdminCase(this,'Bronxial astma · Engil darajali','Pulmonologiya')">
+            <div class="cl-cat">🫁 Pulmonologiya</div><div class="cl-name">Bronxial astma</div>
+            <div class="cl-meta">Engil darajali · O'rta og'ir keys</div>
+            <div class="oc-status">Faol</div>
+          </div>
+          <div class="cl-item" onclick="selectAdminCase(this,'Oshqozon yarasi · H.pylori+','Gastroenterologiya')">
+            <div class="cl-cat">💊 Gastroenterologiya</div><div class="cl-name">Oshqozon yarasi</div>
+            <div class="cl-meta">H.pylori pozitiv</div>
+            <div class="oc-status">Faol</div>
+          </div>
+          <div class="cl-item" onclick="selectAdminCase(this,'Podagra · O\'tkir artrit','Revmotologiya')">
+            <div class="cl-cat">🦴 Revmotologiya</div><div class="cl-name">Podagra</div>
+            <div class="cl-meta">O'tkir podagrik artrit</div>
+            <div class="oc-status draft">Qoralama</div>
+          </div>
+          <div class="cl-item" onclick="selectAdminCase(this,'Jigar sirozi · Child-Pugh A','Gepatologiya')">
+            <div class="cl-cat">🔬 Gepatologiya</div><div class="cl-name">Jigar sirozi</div>
+            <div class="cl-meta">Child-Pugh A</div>
+            <div class="oc-status draft">Qoralama</div>
+          </div>
+        </div>
+      </div>
+      <div class="case-editor">
+        <div id="a-case-editor-content">
+          <div class="empty-st"><div class="bi">📋</div><h3>Keys tanlanmagan</h3><p>Chap paneldan keysni tanlang yoki yangi keys yarating.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- A: Statistika -->
+  <div class="page pg-scroll" id="a-stat">
+    <div class="h2" style="margin-bottom:16px">Tizim statistikasi va hisobotlar</div>
+    <div class="admin-grid">
+      <div class="admin-stat" data-icon="📈"><div class="as-lbl">Umumiy bajarilgan keyslar</div><div class="as-n">1,248</div><div class="as-sub">jami barcha vaqt</div></div>
+      <div class="admin-stat" data-icon="⭐"><div class="as-lbl">O'rtacha ball (tizim)</div><div class="as-n">76%</div><div class="as-sub">barcha talabalar</div></div>
+      <div class="admin-stat" data-icon="🔥"><div class="as-lbl">Eng faol guruh</div><div class="as-n" style="font-size:18px">PHD q-2</div><div class="as-sub">34 keys bu hafta</div></div>
+      <div class="admin-stat" data-icon="⚠️"><div class="as-lbl">Umumiy xato darajasi</div><div class="as-n" style="color:var(--red)">18%</div><div class="as-sub">tahlil talab etadi</div></div>
+    </div>
+    <div class="stat-3">
+      <div class="hc">
+        <div class="hc-hdr">🏆 Top 5 talaba (oylik)</div>
+        <div class="hc-body">
+          <div class="rank-row"><span class="rank-pos">#1</span><div><div class="rank-nm">Yusupov Jasur</div><div class="rank-bar"><div class="rank-bar-fill" style="width:94%"></div></div></div><span class="rank-sc">94%</span></div>
+          <div class="rank-row"><span class="rank-pos">#2</span><div><div class="rank-nm">Karimova Dilnoza</div><div class="rank-bar"><div class="rank-bar-fill" style="width:91%"></div></div></div><span class="rank-sc">91%</span></div>
+          <div class="rank-row"><span class="rank-pos">#3</span><div><div class="rank-nm">Toshmatov Bobur</div><div class="rank-bar"><div class="rank-bar-fill" style="width:88%"></div></div></div><span class="rank-sc">88%</span></div>
+          <div class="rank-row"><span class="rank-pos">#4</span><div><div class="rank-nm">Xoliqova Munira</div><div class="rank-bar"><div class="rank-bar-fill" style="width:85%"></div></div></div><span class="rank-sc">85%</span></div>
+          <div class="rank-row"><span class="rank-pos">#5</span><div><div class="rank-nm">Qurbonov Anusher</div><div class="rank-bar"><div class="rank-bar-fill" style="width:78%"></div></div></div><span class="rank-sc">78%</span></div>
+        </div>
+      </div>
+      <div class="hc">
+        <div class="hc-hdr">📚 Kategoriyalar bo'yicha</div>
+        <div class="hc-body">
+          <div class="rank-row"><div style="flex:1"><div class="rank-nm">❤️ Kardiologiya</div><div class="rank-bar"><div class="rank-bar-fill" style="width:82%"></div></div></div><span class="rank-sc">82%</span></div>
+          <div class="rank-row"><div style="flex:1"><div class="rank-nm">🫁 Pulmonologiya</div><div class="rank-bar"><div class="rank-bar-fill" style="width:78%"></div></div></div><span class="rank-sc">78%</span></div>
+          <div class="rank-row"><div style="flex:1"><div class="rank-nm">💊 Gastroenterologiya</div><div class="rank-bar"><div class="rank-bar-fill" style="width:71%"></div></div></div><span class="rank-sc">71%</span></div>
+          <div class="rank-row"><div style="flex:1"><div class="rank-nm">🦴 Revmotologiya</div><div class="rank-bar"><div class="rank-bar-fill" style="width:65%"></div></div></div><span class="rank-sc">65%</span></div>
+          <div class="rank-row"><div style="flex:1"><div class="rank-nm">🔬 Gepatologiya</div><div class="rank-bar"><div class="rank-bar-fill" style="width:70%"></div></div></div><span class="rank-sc">70%</span></div>
+        </div>
+      </div>
+      <div class="hc">
+        <div class="hc-hdr">📅 Oylik trend</div>
+        <div style="padding:14px">
+          <div class="mini-chart" style="height:90px">
+            <div class="mc-bar" style="height:55%">Jan<div class="mc-bar-label">Yan</div></div>
+            <div class="mc-bar" style="height:65%">Feb<div class="mc-bar-label">Fev</div></div>
+            <div class="mc-bar" style="height:100%;background:rgba(var(--accent-rgb),.3);border-color:var(--accent)">Mar<div class="mc-bar-label">Mar</div></div>
+          </div>
+          <div style="margin-top:26px;font-size:11px;color:var(--text3)">Mart oyida eng yuqori faollik qayd etildi (+28% o'sish)</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn-primary" onclick="showToast('📄 PDF hisobot yuklanmoqda...')">📄 PDF hisobot yuklab olish</button>
+      <button class="btn-ghost" onclick="showToast('📊 Excel fayl yuklanmoqda...')">📊 Excel eksport</button>
+      <button class="btn-ghost" onclick="showToast('📧 Hisobot yuborildi')">📧 Hisobot yuborish</button>
+    </div>
+  </div>
+
+  <!-- A: Sozlamalar -->
+  <div class="page pg-scroll" id="a-settings">
+    <div class="h2" style="margin-bottom:16px">Tizim sozlamalari</div>
+    <div class="settings-grid">
+      <div class="card">
+        <div class="card-hdr">🤖 AI Sozlamalari</div>
+        <div class="setting-item"><div class="si-left"><div class="si-title">AI tahlilini yoqish</div><div class="si-desc">Keys baholashda AI dan foydalanish</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="setting-item"><div class="si-left"><div class="si-title">AI tavsiyalar</div><div class="si-desc">Talabaga real-time AI maslahat</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="setting-item"><div class="si-left"><div class="si-title">Avtomatik baholash</div><div class="si-desc">AI keys topshirilgach darhol baholaydi</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+        <div style="padding:14px">
+          <div class="form-group"><label class="form-label">AI Model versiyasi</label>
+          <select class="form-input"><option>Claude Sonnet 4.6 (tavsiya)</option><option>Claude Haiku 4.5</option></select></div>
+          <div class="form-group" style="margin-top:10px"><label class="form-label">Baholash qat'iyligi</label>
+          <select class="form-input"><option>O'rta (standart)</option><option>Qat'iy</option><option>Yumshaq</option></select></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hdr">🏫 O'quv jarayoni sozlamalari</div>
+        <div class="setting-item"><div class="si-left"><div class="si-title">Streak tizimi</div><div class="si-desc">Kunlik faollik streak'ini hisoblash</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="setting-item"><div class="si-left"><div class="si-title">Guruh reytingi</div><div class="si-desc">Talabalararo reyting ko'rsatilsin</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="setting-item"><div class="si-left"><div class="si-title">Demo rejimi</div><div class="si-desc">Yangi talabalar uchun demo keys</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        <div style="padding:14px">
+          <div class="form-group"><label class="form-label">Haftalik keys maqsadi</label>
+          <input class="form-input" type="number" value="7" min="1" max="30"></div>
+          <div class="form-group" style="margin-top:10px"><label class="form-label">O'tish ball chegarasi</label>
+          <input class="form-input" type="number" value="60" min="50" max="90"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hdr">🔔 Bildirishnomalar</div>
+        <div class="setting-item"><div class="si-left"><div class="si-title">Email bildirishnoma</div><div class="si-desc">Yangi keys va natijalar haqida</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="setting-item"><div class="si-left"><div class="si-title">Faolsizlik ogohlantirishi</div><div class="si-desc">3 kun faolsiz talabaga eslatma</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="setting-item"><div class="si-left"><div class="si-title">Hisobot email</div><div class="si-desc">Haftalik avtomatik hisobot yuborish</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-hdr">🔒 Xavfsizlik va zaxira</div>
+        <div class="setting-item"><div class="si-left"><div class="si-title">2 bosqichli autentifikatsiya</div><div class="si-desc">Admin uchun majburiy</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="setting-item"><div class="si-left"><div class="si-title">Sessiya muddati (soat)</div></div><select class="form-input" style="width:80px;padding:4px 8px;font-size:12px"><option>8</option><option>24</option><option>72</option></select></div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:8px">
+          <button class="btn-ghost" onclick="showToast('💾 Zaxira nusxa yaratilmoqda...')">💾 Zaxira nusxa yaratish</button>
+          <button class="btn-danger" onclick="showToast('⚠️ Tasdiq talab etiladi')">🗑 Kesh tozalash</button>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn-primary" onclick="showToast('✅ Sozlamalar saqlandi!')">✅ Sozlamalarni saqlash</button>
+      <button class="btn-ghost" onclick="showToast('↩️ Tiklandi')">↩️ Asl holatga qaytarish</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════ O'QITUVCHI PAGES ═══════════════ -->
+
+  <!-- O: Bosh sahifa -->
+  <div class="page pg-scroll" id="o-home">
+    <div class="o-hero">
+      <div>
+        <h1>Salom, <span id="o-hero-name">Ustoz!</span></h1>
+        <p id="o-hero-sub">Bugun 5 ta talaba keys yechmoqda. Monitoring panelini ko'rib chiqing.</p>
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+          <span class="badge badge-accent">👨‍🎓 34 ta talaba</span>
+          <span class="badge badge-accent">📋 86 ta keys</span>
+          <span class="badge badge-accent">SamDChTI</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;flex-shrink:0">
+        <button class="btn-primary" onclick="goPage('o-create')">➕ Yangi keys yaratish</button>
+        <button class="btn-ghost" onclick="goPage('o-monitor')">📊 Monitoring</button>
+      </div>
+    </div>
+
+    <div class="o-grid">
+      <div class="o-card"><div class="o-card-ic">👨‍🎓</div><div class="o-card-lbl">Talabalarim</div><div class="o-card-n">34</div><div class="o-card-s">3 ta guruh</div></div>
+      <div class="o-card"><div class="o-card-ic">📋</div><div class="o-card-lbl">Mening keyslarim</div><div class="o-card-n">18</div><div class="o-card-s">6 ta qoralama</div></div>
+      <div class="o-card"><div class="o-card-ic">⏳</div><div class="o-card-lbl">Baholash kutmoqda</div><div class="o-card-n" style="color:var(--yellow)">7</div><div class="o-card-s">tekshirilishi lozim</div></div>
+      <div class="o-card"><div class="o-card-ic">⭐</div><div class="o-card-lbl">Guruh o'rtachasi</div><div class="o-card-n" style="color:var(--accent)">79%</div><div class="o-card-s">bu oy</div></div>
+    </div>
+
+    <div class="o-main-grid">
+      <div class="card">
+        <div class="card-hdr">📊 Talabalar progressi (so'nggi)</div>
+        <div id="o-student-list">
+          <div class="student-prog"><div class="sp-av">YJ</div><div class="sp-info"><div class="sp-name">Yusupov Jasur</div><div class="sp-meta">32 keys · PHD q-2</div><div class="sp-pbar"><div class="sp-pfill" style="width:94%"></div></div></div><span class="sp-score" style="color:var(--accent)">94%</span></div>
+          <div class="student-prog"><div class="sp-av">KD</div><div class="sp-info"><div class="sp-name">Karimova Dilnoza</div><div class="sp-meta">28 keys · PHD q-2</div><div class="sp-pbar"><div class="sp-pfill" style="width:91%"></div></div></div><span class="sp-score" style="color:var(--accent)">91%</span></div>
+          <div class="student-prog"><div class="sp-av">TB</div><div class="sp-info"><div class="sp-name">Toshmatov Bobur</div><div class="sp-meta">25 keys · PHD q-2</div><div class="sp-pbar"><div class="sp-pfill" style="width:88%"></div></div></div><span class="sp-score" style="color:var(--accent)">88%</span></div>
+          <div class="student-prog"><div class="sp-av">QA</div><div class="sp-info"><div class="sp-name">Qurbonov Anusher</div><div class="sp-meta">24 keys · PHD q-2</div><div class="sp-pbar"><div class="sp-pfill" style="width:78%"></div></div></div><span class="sp-score" style="color:var(--yellow)">78%</span></div>
+          <div class="student-prog"><div class="sp-av">ES</div><div class="sp-info"><div class="sp-name">Ergashev Sherzod</div><div class="sp-meta">18 keys · PHD q-1</div><div class="sp-pbar"><div class="sp-pfill" style="width:74%"></div></div></div><span class="sp-score" style="color:var(--yellow)">74%</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hdr">📋 Baholash kutmoqda</div>
+        <div style="padding:4px 0">
+          <div class="rank-row" style="cursor:pointer" onclick="goPage('o-results')">
+            <span style="font-size:16px;width:24px">⏳</span>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:700">Qurbonov A. — Gipertoniya</div>
+              <div style="font-size:11px;color:var(--text3)">Topshirildi · 27.03.2026 14:30</div>
+            </div>
+            <button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="event.stopPropagation();showToast('✅ Baholandi!')">Baholash</button>
+          </div>
+          <div class="rank-row" style="cursor:pointer">
+            <span style="font-size:16px;width:24px">⏳</span>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:700">Ergashev Sh. — BA og'ir</div>
+              <div style="font-size:11px;color:var(--text3)">Topshirildi · 27.03.2026 10:12</div>
+            </div>
+            <button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="showToast('✅ Baholandi!')">Baholash</button>
+          </div>
+          <div class="rank-row" style="cursor:pointer">
+            <span style="font-size:16px;width:24px">⏳</span>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:700">Xoliqova M. — Oshqozon yarasi</div>
+              <div style="font-size:11px;color:var(--text3)">Topshirildi · 26.03.2026 16:50</div>
+            </div>
+            <button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="showToast('✅ Baholandi!')">Baholash</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- O: Monitoring -->
+  <div class="page" id="o-monitor">
+    <div class="o-mon-inner">
+      <div class="mon-left">
+        <div class="ulp-head"><span class="ulp-title">Guruhlar</span></div>
+        <div class="mon-groups">
+          <div class="group-item active" onclick="this.parentElement.querySelectorAll('.group-item').forEach(e=>e.classList.remove('active'));this.classList.add('active')">
+            <div class="gi-name">PHD q-2</div><div class="gi-meta">12 ta talaba · Faol</div>
+          </div>
+          <div class="group-item" onclick="this.parentElement.querySelectorAll('.group-item').forEach(e=>e.classList.remove('active'));this.classList.add('active')">
+            <div class="gi-name">PHD q-1</div><div class="gi-meta">14 ta talaba · Faol</div>
+          </div>
+          <div class="group-item" onclick="this.parentElement.querySelectorAll('.group-item').forEach(e=>e.classList.remove('active'));this.classList.add('active')">
+            <div class="gi-name">Ordinatura</div><div class="gi-meta">8 ta talaba · Faol</div>
+          </div>
+        </div>
+      </div>
+      <div class="mon-main">
+        <div class="mon-stat-row">
+          <div class="mon-st"><div class="msv">12</div><div class="msl">Talabalar</div></div>
+          <div class="mon-st"><div class="msv" style="color:var(--accent)">81%</div><div class="msl">Guruh o'rtachasi</div></div>
+          <div class="mon-st"><div class="msv" style="color:var(--yellow)">3</div><div class="msl">Baholash kutmoqda</div></div>
+        </div>
+        <div class="card">
+          <div class="card-hdr">👨‍🎓 PHD q-2 — Barcha talabalar</div>
+          <table class="student-table">
+            <thead><tr><th>Talaba</th><th>Keys soni</th><th>O'rtacha ball</th><th>Streak</th><th>So'nggi faollik</th><th>Holat</th></tr></thead>
+            <tbody>
+              <tr><td><span class="st-av">YJ</span>Yusupov Jasur</td><td><span style="color:var(--accent);font-weight:800">32</span></td><td><span style="color:var(--accent);font-weight:800">94%</span></td><td>🔥12</td><td>Hozir faol</td><td><span class="badge badge-accent" style="font-size:9px">Onlayn</span></td></tr>
+              <tr><td><span class="st-av">KD</span>Karimova Dilnoza</td><td>28</td><td><span style="color:var(--accent);font-weight:800">91%</span></td><td>🔥8</td><td>1 soat oldin</td><td><span class="badge" style="font-size:9px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);color:#a855f7">Oflayn</span></td></tr>
+              <tr><td><span class="st-av">TB</span>Toshmatov Bobur</td><td>25</td><td><span style="color:var(--accent);font-weight:800">88%</span></td><td>🔥6</td><td>3 soat oldin</td><td><span class="badge" style="font-size:9px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);color:#a855f7">Oflayn</span></td></tr>
+              <tr><td><span class="st-av">XM</span>Xoliqova Munira</td><td>22</td><td><span style="color:var(--accent);font-weight:800">85%</span></td><td>🔥4</td><td>30 daqiqa oldin</td><td><span class="badge badge-accent" style="font-size:9px">Onlayn</span></td></tr>
+              <tr><td><span class="st-av">QA</span>Qurbonov Anusher</td><td>24</td><td><span style="color:var(--yellow);font-weight:800">78%</span></td><td>🔥5</td><td>Hozir faol</td><td><span class="badge badge-accent" style="font-size:9px">Onlayn</span></td></tr>
+              <tr><td><span class="st-av">ES</span>Ergashev Sherzod</td><td>18</td><td><span style="color:var(--yellow);font-weight:800">74%</span></td><td>🔥2</td><td>Kecha</td><td><span class="badge" style="font-size:9px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);color:#a855f7">Oflayn</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- O: Keys yaratish -->
+  <div class="page" id="o-create">
+    <div class="oc-inner">
+      <div class="oc-left">
+        <div class="ulp-head">
+          <span class="ulp-title">Mening keyslarim</span>
+          <button class="btn-ghost" style="padding:5px 10px;font-size:11px" onclick="showToast('➕ Yangi keys')">+Yangi</button>
+        </div>
+        <div class="oc-list">
+          <div class="oc-item active">
+            <div class="oc-it-name">Gipertoniya kasalligi</div>
+            <div class="oc-it-meta">❤️ Kardiologiya · 1-bosqichi</div>
+            <div class="oc-status">Faol</div>
+          </div>
+          <div class="oc-item">
+            <div class="oc-it-name">Bronxial astma</div>
+            <div class="oc-it-meta">🫁 Pulmonologiya · Engil</div>
+            <div class="oc-status">Faol</div>
+          </div>
+          <div class="oc-item">
+            <div class="oc-it-name">Podagra — yangi</div>
+            <div class="oc-it-meta">🦴 Revmotologiya</div>
+            <div class="oc-status draft">Qoralama</div>
+          </div>
+        </div>
+      </div>
+      <div class="oc-main">
+        <div class="oc-form">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:16px;font-weight:800">Keys tahrirlash</div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-ghost" onclick="showToast('👁 Ko\'rish rejimi')">👁 Ko'rish</button>
+              <button class="btn-primary" onclick="showToast('✅ Keys saqlandi!')">💾 Saqlash</button>
+            </div>
+          </div>
+          <div class="section-divider">Asosiy ma'lumot</div>
+          <div class="ce-grid">
+            <div class="form-group"><label class="form-label">Kasallik nomi</label><input class="form-input" value="Gipertoniya kasalligi" placeholder="Kasallik nomi..."></div>
+            <div class="form-group"><label class="form-label">Kategoriya</label><select class="form-input"><option>Kardiologiya</option><option>Pulmonologiya</option><option>Gastroenterologiya</option><option>Revmotologiya</option></select></div>
+            <div class="form-group"><label class="form-label">Bosqich / Daraja</label><input class="form-input" value="1-bosqichi" placeholder="Masalan: 2-bosqichi..."></div>
+            <div class="form-group"><label class="form-label">Qiyinlik darajasi</label><select class="form-input"><option>Engil darajali keys</option><option>O'rta og'ir keys</option><option>Og'ir keys</option></select></div>
+          </div>
+          <div class="section-divider">Bemor ma'lumotlari</div>
+          <div class="ce-grid">
+            <div class="form-group"><label class="form-label">Bemor ismi</label><input class="form-input" value="Maksim" placeholder="Bemor ismi..."></div>
+            <div class="form-group"><label class="form-label">Yoshi / Jinsi</label><input class="form-input" value="52 yosh / Erkak" placeholder="Yoshi va jinsi..."></div>
+          </div>
+          <div class="form-group"><label class="form-label">Asosiy tashxis</label><input class="form-input" value="YuIK. Stabil zo'riqish stenokardiyasi. FS II."></div>
+          <div class="section-divider">Klinik ma'lumotlar</div>
+          <div class="form-group"><label class="form-label">Shikoyatlar</label><textarea class="form-ta">Yurak sohasida og'riq, zo'riqishda hansirash, bosh og'rig'i, bosh aylanishi. Kechqurun oyoqlarda shish paydo bo'lishi.</textarea></div>
+          <div class="form-group"><label class="form-label">Ob'ektiv belgilari</label><textarea class="form-ta">QB: 155/90 mmHg. YuQS: 78/daqiqa. Yurak tonlari bo'g'iqlashgan. Ikkinchi ton aorta ustida kuchaygan.</textarea></div>
+          <div class="section-divider">Laborator va instrumental tekshiruvlar</div>
+          <div class="form-group"><label class="form-label">Laborator ma'lumotlar</label><textarea class="form-ta">Hb: 138 g/l · LDL: 4.1 mmol/l ⬆ · HDL: 0.9 mmol/l ⬇ · Umumiy xolesterin: 6.2 mmol/l ⬆</textarea></div>
+          <div class="form-group"><label class="form-label">Instrumental tekshiruvlar (EKG, ExoKG)</label><textarea class="form-ta">EKG: Sinus ritmi, YuQS 78/daqiqa. Chap qorincha gipertrofiyasi. ST depressiyasi V4-V6.
+ExoKG: EF 52%. Diastol disfunktsiya I daraja.</textarea></div>
+          <div class="section-divider">AI baholash sozlamalari</div>
+          <div class="ce-grid">
+            <div class="form-group"><label class="form-label">To'g'ri javob (asosiy dorilar)</label><textarea class="form-ta" style="min-height:70px">Aspirin 75mg + Bisoprolol 5mg + Ramipril 5mg + Atorvastatin 40mg</textarea></div>
+            <div class="form-group"><label class="form-label">Baholash mezonlari</label><textarea class="form-ta" style="min-height:70px">Antiagregant: 25 ball
+Beta-blokator: 20 ball
+RAAS blokatori: 25 ball
+Statin: 20 ball
+Doza: 10 ball</textarea></div>
+          </div>
+          <div class="save-bar">
+            <button class="btn-primary" onclick="showToast('✅ Keys saqlandi va faol!')">✅ Saqlash va nashr etish</button>
+            <button class="btn-ghost" onclick="showToast('💾 Qoralama saqlandi')">💾 Qoralama sifatida saqlash</button>
+            <button class="btn-danger" onclick="showToast('🗑 O\'chirildi')">🗑 O'chirish</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- O: Natijalar -->
+  <div class="page pg-scroll" id="o-results">
+    <div class="h2" style="margin-bottom:16px">Natijalar va baholash</div>
+    <div class="filter-row">
+      <select class="filter-select"><option>Barcha guruhlar</option><option>PHD q-2</option><option>PHD q-1</option></select>
+      <select class="filter-select"><option>Barcha keyslar</option><option>Gipertoniya</option><option>Bronxial astma</option></select>
+      <select class="filter-select"><option>Sana bo'yicha (yangi)</option><option>Ball bo'yicha</option></select>
+      <button class="btn-ghost">🔍 Qidirish</button>
+      <span style="font-size:12px;color:var(--text3);margin-left:auto">Jami: 34 natija</span>
+    </div>
+    <div class="card">
+      <div class="card-hdr">📋 Topshirilgan keyslar</div>
+      <table class="student-table">
+        <thead><tr><th>Talaba</th><th>Keys</th><th>Topshirildi</th><th>Ball</th><th>Baho</th><th>Holat</th><th></th></tr></thead>
+        <tbody>
+          <tr><td><span class="st-av">QA</span>Qurbonov A.</td><td>Gipertoniya 1-bosq.</td><td>27.03 14:30</td><td style="color:var(--text3)">—</td><td>—</td><td><span class="badge badge-yellow" style="font-size:9px">Kutmoqda</span></td><td><button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="showToast('✅ 84 ball berildi')">Baholash</button></td></tr>
+          <tr><td><span class="st-av">ES</span>Ergashev Sh.</td><td>BA og'ir darajali</td><td>27.03 10:12</td><td style="color:var(--text3)">—</td><td>—</td><td><span class="badge badge-yellow" style="font-size:9px">Kutmoqda</span></td><td><button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="showToast('✅ 79 ball berildi')">Baholash</button></td></tr>
+          <tr><td><span class="st-av">YJ</span>Yusupov J.</td><td>Gipertoniya 2-bosq.</td><td>26.03 15:40</td><td style="color:var(--accent);font-weight:800">95</td><td style="color:var(--accent);font-weight:800">5</td><td><span class="badge badge-accent" style="font-size:9px">Baholandi</span></td><td><button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="showToast('📊 Batafsil ko\'rilmoqda')">Ko'rish</button></td></tr>
+          <tr><td><span class="st-av">KD</span>Karimova D.</td><td>Bronxial astma engil</td><td>26.03 11:22</td><td style="color:var(--accent);font-weight:800">91</td><td style="color:var(--accent);font-weight:800">5</td><td><span class="badge badge-accent" style="font-size:9px">Baholandi</span></td><td><button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="showToast('📊 Batafsil ko\'rilmoqda')">Ko'rish</button></td></tr>
+          <tr><td><span class="st-av">XM</span>Xoliqova M.</td><td>Oshqozon yarasi</td><td>25.03 16:50</td><td style="color:var(--accent);font-weight:800">85</td><td style="color:var(--accent);font-weight:800">4</td><td><span class="badge badge-accent" style="font-size:9px">Baholandi</span></td><td><button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="showToast('📊 Batafsil ko\'rilmoqda')">Ko'rish</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="results-grid">
+      <div class="card">
+        <div class="card-hdr">📊 Guruh statistikasi</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:10px">
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="color:var(--text2)">O'rtacha ball</span><span style="color:var(--accent);font-weight:800">81%</span></div><div class="pbar"><div class="pbar-fill" style="width:81%"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="color:var(--text2)">Baholash darajasi</span><span style="color:var(--accent);font-weight:800">71%</span></div><div class="pbar"><div class="pbar-fill" style="width:71%"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="color:var(--text2)">5 ball olganlar</span><span style="color:var(--accent);font-weight:800">42%</span></div><div class="pbar"><div class="pbar-fill" style="width:42%"></div></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hdr">💊 Ko'p qilingan xatolar</div>
+        <div style="padding:4px 0">
+          <div class="rank-row"><div class="rank-nm" style="font-size:12px">Noto'g'ri doza</div><span class="badge badge-red">28%</span></div>
+          <div class="rank-row"><div class="rank-nm" style="font-size:12px">Kontraindikatsiya</div><span class="badge badge-red">22%</span></div>
+          <div class="rank-row"><div class="rank-nm" style="font-size:12px">O'zaro ta'sir</div><span class="badge badge-yellow">15%</span></div>
+          <div class="rank-row"><div class="rank-nm" style="font-size:12px">Muddat ko'rsatilmagan</div><span class="badge badge-yellow">12%</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hdr">✅ Baholash ulushi</div>
+        <div style="padding:14px;text-align:center">
+          <div style="font-family:var(--mono);font-size:48px;font-weight:700;color:var(--accent)">71%</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:4px">34 dan 24 ta baholandi</div>
+          <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div style="background:var(--surface2);border-radius:8px;padding:10px;text-align:center"><div style="font-family:var(--mono);font-size:20px;font-weight:700;color:var(--accent)">24</div><div style="font-size:10px;color:var(--text3)">Baholandi</div></div>
+            <div style="background:var(--surface2);border-radius:8px;padding:10px;text-align:center"><div style="font-family:var(--mono);font-size:20px;font-weight:700;color:var(--yellow)">10</div><div style="font-size:10px;color:var(--text3)">Kutmoqda</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- O: Profil -->
+  <div class="page pg-scroll" id="o-profil">
+    <div class="h2" style="margin-bottom:4px">Mening profilim</div>
+    <div class="profil-grid">
+      <div>
+        <div class="prof-card">
+          <div class="prof-av" id="o-prof-av">TB</div>
+          <div class="prof-name" id="o-prof-name">Dr. Toshpulatov B.</div>
+          <div class="prof-email" id="o-prof-email">toshpulatov@samdchti.uz</div>
+          <div class="prof-bds">
+            <span class="badge badge-accent">O'qituvchi</span>
+            <span class="badge badge-accent">Kardiologiya</span>
+            <span class="badge badge-accent">SamDChTI</span>
+          </div>
+          <div class="prof-stats">
+            <div class="ps"><div class="ps-v">18</div><div class="ps-l">Keys yaratildi</div></div>
+            <div class="ps"><div class="ps-v">34</div><div class="ps-l">Talabalar</div></div>
+            <div class="ps"><div class="ps-v" style="color:var(--accent)">81%</div><div class="ps-l">Guruh o'rtachasi</div></div>
+            <div class="ps"><div class="ps-v" style="color:var(--yellow)">7</div><div class="ps-l">Baholash kutmoqda</div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="menu-card2">
+          <div class="mc-title">O'qituvchi paneli</div>
+          <div class="mi" onclick="goPage('o-monitor')"><span class="mi-ic">📊</span><span class="mi-t">Talabalar monitoringi</span><span class="mi-a">›</span></div>
+          <div class="mi" onclick="goPage('o-create')"><span class="mi-ic">📋</span><span class="mi-t">Keyslarni boshqarish (18 ta)</span><span class="mi-a">›</span></div>
+          <div class="mi" onclick="goPage('o-results')"><span class="mi-ic">✅</span><span class="mi-t">Baholash kutmoqda (7 ta)</span><span class="mi-a">›</span></div>
+          <div class="mi"><span class="mi-ic">📈</span><span class="mi-t">Kursim statistikasi</span><span class="mi-a">›</span></div>
+        </div>
+        <div class="menu-card2">
+          <div class="mc-title">Ilmiy va pedagogik</div>
+          <div class="mi"><span class="mi-ic">📚</span><span class="mi-t">Klinik protokollar kutubxonasi</span><span class="mi-a">›</span></div>
+          <div class="mi"><span class="mi-ic">🎓</span><span class="mi-t">Malaka oshirish</span><span class="mi-a">›</span></div>
+          <div class="mi"><span class="mi-ic">💡</span><span class="mi-t">AI baholash shablonlari</span><span class="mi-a">›</span></div>
+        </div>
+        <div class="menu-card2">
+          <div class="mc-title">Sozlamalar</div>
+          <div class="mi"><span class="mi-ic">🔔</span><span class="mi-t">Bildirishnomalar</span><span class="mi-a">›</span></div>
+          <div class="mi"><span class="mi-ic">🔒</span><span class="mi-t">Xavfsizlik</span><span class="mi-a">›</span></div>
+        </div>
+        <button class="logout-btn" onclick="doLogout()">🚪 Tizimdan chiqish</button>
       </div>
     </div>
   </div>
 
 </div>
 
-<!-- TOAST -->
+<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
-/* ════════════════════════════════════════
-   DATA
-════════════════════════════════════════ */
+/* ════════════════════════════════════════════════
+   ROLE NAV CONFIG
+════════════════════════════════════════════════ */
+const NAV_CONFIG = {
+  'Talaba': [
+    {id:'t-home', label:'Bosh sahifa', icon:'🏠'},
+    {id:'t-keys', label:'Keys yechish', icon:'📋'},
+    {id:'t-hisobot', label:'Hisobotim', icon:'📊'},
+    {id:'t-profil', label:'Profil', icon:'👤'},
+  ],
+  "O'qituvchi": [
+    {id:'o-home', label:'Bosh sahifa', icon:'🏠'},
+    {id:'o-monitor', label:'Monitoring', icon:'📡'},
+    {id:'o-create', label:'Keys yaratish', icon:'✏️'},
+    {id:'o-results', label:'Natijalar', icon:'✅'},
+    {id:'o-profil', label:'Profil', icon:'👤'},
+  ],
+  'Admin': [
+    {id:'a-dashboard', label:'Dashboard', icon:'⚙️'},
+    {id:'a-users', label:'Foydalanuvchilar', icon:'👥'},
+    {id:'a-cases', label:'Keyslar', icon:'📋'},
+    {id:'a-stat', label:'Statistika', icon:'📊'},
+    {id:'a-settings', label:'Sozlamalar', icon:'🛠'},
+  ],
+};
+
+/* ════════════════════════════════════════════════
+   CASE DATA
+════════════════════════════════════════════════ */
 const CATEGORIES = [
   { id:'kardiologiya', name:'Kardiologiya', icon:'❤️', diseases:[
-    { id:'yurak_etish', name:'Yurak etishmochiligi', subs:[
-      { id:'otkir_yue', name:"O'tkir YuE" },
-      { id:'surunkali_yue', name:'Surunkali YuE' },
+    { id:'gipertoniya', name:'Gipertoniya kasalligi', subs:[
+      {id:'giper_1',name:'1-bosqichi'},{id:'giper_2',name:'2-bosqichi'},{id:'giper_3',name:'3-bosqichi'},
     ]},
     { id:'yurak_ishemik', name:'Yurak ishemik kasalligi', subs:[
-      { id:'stabil', name:"Stabil zo'riqish stenokardiyasi" },
-      { id:'nostabil', name:"Nostabil zo'riqish stenokardiyasi" },
-      { id:'miokard', name:'Miokard infarkti' },
-    ]},
-    { id:'gipertoniya', name:'Gipertoniya kasalligi', subs:[
-      { id:'giper_1', name:'1-bosqichi' },
-      { id:'giper_2', name:'2-bosqichi' },
-      { id:'giper_3', name:'3-bosqichi' },
-    ]},
-  ]},
-  { id:'revmotologiya', name:'Revmotologiya', icon:'🦴', diseases:[
-    { id:'revmatoid', name:'Revmatoid artrit', subs:[
-      { id:'ra_sero', name:'Seropozitiv RA' },
-      { id:'ra_nero', name:'Seronegativ RA' },
-    ]},
-    { id:'podagra', name:'Podagra', subs:[
-      { id:'otkir_pod', name:"O'tkir podagrik artrit" },
-      { id:'sur_pod', name:'Surunkali podagra' },
+      {id:'stabil',name:"Stabil stenokardiya"},{id:'miokard',name:'Miokard infarkti'},
     ]},
   ]},
   { id:'pulmonologiya', name:'Pulmonologiya', icon:'🫁', diseases:[
     { id:'bronxial', name:'Bronxial astma', subs:[
-      { id:'ba_engil', name:'Engil darajali BA' },
-      { id:'ba_orta', name:"O'rta og'ir BA" },
-      { id:'ba_ogir', name:"Og'ir BA" },
+      {id:'ba_engil',name:'Engil darajali'},{id:'ba_orta',name:"O'rta og'ir"},{id:'ba_ogir',name:"Og'ir"},
     ]},
     { id:'pnevmoniya', name:'Pnevmoniya', subs:[
-      { id:'jamoa_pnev', name:'Jamoa pnevmoniyasi' },
-      { id:'noz_pnev', name:'Nozokomial pnevmoniya' },
+      {id:'jamoa_pnev',name:'Jamoa'},{id:'noz_pnev',name:'Nozokomial'},
     ]},
   ]},
   { id:'gastroenterologiya', name:'Gastroenterologiya', icon:'💊', diseases:[
     { id:'oshqozon', name:'Oshqozon yarasi', subs:[
-      { id:'hp_poz', name:'H.pylori pozitiv' },
-      { id:'hp_neg', name:'H.pylori negativ' },
+      {id:'hp_poz',name:'H.pylori pozitiv'},{id:'hp_neg',name:'H.pylori negativ'},
     ]},
-    { id:'gerb', name:'GERB', subs:[
-      { id:'gerb_er', name:'Eroziv GERB' },
-      { id:'gerb_ner', name:'Noeroziv GERB' },
+  ]},
+  { id:'revmotologiya', name:'Revmotologiya', icon:'🦴', diseases:[
+    { id:'revmatoid', name:'Revmatoid artrit', subs:[
+      {id:'ra_sero',name:'Seropozitiv RA'},{id:'ra_nero',name:'Seronegativ RA'},
+    ]},
+    { id:'podagra', name:'Podagra', subs:[
+      {id:'otkir_pod',name:"O'tkir artrit"},{id:'sur_pod',name:'Surunkali'},
     ]},
   ]},
   { id:'gepatologiya', name:'Gepatologiya', icon:'🔬', diseases:[
     { id:'gepatit_b', name:'Surunkali gepatit B', subs:[
-      { id:'hbv_aktiv', name:'Aktiv fazasi' },
-      { id:'hbv_noaktiv', name:'Noaktiv tashuvchilik' },
-    ]},
-    { id:'sirroz', name:'Jigar sirozi', subs:[
-      { id:'sirroz_a', name:'Child-Pugh A' },
-      { id:'sirroz_b', name:'Child-Pugh B' },
+      {id:'hbv_aktiv',name:'Aktiv fazasi'},
     ]},
   ]},
   { id:'nefrologiya', name:'Nefrologiya', icon:'💧', diseases:[
     { id:'sbk', name:'Surunkali buyrak kasalligi', subs:[
-      { id:'sbk_3', name:'3-bosqich' },
-      { id:'sbk_4', name:'4-bosqich' },
-      { id:'sbk_5', name:'5-bosqich (dializ)' },
-    ]},
-    { id:'glom', name:'Glomerulonefrit', subs:[
-      { id:'gn_mem', name:'Membranoz GN' },
-      { id:'gn_mez', name:'Mezangioproliferativ GN' },
+      {id:'sbk_3',name:'3-bosqich'},{id:'sbk_4',name:'4-bosqich'},
     ]},
   ]},
 ];
 
-const CASE_DATA = {
-  pasport: {
-    title: "Pasport ma'lumotlari",
-    rows:[
-      ['F.I.Sh', 'Maksim'],
-      ['Yoshi', '52 yosh'],
-      ['Jinsi', 'Erkak'],
-      ['Asosiy tashxis', "YuIK. Stabil zo'riqish stenokardiyasi. FS II."],
-      ['Asorati', "YuE 2-darajassi. Qorinchalar ekstrasistoliya"],
-      ["Yo'ldosh kasalligi", "Gipertoniya kasalligi II bosqichi"],
-    ]
-  },
-  shikoyat: {
-    title: 'Shikoyatlar',
-    text: "Yurak sohasida og'riq, zo'riqishda hansirash, bosh og'rig'i, bosh aylanishi. Kechqurun oyoqlarda shish paydo bo'lishi. Umumiy holsizlik va tez charchash. Nafas olishda qiyinchilik (fizik zo'riqishda). Yurak urishi tezlashishi."
-  },
-  obyektiv: {
-    title: "Ob'ektiv belgilari",
-    text: "Umumiy ahvoli qoniqarli. Teri qoplami oddiy rangda. NPR: 18/min. YuQS: 78/daqiqa. Qon bosimi: 155/90 mmHg (o'ng qo'lda), 158/92 mmHg (chap qo'lda). Yurak tonlari bo'g'iqlashgan. Ikkinchi ton aorta ustida kuchaygan. Periferik shishlar — pastki oyoqlar sohasida. O'pkada — pastnign lateral qismlarida mayda pufakchali xirillashlar."
-  },
-  laborator: {
-    title: 'Laborator tekshiruv natijalari',
-    rows:[
-      ['Hb (gemoglobin)', '138 g/l'],
-      ['Eritrotsitlar', '4.5×10¹²/l'],
-      ['Leykositlar', '7.2×10⁹/l'],
-      ['Trombotsitlar', '210×10⁹/l'],
-      ['EChT', '12 mm/soat'],
-      ['Umumiy xolesterin', '6.2 mmol/l ⬆'],
-      ['LDL', '4.1 mmol/l ⬆'],
-      ['HDL', '0.9 mmol/l ⬇'],
-      ['Triglitseridlar', '2.3 mmol/l ⬆'],
-      ['Glyukoza', '5.1 mmol/l'],
-      ['Kreatinin', '88 mkmol/l'],
-      ['Umumiy oqsil', '72 g/l'],
-      ['ALT/AST', '28/32 ED/l'],
-      ['Siydik tahlili', 'Normada'],
-    ]
-  },
-  instrumental: {
-    title: 'Klinik-instrumental tekshiruv natijalari',
-    text: `<strong>EKG:</strong> Sinus ritmi, YuQS 78/daqiqa. Chap qorincha gipertrofiyasi belgilari. ST segment depressiyasi V4-V6 (1-1.5 mm). T tishi inversiyasi V5-V6.
+const CASE_SECTIONS = {
+  pasport:{label:'📋 Pasport', rows:[
+    ['F.I.Sh','Maksim'],['Yoshi','52 yosh'],['Jinsi','Erkak'],
+    ['Asosiy tashxis',"YuIK. Stabil zo'riqish stenokardiyasi. FS II."],
+    ['Asorat',"YuE 2-darajasi. Qorinchalar ekstrasistoliya"],
+    ["Yo'ldosh kasallik","Gipertoniya kasalligi II bosqichi"],
+  ]},
+  shikoyat:{label:'💬 Shikoyatlar', text:"Yurak sohasida og'riq, zo'riqishda hansirash, bosh og'rig'i. Kechqurun oyoqlarda shish. Umumiy holsizlik. Nafas olishda qiyinchilik."},
+  obyektiv:{label:'🩺 Ob\'ektiv', text:"QB: 155/90 mmHg. YuQS: 78/daqiqa. Yurak tonlari bo'g'iqlashgan. 2-ton aorta ustida kuchaygan. Pastki oyoqlarda shish."},
+  laborator:{label:'🧪 Laborator', rows:[
+    ['Hb','138 g/l'],['Leykositlar','7.2×10⁹/l'],
+    ['Umumiy xolesterin','6.2 mmol/l ⬆'],['LDL','4.1 mmol/l ⬆'],
+    ['HDL','0.9 mmol/l ⬇'],['Triglitseridlar','2.3 mmol/l ⬆'],
+    ['Glyukoza','5.1 mmol/l'],['Kreatinin','88 mkmol/l'],
+  ]},
+  instrumental:{label:'📊 Instrumental', text:`EKG: Sinus ritmi, YuQS 78/daqiqa. Chap qorincha gipertrofiyasi. ST depressiyasi V4-V6 (1-1.5 mm).
 
-<strong>ExoKG (EXO):</strong> Chap qorincha EF 52%. Diastol disfunktsiya I daraja. Chap qorincha orqa devori gipertrofiyasi (12.4 mm). Mitral qopqoq regirgitatsiyasi I daraja.
+ExoKG: EF 52%. Diastol disfunktsiya I daraja. Chap qorincha orqa devori gipertrofiyasi (12.4 mm).
 
-<strong>Stress-ExoKG:</strong> Ishemiya belgilari aniqlanmadi. Zo'riqish tolerantligi — o'rta.
-
-<strong>Rentgenografiya (ko'krak qafasi):</strong> Yurak soyasi kengaygan, chap chegarasi chiqib ketgan. O'pka tomirining kuchayishi.`
-  }
+Rentgen: Yurak soyasi kengaygan. O'pka tomiri kuchaygan.`},
 };
 
-/* state */
-let currentPage = 'home';
-let expandedCats = {};
-let selectedCatId = null;
-let selectedSubId = null;
-let caseLoaded = false;
-let currentCaseSection = 'pasport';
-let bemorMode = 'bemor';
-let fillProgress = 0;
-let doriCount = 0;
-let xatoCount = 0;
-let davoTexts = {};
+const AI_ADVICE = {
+  pasport:"Bemor 52 yoshli erkak. Yoshga oid xavf omillari mavjud. ESC/ESH 2023 bo'yicha SCORE2 hisoblash tavsiya etiladi.",
+  shikoyat:"Yurak sohasida og'riq va zo'riqishda hansirash ishemiya belgisi. CCS bo'yicha tasniflang: FS II.",
+  obyektiv:"QB 155/90 — 2-darajali gipertoniya. Chap qorincha gipertrofiyasi belgilari mavjud.",
+  laborator:"LDL 4.1 mmol/l — maqsad <1.8 mmol/l (yuqori xavfli). Statin zarur. HDL past — qo'shimcha xavf.",
+  instrumental:"EKG: ST depressiyasi — subendokardial ishemiya. ExoKG: EF 52% — chegaraviy holat.",
+  davo:"Aspirin 75mg + Bisoprolol 5mg + Ramipril 5mg + Atorvastatin 40-80mg — to'g'ri kombinatsiya.",
+  adabiyot:"ESC/ESH 2023, AHA/ACC 2022, O'zbekiston MoH 2023 protokollariga murojaat qiling.",
+};
 
-/* ════════════════════════════════════════
-   LOGIN
-════════════════════════════════════════ */
+/* ════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════ */
+let currentRole = 'Talaba';
+let currentPage = '';
+let tCaseLoaded = false;
+let tMode = 'bemor';
+let tCurSection = 'pasport';
+let tPct = 0;
+const expandedCats = {}, expandedDis = {};
+
+/* ════════════════════════════════════════════════
+   LOGIN / LOGOUT
+════════════════════════════════════════════════ */
 function quickLogin(role) {
   document.getElementById('l-role').value = role;
   doLogin();
 }
 
 function doLogin() {
-  const email = document.getElementById('l-email').value || 'anusher@clinpharm.uz';
+  const email = document.getElementById('l-email').value || 'user@clinpharm.uz';
   const role = document.getElementById('l-role').value;
-  const name = 'Qurbonov Anusher';
-  const initials = 'QA';
-  setUserUI(name, email, role, initials);
+  currentRole = role;
+
+  // Set theme
+  const body = document.body;
+  body.className = '';
+  if(role === 'Talaba') body.classList.add('talaba');
+  else if(role === "O'qituvchi") body.classList.add('oqituvchi');
+  else body.classList.add('admin');
+
+  // Set user info
+  let name, initials, sub;
+  if(role === 'Talaba') { name='Qurbonov Anusher'; initials='QA'; sub="anusher@clinpharm.uz"; }
+  else if(role === "O'qituvchi") { name='Dr. Toshpulatov B.'; initials='TB'; sub="toshpulatov@samdchti.uz"; }
+  else { name='Admin Karimov'; initials='AK'; sub="admin@clinpharm.uz"; }
+
+  // Update nav
+  document.getElementById('nav-name').textContent = name;
+  document.getElementById('nav-role-badge').textContent = role.toUpperCase();
+  document.getElementById('nav-role-tag').textContent = role;
+  document.getElementById('nav-av').textContent = initials;
+
+  // Build nav links
+  const links = NAV_CONFIG[role] || [];
+  const navEl = document.getElementById('nav-links');
+  navEl.innerHTML = '';
+  links.forEach(l => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-link' + (links.indexOf(l) === 0 ? ' active' : '');
+    btn.id = 'nl-' + l.id;
+    btn.innerHTML = l.icon + ' ' + l.label;
+    btn.onclick = () => goPage(l.id);
+    navEl.appendChild(btn);
+  });
+
+  // Update profile pages
+  setEl('t-hero-name', name.split(' ')[1] + '!');
+  setEl('o-hero-name', name + '!');
+  setEl('t-prof-av', initials);
+  setEl('t-prof-name', name);
+  setEl('t-prof-email', email || sub);
+  setEl('o-prof-av', initials);
+  setEl('o-prof-name', name);
+  setEl('o-prof-email', email || sub);
+
   document.getElementById('login-page').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
-  buildCatList();
-  showToast('✅ Xush kelibsiz, ' + name + '!');
+
+  // Go first page
+  goPage(links[0]?.id || 't-home');
+  if(role === 'Talaba') buildTCatList();
+
+  showToast('✅ Xush kelibsiz, ' + name.split(' ')[1] + '!');
 }
 
 function doLogout() {
   document.getElementById('login-page').style.display = 'flex';
   document.getElementById('app').style.display = 'none';
-  currentPage = 'home'; caseLoaded = false;
+  document.body.className = '';
+  tCaseLoaded = false; currentPage = '';
 }
 
-function setUserUI(name, email, role, initials) {
-  const set = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
-  set('nav-name', name); set('nav-role', role.toUpperCase()); set('nav-av', initials);
-  set('hero-name', name + '!');
-  set('prof-av', initials); set('prof-name', name); set('prof-email', email); set('prof-role-b', role);
+function setEl(id, val) {
+  const el = document.getElementById(id);
+  if(el) el.textContent = val;
 }
 
-/* ════════════════════════════════════════
+/* ════════════════════════════════════════════════
    NAVIGATION
-════════════════════════════════════════ */
+════════════════════════════════════════════════ */
 function goPage(pg) {
   currentPage = pg;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-  const pageEl = document.getElementById('page-' + pg);
-  if (pageEl) { pageEl.classList.add('active'); pageEl.classList.add('fade-in'); }
-  const navEl = document.getElementById('nl-' + pg);
-  if (navEl) navEl.classList.add('active');
+  const el = document.getElementById(pg);
+  if(el) { el.classList.add('active'); el.classList.add('fade-in'); }
+  const nl = document.getElementById('nl-' + pg);
+  if(nl) nl.classList.add('active');
 }
 
-/* ════════════════════════════════════════
-   CATEGORY LIST
-════════════════════════════════════════ */
-function buildCatList() {
-  const el = document.getElementById('cat-list');
+/* ════════════════════════════════════════════════
+   TALABA — CAT LIST
+════════════════════════════════════════════════ */
+function buildTCatList() {
+  const el = document.getElementById('t-cat-list');
+  if(!el) return;
   el.innerHTML = '';
   CATEGORIES.forEach(cat => {
-    const div = document.createElement('div');
-    div.innerHTML = `
-      <div class="ks-cat-item" id="cat-${cat.id}" onclick="toggleCat('${cat.id}')">
-        <span class="ks-cat-icon">${cat.icon}</span>${cat.name}
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `
+      <div class="cat-item" id="tc-${cat.id}" onclick="tToggleCat('${cat.id}')">
+        <span class="cat-icon">${cat.icon}</span>${cat.name}
       </div>
-      <div id="dis-${cat.id}" style="display:none"></div>
+      <div id="td-${cat.id}" style="display:none"></div>
     `;
-    el.appendChild(div);
-    const disEl = div.querySelector(`#dis-${cat.id}`);
+    el.appendChild(wrap);
+    const disEl = wrap.querySelector('#td-' + cat.id);
     cat.diseases.forEach(dis => {
       const dd = document.createElement('div');
       dd.innerHTML = `
-        <div class="ks-sub-item" id="dis-btn-${dis.id}" onclick="toggleDis('${cat.id}','${dis.id}')">
-          <span class="ks-sub-arrow">▸</span>${dis.name}
+        <div class="sub-item" id="tdb-${dis.id}" onclick="tToggleDis('${cat.id}','${dis.id}')">
+          <span style="font-size:10px;opacity:.5">▸</span>${dis.name}
         </div>
-        <div id="sub-${dis.id}" style="display:none;padding-left:12px"></div>
+        <div id="ts-${dis.id}" style="display:none"></div>
       `;
       disEl.appendChild(dd);
-      const subEl = dd.querySelector(`#sub-${dis.id}`);
+      const subEl = dd.querySelector('#ts-' + dis.id);
       dis.subs.forEach(sub => {
         const sd = document.createElement('div');
-        sd.className = 'ks-sub-item';
-        sd.id = 'sub-btn-' + sub.id;
-        sd.style.paddingLeft = '42px';
-        sd.innerHTML = `<span class="ks-sub-arrow">—</span>${sub.name}`;
-        sd.onclick = () => selectCase(dis.id, sub.id);
+        sd.className = 'leaf-item';
+        sd.id = 'tl-' + sub.id;
+        sd.innerHTML = `<span style="font-size:9px;opacity:.4">—</span>${sub.name}`;
+        sd.onclick = () => tSelectCase(dis.id, sub.id);
         subEl.appendChild(sd);
       });
     });
   });
 }
 
-function toggleCat(catId) {
-  expandedCats[catId] = !expandedCats[catId];
-  const el = document.getElementById('dis-' + catId);
-  if (el) el.style.display = expandedCats[catId] ? 'block' : 'none';
-  document.querySelectorAll('.ks-cat-item').forEach(e => e.classList.remove('active'));
-  if (expandedCats[catId]) {
-    const el2 = document.getElementById('cat-' + catId);
-    if (el2) el2.classList.add('active');
-  }
+function tToggleCat(id) {
+  expandedCats[id] = !expandedCats[id];
+  const el = document.getElementById('td-' + id);
+  if(el) el.style.display = expandedCats[id] ? 'block' : 'none';
+  document.querySelectorAll('.cat-item').forEach(e => e.classList.remove('active'));
+  if(expandedCats[id]) { const btn = document.getElementById('tc-' + id); if(btn) btn.classList.add('active'); }
 }
 
-const expandedDis = {};
-function toggleDis(catId, disId) {
+function tToggleDis(catId, disId) {
   expandedDis[disId] = !expandedDis[disId];
-  const el = document.getElementById('sub-' + disId);
-  if (el) el.style.display = expandedDis[disId] ? 'block' : 'none';
-  const btn = document.getElementById('dis-btn-' + disId);
-  if (btn) btn.querySelector('.ks-sub-arrow').textContent = expandedDis[disId] ? '▾' : '▸';
+  const el = document.getElementById('ts-' + disId);
+  if(el) el.style.display = expandedDis[disId] ? 'block' : 'none';
+  const btn = document.getElementById('tdb-' + disId);
+  if(btn) btn.querySelector('span').textContent = expandedDis[disId] ? '▾' : '▸';
 }
 
-/* ════════════════════════════════════════
-   SELECT CASE
-════════════════════════════════════════ */
-function selectCase(disId, subId) {
-  goPage('keys');
-  selectedSubId = subId;
-  caseLoaded = true;
-  fillProgress = 0; doriCount = 0; xatoCount = 0;
-  davoTexts = {};
+/* ════════════════════════════════════════════════
+   TALABA — SELECT CASE
+════════════════════════════════════════════════ */
+function tSelectCase(disId, subId) {
+  goPage('t-keys');
+  tCaseLoaded = true;
+  tPct = 0; tCurSection = 'pasport'; tMode = 'bemor';
 
-  // highlight
-  document.querySelectorAll('[id^="sub-btn-"]').forEach(e => e.style.color = '');
-  const sb = document.getElementById('sub-btn-' + subId);
-  if (sb) sb.style.color = 'var(--teal)';
-
-  // show panels
-  document.getElementById('keys-sections-panel').style.display = 'block';
-  document.getElementById('baholash-block').style.display = 'block';
-  document.getElementById('case-nav').style.display = 'flex';
-  document.getElementById('bm-tabs').style.display = 'flex';
-  updateProg(0);
-
-  // find name
+  // find names
   let disName = '', subName = '';
   CATEGORIES.forEach(cat => cat.diseases.forEach(d => {
-    if (d.id === disId) { disName = d.name; d.subs.forEach(s => { if (s.id === subId) subName = s.name; }); }
+    if(d.id === disId) { disName = d.name; d.subs.forEach(s => { if(s.id === subId) subName = s.name; }); }
   }));
-  document.getElementById('km-title').textContent = disName + ' · ' + subName;
+  setEl('t-km-title', disName + ' · ' + subName);
 
-  buildKSL();
-  showCaseSection('pasport');
-  // reset case tabs
-  document.querySelectorAll('.cn-btn').forEach((b,i) => {
-    b.classList.toggle('active', i === 0);
-    b.querySelector('.cn-dot').style.background = i === 0 ? 'var(--teal)' : 'var(--border2)';
-  });
+  // highlight leaf
+  document.querySelectorAll('.leaf-item').forEach(e => e.classList.remove('active'));
+  const lf = document.getElementById('tl-' + subId);
+  if(lf) lf.classList.add('active');
+
+  // show panels
+  const prog = document.getElementById('t-prog');
+  const ksl = document.getElementById('t-ksl-sec');
+  const ctabs = document.getElementById('t-case-tabs');
+  if(prog) prog.style.display = 'block';
+  if(ksl) ksl.style.display = 'block';
+  if(ctabs) ctabs.style.display = 'flex';
+
+  tUpdateProg(0);
+
+  // reset tabs
+  document.querySelectorAll('#t-case-tabs .ctab').forEach((b,i) => b.classList.toggle('active', i===0));
+  document.getElementById('t-tb-bemor').classList.add('active');
+  document.getElementById('t-tb-ai').classList.remove('active');
+
+  tShowSection('pasport');
 }
 
-/* ════════════════════════════════════════
-   KEYS SECTION LIST (left sidebar bottom)
-════════════════════════════════════════ */
-const KSL_ITEMS = [
-  { id:'pasport', name:"Pasport ma'lumotlari" },
-  { id:'shikoyat', name:'Shikoyatlar' },
-  { id:'obyektiv', name:"Ob'ektiv tekshiruv" },
-  { id:'laborator', name:'Laborator' },
-  { id:'instrumental', name:'Instrumental' },
-  { id:'davo', name:'Davo muolajasi' },
-  { id:'adabiyot', name:'Adabiyot' },
-];
-
-function buildKSL() {
-  const el = document.getElementById('ksl');
-  el.innerHTML = '';
-  KSL_ITEMS.forEach((item, i) => {
-    const div = document.createElement('div');
-    div.className = 'ksl-item' + (i === 0 ? ' active' : '');
-    div.id = 'ksl-' + item.id;
-    div.innerHTML = `
-      <div class="ksl-left">
-        <div class="ksl-dot"></div>
-        <span class="ksl-name">${item.name}</span>
-      </div>
-      <span class="ksl-expand">—</span>
-    `;
-    div.onclick = () => { switchCaseSection(item.id, null); };
-    el.appendChild(div);
-  });
+/* ════════════════════════════════════════════════
+   TALABA — CASE SECTIONS
+════════════════════════════════════════════════ */
+function tSection(id, btn) {
+  tCurSection = id;
+  document.querySelectorAll('#t-case-tabs .ctab').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  tShowSection(id);
 }
 
-/* ════════════════════════════════════════
-   CASE SECTIONS
-════════════════════════════════════════ */
-function switchCaseSection(sectionId, btn) {
-  currentCaseSection = sectionId;
-  // update case nav
-  if (btn) {
-    document.querySelectorAll('.cn-btn').forEach(b => {
-      b.classList.remove('active');
-      b.querySelector('.cn-dot').style.background = 'var(--border2)';
-    });
-    btn.classList.add('active');
-    btn.querySelector('.cn-dot').style.background = 'var(--teal)';
-  }
-  // update ksl
-  document.querySelectorAll('.ksl-item').forEach(el => el.classList.remove('active'));
-  const kslEl = document.getElementById('ksl-' + sectionId);
-  if (kslEl) kslEl.classList.add('active');
-
-  showCaseSection(sectionId);
+function tSwitchMode(mode) {
+  tMode = mode;
+  document.getElementById('t-tb-bemor').classList.toggle('active', mode === 'bemor');
+  document.getElementById('t-tb-ai').classList.toggle('active', mode === 'ai');
+  if(tCaseLoaded) tShowSection(tCurSection);
 }
 
-function showCaseSection(sectionId) {
-  if (!caseLoaded) return;
-  const body = document.getElementById('km-body');
+function tShowSection(id) {
+  if(!tCaseLoaded) return;
+  const body = document.getElementById('t-km-body');
 
-  if (bemorMode === 'assist') {
-    showAssistent(body, sectionId);
+  if(tMode === 'ai') {
+    body.innerHTML = `
+      <div class="card fade-in">
+        <div class="card-hdr">🤖 AI Yordam — ${id.toUpperCase()}</div>
+        <div style="padding:16px">
+          <div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.2);border-radius:10px;padding:14px;margin-bottom:14px">
+            <div style="font-size:10px;font-weight:800;color:var(--accent);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">🤖 AI Maslahat</div>
+            <p style="font-size:13px;color:var(--text);line-height:1.75">${AI_ADVICE[id] || 'Bu bo\'lim uchun AI tavsiyasi tayyorlanmoqda...'}</p>
+          </div>
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px">
+            <div style="font-size:10px;font-weight:800;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Savol bering</div>
+            <textarea class="ta" id="t-ai-q" placeholder="AI ga savolingizni yozing..." style="min-height:70px"></textarea>
+            <button class="btn-primary" style="margin-top:10px;width:100%" onclick="showToast('🤖 AI javobi tayyorlanmoqda...')">📤 Yuborish</button>
+          </div>
+        </div>
+      </div>`;
     return;
   }
 
-  if (sectionId === 'pasport') {
-    const d = CASE_DATA.pasport;
+  const d = CASE_SECTIONS[id];
+  if(id === 'pasport') {
     body.innerHTML = `
-      <div class="patient-hdr fade-in">
-        <div class="p-avatar">👨</div>
+      <div class="pat-hdr fade-in">
+        <div class="p-av">👨</div>
         <div>
           <div class="p-name">Maksim, 52 yosh</div>
-          <div class="p-meta">Erkak · Kardiologiya · Gipertoniya kasalligi</div>
-          <div class="p-badges">
-            <span class="pbadge" style="border-color:rgba(0,212,170,.3);color:var(--teal);background:rgba(0,212,170,.08)">Engil darajali</span>
-            <span class="pbadge" style="border-color:rgba(0,188,212,.3);color:var(--cyan);background:rgba(0,188,212,.08)">1-bosqichi</span>
+          <div class="p-meta">Erkak · Kardiologiya · YuIK</div>
+          <div class="p-bds">
+            <span class="badge badge-accent">Engil darajali keys</span>
+            <span class="badge badge-accent">Gipertoniya 1-bosq.</span>
           </div>
         </div>
       </div>
-      <div class="info-card fade-in">
-        <div class="info-card-hdr">📋 Pasport ma'lumotlari</div>
-        ${d.rows.map(([k,v]) => `<div class="info-row"><span class="ir-key">${k}</span><span class="ir-val">${v}</span></div>`).join('')}
+      <div class="card fade-in">
+        <div class="card-hdr">📋 Pasport ma'lumotlari</div>
+        ${d.rows.map(([k,v]) => `<div class="info-row"><span class="ir-k">${k}</span><span class="ir-v">${v}</span></div>`).join('')}
       </div>`;
-  }
-  else if (sectionId === 'shikoyat') {
+  } else if(id === 'shikoyat' || id === 'obyektiv') {
+    body.innerHTML = `<div class="card fade-in"><div class="card-hdr">${d.label}</div><div style="padding:16px 20px"><p style="line-height:1.8;font-size:13px">${d.text}</p></div></div>`;
+  } else if(id === 'laborator') {
+    body.innerHTML = `<div class="card fade-in"><div class="card-hdr">${d.label}</div>${d.rows.map(([k,v]) => {
+      const c = v.includes('⬆') ? 'var(--red)' : v.includes('⬇') ? 'var(--yellow)' : 'var(--text)';
+      return `<div class="info-row"><span class="ir-k">${k}</span><span class="ir-v" style="color:${c}">${v}</span></div>`;
+    }).join('')}</div>`;
+  } else if(id === 'instrumental') {
+    body.innerHTML = `<div class="card fade-in"><div class="card-hdr">${d.label}</div><div style="padding:16px 20px"><p style="line-height:1.9;font-size:13px;white-space:pre-line">${d.text}</p></div></div>`;
+  } else if(id === 'davo') {
     body.innerHTML = `
-      <div class="info-card fade-in">
-        <div class="info-card-hdr">💬 Shikoyatlar</div>
-        <div style="padding:18px 22px">
-          <p style="line-height:1.8;color:var(--text);font-size:14px">${CASE_DATA.shikoyat.text}</p>
+      <div class="card fade-in">
+        <div class="card-hdr">💊 Davo muolajasi</div>
+        <div style="padding:16px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+            <div><span class="ta-label">Asosiy dorilar</span><textarea class="ta" id="t-ta-asosiy" placeholder="Asosiy dorilar ro'yxati..."></textarea></div>
+            <div><span class="ta-label">Qo'shimcha terapiya</span><textarea class="ta" id="t-ta-qosh" placeholder="Qo'shimcha dorilar..."></textarea></div>
+          </div>
+          <div style="margin-bottom:12px"><span class="ta-label">Doz va qabul tartibi</span><textarea class="ta" id="t-ta-doza" style="min-height:70px" placeholder="Har bir dorining dozasi..."></textarea></div>
+          <div style="margin-bottom:14px"><span class="ta-label">Davolash muddati</span><textarea class="ta" id="t-ta-muddat" style="min-height:50px" placeholder="Qancha muddat..."></textarea></div>
+          <div class="note-yellow" style="margin-bottom:14px">⚠️ <strong>Eslatma:</strong> Kontraindikatsiyalarni hisobga oling. Qon bosimini monitoring qilish zarur.</div>
+          <button class="submit-btn" onclick="tSubmit()">✅ Keysni AI ga topshirish va baholash</button>
         </div>
       </div>`;
-  }
-  else if (sectionId === 'obyektiv') {
+  } else if(id === 'adabiyot') {
     body.innerHTML = `
-      <div class="info-card fade-in">
-        <div class="info-card-hdr">🩺 Ob'ektiv belgilari</div>
-        <div style="padding:18px 22px">
-          <p style="line-height:1.8;color:var(--text);font-size:14px">${CASE_DATA.obyektiv.text}</p>
+      <div class="card fade-in">
+        <div class="card-hdr">📚 Adabiyot</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:10px">
+          ${[['ESC/ESH 2023',"Arterial gipertoniya bo'yicha qo'llanma"],
+             ['AHA/ACC 2022','Yurak-qon tomir kasalliklari'],
+             ['WHO 2023','Ratsional farmakoterapiya'],
+             ['O\'zbekiston MoH 2023','Milliy klinik protokollar']
+          ].map(([s,d]) => `<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px">
+            <div style="font-size:12px;font-weight:800;color:var(--accent);margin-bottom:3px">${s}</div>
+            <div style="font-size:12px;color:var(--text2)">${d}</div>
+          </div>`).join('')}
         </div>
       </div>`;
-  }
-  else if (sectionId === 'laborator') {
-    const d = CASE_DATA.laborator;
-    body.innerHTML = `
-      <div class="info-card fade-in">
-        <div class="info-card-hdr">🧪 Laborator tekshiruv natijalari</div>
-        ${d.rows.map(([k,v]) => {
-          const isHigh = v.includes('⬆');
-          const isLow = v.includes('⬇');
-          const color = isHigh ? 'var(--red)' : isLow ? 'var(--yellow)' : 'var(--text)';
-          return `<div class="info-row"><span class="ir-key">${k}</span><span class="ir-val" style="color:${color}">${v}</span></div>`;
-        }).join('')}
-      </div>`;
-  }
-  else if (sectionId === 'instrumental') {
-    body.innerHTML = `
-      <div class="info-card fade-in">
-        <div class="info-card-hdr">📊 Klinik-instrumental tekshiruv natijalari</div>
-        <div style="padding:18px 22px">
-          <p style="line-height:1.9;color:var(--text);font-size:14px;white-space:pre-line">${CASE_DATA.instrumental.text}</p>
-        </div>
-      </div>`;
-  }
-  else if (sectionId === 'davo') {
-    const saved = davoTexts['davo'] || '';
-    body.innerHTML = `
-      <div class="info-card fade-in">
-        <div class="info-card-hdr">💊 Davo muolajasi — ma'lumot kiriting</div>
-        <div style="padding:18px 22px">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-            <div>
-              <span class="davo-label">Asosiy dori vositalar</span>
-              <textarea class="davo-ta" id="ta-asosiy" placeholder="Asosiy dorilar ro'yxati&#10;Masalan: Aspirin 75mg × 1 m/k">${saved}</textarea>
-            </div>
-            <div>
-              <span class="davo-label">Qo'shimcha terapiya</span>
-              <textarea class="davo-ta" id="ta-qosh" placeholder="Qo'shimcha dorilar&#10;Masalan: Bisoprolol 5mg × 1 m/k"></textarea>
-            </div>
-          </div>
-          <div style="margin-bottom:16px">
-            <span class="davo-label">Doz va qabul tartibi</span>
-            <textarea class="davo-ta" id="ta-doza" style="min-height:80px" placeholder="Har bir dorining dozasi va qabul tartibi..."></textarea>
-          </div>
-          <div style="margin-bottom:16px">
-              <span class="davo-label">Davolash muddati</span>
-              <textarea class="davo-ta" id="ta-muddat" style="min-height:60px" placeholder="Qancha muddat davom etish..."></textarea>
-          </div>
-          <div class="special-note" style="margin-bottom:16px">
-            <strong>⚠️ Maxsus ko'rsatmalar:</strong> Homiladorlikda ruxsat etilgan dorilar: amoksitsillin (B kategoriya), azitromitsin (B kategoriya). Ruxsat etilmagan: tetratsiklin, ftorxinolonlar (C/D kategoriya).
-          </div>
-          <div style="display:flex;gap:10px">
-            <button class="submit-case" onclick="submitCase()" style="flex:1">✅ Keysni SI ga tahlil qilish uchun topshirish</button>
-          </div>
-        </div>
-      </div>`;
-  }
-  else if (sectionId === 'adabiyot') {
-    body.innerHTML = `
-      <div class="info-card fade-in">
-        <div class="info-card-hdr">📚 Adabiyot manbalar</div>
-        <div style="padding:18px 22px;display:flex;flex-direction:column;gap:10px">
-          ${[
-            ['ESC/ESH 2023', "Gipertoniya kasalligini davolash bo'yicha qo'llanma"],
-            ['AHA/ACC 2022', 'Yurak-qon tomir kasalliklari standartlari'],
-            ['WHO 2023', "Ratsional farmakoterapiya asoslari"],
-            ['Uzbek MoH', "O'zbekiston Respublikasi klinik protokollari 2023"],
-          ].map(([src,desc]) => `
-            <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
-              <div style="font-size:13px;font-weight:800;color:var(--teal);margin-bottom:4px">${src}</div>
-              <div style="font-size:13px;color:var(--text2)">${desc}</div>
-            </div>`).join('')}
-        </div>
-      </div>`;
-  }
-  else {
-    body.innerHTML = `<div class="empty-state"><div class="big-icon">🔧</div><h3>${sectionId}</h3><p>Bu bo'lim ishlanmoqda...</p></div>`;
+  } else {
+    body.innerHTML = `<div class="empty-st"><div class="bi">🔧</div><h3>${id}</h3><p>Ishlanmoqda...</p></div>`;
   }
 }
 
-/* ════════════════════════════════════════
-   ASSISTENT MODE
-════════════════════════════════════════ */
-function showAssistent(body, sectionId) {
-  body.innerHTML = `
-    <div class="info-card fade-in">
-      <div class="info-card-hdr">🤖 AI Assistent — ${sectionId.toUpperCase()} tahlili</div>
-      <div style="padding:18px 22px">
-        <div style="background:rgba(0,212,170,.06);border:1px solid rgba(0,212,170,.2);border-radius:10px;padding:14px;margin-bottom:16px">
-          <div style="font-size:12px;font-weight:800;color:var(--teal);margin-bottom:8px">🤖 AI tavsiyasi:</div>
-          <p style="font-size:13px;color:var(--text);line-height:1.75">${getAIAdvice(sectionId)}</p>
-        </div>
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px">
-          <div style="font-size:12px;font-weight:800;color:var(--text3);margin-bottom:8px">Savollar va qo'shimcha ma'lumot:</div>
-          <textarea class="davo-ta" id="ai-q" placeholder="AI ga savolingizni yozing..." style="min-height:80px"></textarea>
-          <button class="submit-case" onclick="askAI()" style="margin-top:0">📤 Savol berish</button>
-        </div>
+/* ════════════════════════════════════════════════
+   TALABA — ACTIONS
+════════════════════════════════════════════════ */
+function tClear() {
+  document.querySelectorAll('.ta').forEach(t => t.value = '');
+  tUpdateProg(0);
+  showToast('🗑 Tozalandi');
+}
+
+function tDemo() {
+  const fields = {
+    't-ta-asosiy': "1. Aspirin 75mg × 1/kun\n2. Bisoprolol 5mg × 1/kun\n3. Ramipril 5mg × 1/kun",
+    't-ta-qosh': "4. Atorvastatin 40mg × 1/kun (kechqurun)\n5. Trimetazidin MR 35mg × 2/kun",
+    't-ta-doza': "Aspirin — 75mg, ovqatdan keyin\nBisoprolol — 5mg, ertalab\nRamipril — 5mg, qon bosimiga qarab",
+    't-ta-muddat': "Asosiy terapiya — doimiy\nTrimetazidin — 3-6 oy kursi"
+  };
+  let found = 0;
+  Object.entries(fields).forEach(([id, val]) => { const el = document.getElementById(id); if(el) { el.value = val; found++; }});
+  if(!found) {
+    if(tCaseLoaded) { tSection('davo', null); document.querySelectorAll('#t-case-tabs .ctab').forEach((b,i) => b.classList.toggle('active', b.textContent.includes('Davo'))); setTimeout(() => tDemo(), 200); }
+    else showToast('⚠️ Avval keys tanlang!');
+    return;
+  }
+  tUpdateProg(75);
+  showToast("✨ Demo ma'lumotlar to'ldirildi");
+}
+
+function tSubmit() {
+  const fields = ['t-ta-asosiy','t-ta-qosh','t-ta-doza','t-ta-muddat'];
+  let filled = 0;
+  fields.forEach(id => { const el = document.getElementById(id); if(el && el.value.trim()) filled++; });
+  if(!filled) { showToast("⚠️ Davo muolajasini kiriting!"); return; }
+
+  setEl('t-score-v', '84');
+  setEl('t-baho-v', '4');
+  setEl('t-dori-v', '5');
+  setEl('t-xato-v', '1');
+  tUpdateProg(100);
+
+  const bahCard = document.getElementById('t-bah-card');
+  if(bahCard) bahCard.innerHTML = `<div class="bah-icon">🎯</div><div class="bah-title" style="color:var(--accent)">84 / 100 ball</div><div class="bah-desc" style="color:var(--text2)">Yaxshi natija! Atorvastatin dozasi oshirilishi mumkin (40→80mg).</div>`;
+  const aiBox = document.getElementById('t-ai-box');
+  if(aiBox) aiBox.innerHTML = '<div class="ai-ic">✅</div><p style="color:var(--text2)">Aspirin, Bisoprolol, Ramipril — to\'g\'ri. Atorvastatin dozasini LDL ga qarab oshiring (40→80mg).</p>';
+
+  showToast('🎉 Ball: 84/100 — Muvaffaqiyatli baholandi!');
+}
+
+function tUpdateProg(pct) {
+  tPct = pct;
+  const pb = document.getElementById('t-pbar');
+  const pp = document.getElementById('t-pct');
+  if(pb) pb.style.width = pct + '%';
+  if(pp) pp.textContent = pct + '%';
+}
+
+/* ════════════════════════════════════════════════
+   ADMIN — USERS
+════════════════════════════════════════════════ */
+function showUser(el, u) {
+  document.querySelectorAll('.user-item').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  setEl('ud-av', u.name.split(' ').map(w => w[0]).join('').slice(0,2));
+  setEl('ud-name', u.name);
+  setEl('ud-email', u.email);
+  setEl('ud-keys', u.keys || '—');
+  setEl('ud-avg', u.avg ? u.avg + '%' : '—');
+  const bds = document.getElementById('ud-badges');
+  if(bds) bds.innerHTML = `
+    <span class="badge badge-accent">${u.role}</span>
+    <span class="badge badge-accent">${u.group}</span>
+    <span class="badge" style="font-size:9px;background:rgba(${u.online ? '34,197,94' : '100,116,139'},.12);border:1px solid rgba(${u.online ? '34,197,94' : '100,116,139'},.3);color:${u.online ? '#22c55e' : 'var(--text3)'}">${u.online ? 'Onlayn' : 'Oflayn'}</span>`;
+}
+
+/* ════════════════════════════════════════════════
+   ADMIN — CASES
+════════════════════════════════════════════════ */
+function selectAdminCase(el, name, cat) {
+  document.querySelectorAll('.cl-item').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  const ed = document.getElementById('a-case-editor-content');
+  if(ed) ed.innerHTML = `
+    <div style="margin-bottom:18px;display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font-size:16px;font-weight:800">${name}</div><div style="font-size:12px;color:var(--text2);margin-top:3px">${cat}</div></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-ghost" onclick="showToast('👁 Ko\'rish rejimi')">👁 Ko'rish</button>
+        <button class="btn-primary" onclick="showToast('✅ Saqlandi!')">💾 Saqlash</button>
+      </div>
+    </div>
+    <div class="ce-form">
+      <div class="section-divider">Asosiy ma'lumot</div>
+      <div class="ce-grid">
+        <div class="form-group"><label class="form-label">Kasallik nomi</label><input class="form-input" value="${name.split(' · ')[0]}"></div>
+        <div class="form-group"><label class="form-label">Kategoriya</label><input class="form-input" value="${cat}"></div>
+        <div class="form-group"><label class="form-label">Holati</label><select class="form-input"><option>Faol</option><option>Qoralama</option><option>Arxiv</option></select></div>
+        <div class="form-group"><label class="form-label">Qiyinlik darajasi</label><select class="form-input"><option>Engil</option><option>O'rta og'ir</option><option>Og'ir</option></select></div>
+      </div>
+      <div class="section-divider">Bemor ma'lumotlari</div>
+      <div class="ce-grid">
+        <div class="form-group"><label class="form-label">Bemor ismi</label><input class="form-input" value="Maksim"></div>
+        <div class="form-group"><label class="form-label">Yoshi / Jinsi</label><input class="form-input" value="52 yosh / Erkak"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Shikoyatlar</label><textarea class="form-ta">Yurak sohasida og'riq, zo'riqishda hansirash, bosh og'rig'i.</textarea></div>
+      <div class="form-group"><label class="form-label">Ob'ektiv belgilari</label><textarea class="form-ta">QB: 155/90 mmHg. YuQS: 78/daqiqa. Yurak tonlari bo'g'iqlashgan.</textarea></div>
+      <div class="form-group"><label class="form-label">Laborator ma'lumotlar</label><textarea class="form-ta">Hb: 138 g/l · LDL: 4.1 mmol/l ⬆ · HDL: 0.9 mmol/l ⬇</textarea></div>
+      <div class="save-bar">
+        <button class="btn-primary" onclick="showToast('✅ Keys saqlandi!')">✅ Saqlash va nashr</button>
+        <button class="btn-ghost" onclick="showToast('💾 Qoralama')">💾 Qoralama</button>
+        <button class="btn-danger" onclick="showToast('🗑 O\'chirildi')">🗑 O'chirish</button>
       </div>
     </div>`;
 }
 
-function getAIAdvice(s) {
-  const advice = {
-    pasport: "Bemor 52 yoshli erkak. Yoshga oid xavf omillari (erkak jinsi, 45+ yosh, arterial gipertoniya) mavjud. Klinik tashxis qo'yishda ESC/ESH 2023 ko'rsatmalariga amal qiling.",
-    shikoyat: "Yurak sohasidagi og'riq va zo'riqishda hansirash ishemiya belgisidir. Stenokardiyani CCS bo'yicha tasniflash tavsiya etiladi: FS II — o'rtacha faoliyat cheklangan.",
-    obyektiv: "QB: 155/90 mmHg — 2-darajali gipertoniya. Chap qorincha gipertrofiyasi belgilari mavjud. SCORE2 kardi-qon tomir xavfini hisoblang.",
-    laborator: "LDL 4.1 mmol/l — maqsad LDL < 1.8 mmol/l (yuqori xavfli bemor). Atorvastatin yoki Rozuvastatin buyurish lozim. HDL past — qo'shimcha xavf omili.",
-    instrumental: "EKG: ST depressiyasi V4-V6 — subendokardial ishemiya. ExoKG: EF 52% — chegaraviy holat. Stress-test standart protokolda o'tkazish tavsiya etiladi.",
-    davo: "Asosiy terapiya: 1) Antiagregant — Aspirin 75-100mg. 2) Beta-blokator — Bisoprolol 5mg. 3) RAAS blokatori — Ramipril 5-10mg. 4) Statin — Atorvastatin 40-80mg.",
-  };
-  return advice[s] || "Bu bo'lim uchun AI tahlili tayyorlanmoqda...";
-}
-
-function askAI() {
-  const q = document.getElementById('ai-q');
-  if (!q || !q.value.trim()) { showToast('Savol kiriting!'); return; }
-  showToast('🤖 AI javobi tayyorlanmoqda...');
-  q.value = '';
-}
-
-/* ════════════════════════════════════════
-   BEMOR / ASSISTENT SWITCH
-════════════════════════════════════════ */
-function switchBemor(mode) {
-  bemorMode = mode;
-  document.getElementById('tab-bemor').classList.toggle('active', mode === 'bemor');
-  document.getElementById('tab-assist').classList.toggle('active', mode === 'assist');
-  if (caseLoaded) showCaseSection(currentCaseSection);
-}
-
-/* ════════════════════════════════════════
-   ACTIONS
-════════════════════════════════════════ */
-function clearDavo() {
-  document.querySelectorAll('.davo-ta').forEach(t => t.value = '');
-  davoTexts = {};
-  updateProg(0);
-  showToast('🗑 Tozalandi');
-}
-
-function fillDemo() {
-  const fields = {
-    'ta-asosiy': "1. Aspirin 75mg × 1 marta/kun (tunda)\n2. Bisoprolol 5mg × 1 marta/kun (ertalab)\n3. Ramipril 5mg × 1 marta/kun",
-    'ta-qosh': "4. Atorvastatin 40mg × 1 marta/kun (kechqurun)\n5. Trimetazidin MR 35mg × 2 marta/kun",
-    'ta-doza': "Aspirin — 75mg/sutka, ovqatdan keyin\nBisoprolol — 5mg, ertalab, boqilgan tavsiya asosida\nRamipril — 5mg, qon bosimini nazorat qilgan holda",
-    'ta-muddat': "Asosiy terapiya — uzoq muddatli (doimiy)\nTrimetazidin — 3-6 oy kursi"
-  };
-  let found = 0;
-  Object.entries(fields).forEach(([id, val]) => {
-    const el = document.getElementById(id);
-    if (el) { el.value = val; found++; }
-  });
-  if (!found) {
-    if (caseLoaded) { switchCaseSection('davo', null); setTimeout(() => fillDemo(), 200); }
-    else showToast('⚠️ Avval keys tanlang!');
-    return;
-  }
-  doriCount = 5; xatoCount = 0;
-  document.getElementById('dori-val').textContent = doriCount;
-  document.getElementById('xato-val').textContent = xatoCount;
-  updateProg(75);
-  showToast('✨ Demo ma\'lumotlar to\'ldirildi');
-}
-
-function submitCase() {
-  const fields = ['ta-asosiy','ta-qosh','ta-doza','ta-muddat'];
-  let filled = 0;
-  fields.forEach(id => { const el = document.getElementById(id); if (el && el.value.trim()) filled++; });
-  if (filled === 0) { showToast('⚠️ Davo muolajasini kiriting!'); return; }
-  doriCount = 5; xatoCount = 1;
-  document.getElementById('dori-val').textContent = doriCount;
-  document.getElementById('xato-val').textContent = xatoCount;
-  document.getElementById('score-val').textContent = '84';
-  document.getElementById('baho-val').textContent = '4';
-  updateProg(100);
-  // update right panel
-  document.querySelector('.bah-status').textContent = 'Tahlil bajarildi ✅';
-  document.querySelector('.bah-icon').textContent = '🎯';
-  document.querySelector('.bah-title').textContent = '84 / 100 ball';
-  document.querySelector('.bah-desc').textContent = 'Yaxshi natija! Davo muolajasi asosan to\'g\'ri. 1 ta xato topildi.';
-  document.querySelector('.si-text').innerHTML = '✅ Davo muolajasi tahlil qilindi.<br><br>Aspirin, Bisoprolol va Ramipril — to\'g\'ri tanlangan. Atorvastatin dozasi oshirilishi mumkin (40→80mg LDL > 1.8 bo\'lganda).';
-  showToast('🎉 Ball: 84/100 — Baholandi!');
-}
-
-function updateProg(pct) {
-  fillProgress = pct;
-  document.getElementById('prog-fill').style.width = pct + '%';
-  document.getElementById('prog-pct').textContent = pct + '%';
-}
-
-/* ════════════════════════════════════════
+/* ════════════════════════════════════════════════
    TOAST
-════════════════════════════════════════ */
+════════════════════════════════════════════════ */
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
