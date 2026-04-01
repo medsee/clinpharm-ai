@@ -589,6 +589,232 @@ body.oqituvchi {
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .fade-in{animation:fadeIn .3s ease;}
+
+/* ══════════════════════════════════════════════
+   DORI BAZASI STYLES
+══════════════════════════════════════════════ */
+.db-header{background:linear-gradient(135deg,var(--surface2),var(--surface3));border:1px solid var(--border2);border-radius:18px;padding:24px 28px;margin-bottom:20px;position:relative;overflow:hidden;}
+.db-header::before{content:'💊';position:absolute;right:20px;top:-10px;font-size:100px;opacity:.05;}
+.db-header h1{font-size:22px;font-weight:800;}.db-header h1 span{color:var(--accent);}
+.db-header p{color:var(--text2);font-size:13px;margin-top:5px;}
+.db-search-bar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+.db-search-input{flex:1;min-width:200px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 16px;color:var(--text);font-size:13px;font-family:var(--font);outline:none;transition:border-color .2s;}
+.db-search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.1);}
+.db-search-input::placeholder{color:var(--text3);}
+.db-filter-btn{padding:9px 16px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s;white-space:nowrap;}
+.db-filter-btn:hover{border-color:var(--border2);color:var(--text);}
+.db-filter-btn.active{background:var(--accent-dim);border-color:rgba(var(--accent-rgb),.4);color:var(--accent);}
+.db-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;}
+.drug-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .25s;}
+.drug-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.4);}
+.drug-card-top{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px;}
+.drug-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.drug-name{font-size:14px;font-weight:800;line-height:1.3;}
+.drug-inn{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.5px;margin-top:2px;text-transform:uppercase;}
+.drug-group-tag{display:inline-flex;padding:2px 8px;border-radius:6px;font-size:9px;font-weight:800;letter-spacing:.5px;margin-top:5px;}
+.drug-card-body{padding:12px 16px;}
+.drug-info-row{display:flex;gap:8px;margin-bottom:6px;align-items:flex-start;}
+.drug-info-key{font-size:10px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;min-width:90px;padding-top:1px;}
+.drug-info-val{font-size:11px;color:var(--text2);line-height:1.5;flex:1;}
+.drug-interactions{margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+.di-title{font-size:9px;font-weight:800;letter-spacing:1px;color:var(--text3);text-transform:uppercase;margin-bottom:6px;}
+.di-item{display:flex;align-items:flex-start;gap:6px;margin-bottom:4px;}
+.di-sev{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.di-sev.high{background:#ff4d6a;box-shadow:0 0 4px #ff4d6a55;}
+.di-sev.med{background:#ffb74d;box-shadow:0 0 4px #ffb74d55;}
+.di-sev.low{background:#22c55e;box-shadow:0 0 4px #22c55e55;}
+.di-text{font-size:11px;color:var(--text2);line-height:1.4;}
+.contra-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+.contra-tag{padding:2px 8px;border-radius:6px;font-size:9px;font-weight:800;background:rgba(255,77,106,.1);border:1px solid rgba(255,77,106,.2);color:var(--red);}
+.ok-tag{padding:2px 8px;border-radius:6px;font-size:9px;font-weight:800;background:rgba(var(--accent-rgb),.1);border:1px solid rgba(var(--accent-rgb),.2);color:var(--accent);}
+/* Interaction checker */
+.ix-checker{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:20px;}
+.ix-title{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:14px;}
+.ix-input-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.ix-drug-add{display:flex;gap:8px;align-items:center;flex:1;min-width:200px;}
+.ix-selected{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+.ix-tag{display:flex;align-items:center;gap:6px;background:var(--accent-dim);border:1px solid rgba(var(--accent-rgb),.3);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--accent);}
+.ix-tag button{background:none;border:none;cursor:pointer;color:var(--text3);font-size:12px;line-height:1;padding:0;}
+.ix-tag button:hover{color:var(--red);}
+.ix-result{margin-top:14px;display:flex;flex-direction:column;gap:8px;}
+.ix-alert{border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;}
+.ix-alert.danger{background:rgba(255,77,106,.08);border:1px solid rgba(255,77,106,.25);}
+.ix-alert.warning{background:rgba(255,183,77,.08);border:1px solid rgba(255,183,77,.25);}
+.ix-alert.safe{background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.2);}
+.ix-alert-icon{font-size:16px;flex-shrink:0;}
+.ix-alert-body{}
+.ix-alert-title{font-size:12px;font-weight:800;margin-bottom:3px;}
+.ix-alert.danger .ix-alert-title{color:var(--red);}
+.ix-alert.warning .ix-alert-title{color:var(--yellow);}
+.ix-alert.safe .ix-alert-title{color:var(--accent);}
+.ix-alert-desc{font-size:11px;color:var(--text2);line-height:1.5;}
+.db-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.db-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.db-stat-n{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--accent);}
+.db-stat-l{font-size:10px;color:var(--text3);margin-top:3px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.drug-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
+.drug-modal{background:var(--surface);border:1px solid var(--border2);border-radius:18px;width:100%;max-width:600px;max-height:88vh;overflow-y:auto;}
+.drug-modal-hdr{padding:20px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;position:sticky;top:0;background:var(--surface);z-index:1;}
+.drug-modal-body{padding:20px 22px;}
+.modal-section{margin-bottom:18px;}
+.modal-section-title{font-size:9px;font-weight:800;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.modal-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.modal-info-item{background:var(--surface2);border-radius:8px;padding:10px 12px;}
+.modal-info-item .key{font-size:9px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+.modal-info-item .val{font-size:12px;color:var(--text);font-weight:600;}
+
+
+/* ══════════════════════════════════════════
+   MOBILE RESPONSIVE
+══════════════════════════════════════════ */
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:var(--surface);border-top:1px solid var(--border);
+  padding:6px 0 max(6px, env(safe-area-inset-bottom));
+  display:none;flex-direction:row;}
+.mob-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:2px;padding:4px 2px;cursor:pointer;transition:all .2s;
+  border:none;background:transparent;font-family:var(--font);}
+.mob-nav-item .mni-icon{font-size:18px;transition:transform .2s;}
+.mob-nav-item .mni-label{font-size:9px;font-weight:700;color:var(--text3);letter-spacing:.3px;}
+.mob-nav-item.active .mni-label{color:var(--accent);}
+.mob-nav-item.active .mni-icon{transform:translateY(-2px);}
+.mob-menu-btn{display:none;background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:4px 8px;}
+@media(max-width:768px){
+  .nav-links{display:none !important;}
+  .nav-role-tag{display:none;}
+  .nav-logo small{display:none;}
+  .nav-logo{font-size:13px;}
+  .mob-nav{display:flex !important;}
+  .page.active{padding-bottom:64px;}
+  .pg-scroll{padding:14px;}
+  .grid4,.o-grid,.admin-grid{grid-template-columns:1fr 1fr !important;}
+  .profil-grid,.hgrid,.admin-main-grid,.stat-3,.settings-grid,.results-grid,.o-main-grid{grid-template-columns:1fr !important;}
+  .t-hero{flex-direction:column;gap:14px;}
+  .t-hero-right{align-items:flex-start;}
+  #t-keys{flex-direction:column !important;}
+  .ks-left{width:100% !important;height:auto;border-right:none !important;border-bottom:1px solid var(--border);}
+  .ks-right{width:100% !important;border-left:none !important;border-top:1px solid var(--border);}
+  .km-center{min-height:60vh;}
+  .ks-left .prog-block{display:none;}
+  .dv-row,.dv-row-3{grid-template-columns:1fr !important;}
+  .rx-table-wrap{font-size:11px;}
+  .modal-info-grid{grid-template-columns:1fr !important;}
+  .db-grid{grid-template-columns:1fr !important;}
+  .ud-stats{grid-template-columns:1fr 1fr !important;}
+  .a-users-inner,.o-mon-inner,.oc-inner,.a-cases-inner{flex-direction:column !important;}
+  .user-list-panel,.mon-left,.oc-left,.case-list-panel{width:100% !important;max-height:200px;}
+  .ce-grid{grid-template-columns:1fr !important;}
+  .nav-user .nav-name{display:none;}
+  .ai-chat-messages{min-height:200px !important;}
+}
+@media(max-width:480px){
+  .grid4,.o-grid,.admin-grid{grid-template-columns:1fr !important;}
+  .nav-logo{font-size:12px;}
+}
+
+/* ══════════════════════════════════════════
+   ANALYTICS PAGE
+══════════════════════════════════════════ */
+.an-hero{background:linear-gradient(135deg,var(--surface2),var(--surface3));
+  border:1px solid var(--border2);border-radius:18px;padding:22px 26px;
+  margin-bottom:20px;position:relative;overflow:hidden;}
+.an-hero::before{content:'📈';position:absolute;right:20px;top:-10px;font-size:100px;opacity:.05;}
+.an-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.an-kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;position:relative;overflow:hidden;transition:all .2s;}
+.an-kpi:hover{border-color:var(--border2);transform:translateY(-2px);}
+.an-kpi-glow{position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;opacity:.08;filter:blur(20px);}
+.an-kpi-label{font-size:9px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.an-kpi-value{font-family:var(--mono);font-size:32px;font-weight:700;}
+.an-kpi-sub{font-size:11px;color:var(--text2);margin-top:4px;}
+.an-kpi-delta{font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;display:inline-flex;margin-top:5px;}
+.an-kpi-delta.up{background:rgba(34,197,94,.12);color:#22c55e;}
+.an-kpi-delta.down{background:rgba(255,77,106,.12);color:var(--red);}
+.an-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.an-3col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px;}
+/* Chart bars */
+.an-chart-wrap{padding:16px;}
+.an-bar-chart{display:flex;flex-direction:column;gap:8px;}
+.an-bar-row{display:flex;align-items:center;gap:10px;}
+.an-bar-label{font-size:11px;color:var(--text2);width:120px;flex-shrink:0;text-align:right;}
+.an-bar-track{flex:1;height:22px;background:var(--surface2);border-radius:6px;overflow:hidden;position:relative;}
+.an-bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:10px;
+  font-size:10px;font-weight:800;transition:width 1s cubic-bezier(.4,0,.2,1);}
+.an-bar-val{font-family:var(--mono);font-size:11px;font-weight:700;width:40px;text-align:right;color:var(--text2);}
+/* Radial progress */
+.an-radial-wrap{display:flex;flex-direction:column;align-items:center;padding:10px;}
+.an-radial{position:relative;width:120px;height:120px;}
+.an-radial svg{transform:rotate(-90deg);}
+.an-radial-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.an-radial-pct{font-family:var(--mono);font-size:22px;font-weight:700;}
+.an-radial-lbl{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-top:2px;}
+/* Heatmap calendar */
+.an-heatmap{display:grid;grid-template-columns:repeat(26,1fr);gap:3px;padding:4px;}
+.an-heat-cell{aspect-ratio:1;border-radius:3px;transition:all .2s;cursor:default;}
+.an-heat-cell:hover{transform:scale(1.3);}
+/* Error radar */
+.an-error-list{display:flex;flex-direction:column;gap:6px;}
+.an-error-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);}
+.an-error-rank{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--text3);width:24px;}
+.an-error-name{flex:1;font-size:12px;font-weight:600;}
+.an-error-bar{width:80px;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.an-error-fill{height:100%;border-radius:3px;}
+.an-error-count{font-family:var(--mono);font-size:11px;font-weight:700;width:30px;text-align:right;}
+/* Timeline */
+.an-timeline{display:flex;flex-direction:column;gap:0;}
+.an-tl-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+.an-tl-item:last-child{border-bottom:none;}
+.an-tl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.an-tl-line{width:2px;background:var(--border);flex-shrink:0;margin:0 4px;}
+.an-tl-content{flex:1;}
+.an-tl-date{font-size:10px;color:var(--text3);font-weight:700;}
+.an-tl-name{font-size:12px;font-weight:700;margin-top:1px;}
+.an-tl-score{font-family:var(--mono);font-size:12px;font-weight:700;}
+
+/* ══════════════════════════════════════════
+   AI TUTOR PAGE
+══════════════════════════════════════════ */
+.ai-tutor-layout{display:flex;height:100%;overflow:hidden;}
+.ai-tutor-sidebar{width:240px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.ai-ts-head{padding:14px 16px;border-bottom:1px solid var(--border);}
+.ai-ts-title{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--accent);text-transform:uppercase;}
+.ai-ts-body{flex:1;overflow-y:auto;padding:10px;}
+.ai-topic-btn{width:100%;text-align:left;padding:9px 12px;border-radius:9px;border:1px solid transparent;background:transparent;color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s;margin-bottom:3px;display:flex;align-items:center;gap:8px;}
+.ai-topic-btn:hover{background:var(--surface2);color:var(--text);}
+.ai-topic-btn.active{background:var(--accent-dim);border-color:rgba(var(--accent-rgb),.3);color:var(--accent);}
+.ai-topic-btn .tp-icon{font-size:14px;width:18px;text-align:center;}
+.ai-chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+.ai-chat-topbar{padding:12px 18px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.ai-chat-avatar{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--cyan));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.ai-chat-name{font-size:13px;font-weight:800;}
+.ai-chat-status{font-size:10px;color:var(--accent);font-weight:700;}
+.ai-chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px;}
+.ai-msg{display:flex;gap:10px;animation:fadeIn .3s ease;}
+.ai-msg.user{flex-direction:row-reverse;}
+.ai-msg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;}
+.ai-msg.user .ai-msg-avatar{background:linear-gradient(135deg,var(--accent),var(--cyan));color:var(--bg);}
+.ai-msg.bot .ai-msg-avatar{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;}
+.ai-msg-bubble{max-width:75%;padding:11px 14px;border-radius:14px;font-size:13px;line-height:1.7;}
+.ai-msg.user .ai-msg-bubble{background:var(--accent);color:var(--bg);border-radius:14px 4px 14px 14px;font-weight:600;}
+.ai-msg.bot .ai-msg-bubble{background:var(--surface);border:1px solid var(--border);border-radius:4px 14px 14px 14px;color:var(--text);}
+.ai-msg-time{font-size:9px;color:var(--text3);margin-top:4px;font-weight:600;}
+.ai-typing{display:flex;gap:4px;align-items:center;padding:11px 14px;}
+.ai-typing span{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:aiTyping 1.2s infinite;}
+.ai-typing span:nth-child(2){animation-delay:.2s;}
+.ai-typing span:nth-child(3){animation-delay:.4s;}
+@keyframes aiTyping{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-6px);opacity:1}}
+.ai-chat-input-area{padding:12px 16px;background:var(--surface);border-top:1px solid var(--border);flex-shrink:0;}
+.ai-quick-btns{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.ai-quick-btn{padding:5px 12px;border-radius:20px;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s;white-space:nowrap;}
+.ai-quick-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);}
+.ai-input-row{display:flex;gap:8px;}
+.ai-input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:11px 16px;color:var(--text);font-size:13px;font-family:var(--font);outline:none;resize:none;transition:border-color .2s;min-height:44px;max-height:120px;}
+.ai-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.1);}
+.ai-input::placeholder{color:var(--text3);}
+.ai-send-btn{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--cyan));border:none;color:var(--bg);font-size:16px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ai-send-btn:hover{transform:scale(1.08);box-shadow:0 4px 14px rgba(var(--accent-rgb),.4);}
+.ai-send-btn:disabled{opacity:.5;cursor:not-allowed;}
+.ai-case-context{background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.2);border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:11px;color:var(--text2);line-height:1.5;}
+
 </style>
 </head>
 <body>
@@ -853,7 +1079,7 @@ body.oqituvchi {
         <div class="prof-card">
           <div class="prof-av" id="t-prof-av">QA</div>
           <div class="prof-name" id="t-prof-name">Qurbonov Anusher</div>
-          <div class="prof-email" id="t-prof-email">anusher@pharmsim.uz</div>
+          <div class="prof-email" id="t-prof-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="56373823253e332416263e37243b253f3b78232c">[email&#160;protected]</a></div>
           <div class="prof-bds">
             <span class="badge badge-accent" id="t-prof-role-b">Talaba</span>
             <span class="badge badge-accent">SamDChTI</span>
@@ -970,7 +1196,7 @@ body.oqituvchi {
       <div class="user-detail" id="a-user-detail">
         <div class="ud-hdr">
           <div class="ud-av" id="ud-av">QA</div>
-          <div><div style="font-size:20px;font-weight:800" id="ud-name">Qurbonov Anusher</div><div style="font-size:12px;color:var(--text2);margin-top:3px" id="ud-email">anusher@pharmsim.uz</div><div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap" id="ud-badges"><span class="badge badge-accent">Talaba</span><span class="badge badge-accent">PHD q-2</span><span class="badge" style="font-size:9px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#22c55e">Onlayn</span></div></div>
+          <div><div style="font-size:20px;font-weight:800" id="ud-name">Qurbonov Anusher</div><div style="font-size:12px;color:var(--text2);margin-top:3px" id="ud-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="67060912140f021527170f06150a140e0a49121d">[email&#160;protected]</a></div><div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap" id="ud-badges"><span class="badge badge-accent">Talaba</span><span class="badge badge-accent">PHD q-2</span><span class="badge" style="font-size:9px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#22c55e">Onlayn</span></div></div>
           <div style="margin-left:auto;display:flex;gap:8px;flex-direction:column"><button class="btn-ghost" onclick="showToast('✏️ Tahrirlash rejimi')">✏️ Tahrirlash</button><button class="btn-danger" onclick="showToast('🚫 Foydalanuvchi bloklandi')">🚫 Bloklash</button></div>
         </div>
         <div class="ud-stats">
@@ -1147,7 +1373,7 @@ body.oqituvchi {
         <div class="prof-card">
           <div class="prof-av" id="o-prof-av">TB</div>
           <div class="prof-name" id="o-prof-name">Dr. Toshpulatov B.</div>
-          <div class="prof-email" id="o-prof-email">toshpulatov@samdchti.uz</div>
+          <div class="prof-email" id="o-prof-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f98d968a91898c95988d968fb98a98949d9a918d90d78c83">[email&#160;protected]</a></div>
           <div class="prof-bds"><span class="badge badge-accent">O'qituvchi</span><span class="badge badge-accent">Kardiologiya</span><span class="badge badge-accent">SamDChTI</span></div>
           <div class="prof-stats"><div class="ps"><div class="ps-v">18</div><div class="ps-l">Keys yaratildi</div></div><div class="ps"><div class="ps-v">34</div><div class="ps-l">Talabalar</div></div><div class="ps"><div class="ps-v" style="color:var(--accent)">81%</div><div class="ps-l">Guruh o'rtachasi</div></div><div class="ps"><div class="ps-v" style="color:var(--yellow)">7</div><div class="ps-l">Baholash kutmoqda</div></div></div>
         </div>
@@ -1164,7 +1390,7 @@ body.oqituvchi {
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ════════════════════════════════════════════════
    ROLE NAV CONFIG
 ════════════════════════════════════════════════ */
@@ -1172,6 +1398,9 @@ const NAV_CONFIG = {
   'Talaba': [
     {id:'t-home', label:'Bosh sahifa', icon:'🏠'},
     {id:'t-keys', label:'Keys yechish', icon:'📋'},
+    {id:'t-dorilar', label:'Dori Bazasi', icon:'💊'},
+    {id:'t-analytics', label:'Analytics', icon:'📈'},
+    {id:'t-ai-tutor', label:'AI Tutor', icon:'🤖'},
     {id:'t-hisobot', label:'Hisobotim', icon:'📊'},
     {id:'t-profil', label:'Profil', icon:'👤'},
   ],
@@ -1318,6 +1547,7 @@ function doLogin() {
   document.getElementById('app').style.display = 'flex';
   goPage(links[0]?.id || 't-home');
   if(role === 'Talaba') buildTCatList();
+  setTimeout(buildMobileNav, 100);
   showToast('✅ Xush kelibsiz, ' + name.split(' ')[1] + '!');
 }
 
@@ -1344,6 +1574,9 @@ function goPage(pg) {
   if(el) { el.classList.add('active'); el.classList.add('fade-in'); }
   const nl = document.getElementById('nl-' + pg);
   if(nl) nl.classList.add('active');
+  if(pg === 't-dorilar') setTimeout(initDorilarPage, 50);
+  if(pg === 't-analytics') setTimeout(initAnalyticsPage, 50);
+  if(pg === 't-ai-tutor') setTimeout(initAITutorPage, 50);
 }
 
 /* ════════════════════════════════════════════════
@@ -1984,6 +2217,7 @@ function selectAdminCase(el, name, cat) {
 
 /* ════════════════════════════════════════════════
    TOAST
+═
 ════════════════════════════════════════════════ */
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -1991,6 +2225,1190 @@ function showToast(msg) {
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2800);
 }
+
+
+/* ════════════════════════════════════════════════
+   DORI BAZASI — DRUG DATABASE
+════════════════════════════════════════════════ */
+
+const DRUG_GROUPS = {
+  'Antiagregantlar': {color:'#00d4aa', bg:'rgba(0,212,170,.15)', icon:'🩸'},
+  'Beta-blokatorlar': {color:'#00c4e8', bg:'rgba(0,196,232,.15)', icon:'❤️'},
+  'ACE Ingibitorlari': {color:'#a78bfa', bg:'rgba(167,139,250,.15)', icon:'🔴'},
+  'ARB (Sartanlar)': {color:'#818cf8', bg:'rgba(129,140,248,.15)', icon:'🟣'},
+  'Statinlar': {color:'#fb923c', bg:'rgba(251,146,60,.15)', icon:'📊'},
+  'Diuretiklar': {color:'#38bdf8', bg:'rgba(56,189,248,.15)', icon:'💧'},
+  'Kalsiy antagonistlar': {color:'#f472b6', bg:'rgba(244,114,182,.15)', icon:'⚡'},
+  'Nitratlar': {color:'#facc15', bg:'rgba(250,204,21,.15)', icon:'💛'},
+  'Bronxodilatatorlar': {color:'#4ade80', bg:'rgba(74,222,128,.15)', icon:'🫁'},
+  'IKS (Ingalyatsion KS)': {color:'#60a5fa', bg:'rgba(96,165,250,.15)', icon:'🌬️'},
+  'PPI (Proton nasos)': {color:'#c084fc', bg:'rgba(192,132,252,.15)', icon:'🟡'},
+  'Antibiotiklar': {color:'#f87171', bg:'rgba(248,113,113,.15)', icon:'🦠'},
+  'NSAIDlar': {color:'#fbbf24', bg:'rgba(251,191,36,.15)', icon:'💊'},
+  'Kortikosteroidlar': {color:'#34d399', bg:'rgba(52,211,153,.15)', icon:'🟢'},
+  'Antigutli': {color:'#22d3ee', bg:'rgba(34,211,238,.15)', icon:'🦴'},
+  'Antikoagulyantlar': {color:'#ff6b6b', bg:'rgba(255,107,107,.15)', icon:'🩹'},
+};
+
+const DRUG_DATABASE = [
+  // ═══ ANTIAGREGANTLAR ═══
+  {
+    id:1, name:'Aspirin', inn:'Acetylsalicylic acid', group:'Antiagregantlar',
+    mechanism:'Siklooksigenaza-1 va -2 ni qaytmas bloklaydi → tromboksan A2 sintezi kamayadi → trombosit agregatsiyasi pasayadi',
+    doza:'Antiagregant: 75–100 mg/kun; Analgetik/antipretik: 300–1000 mg × 3–4/kun',
+    yollar:'Per os (og\'iz orqali)',
+    ko_rsatmalar:["YuIK — tromboz profilaktikasi", "TIA/Insult profilaktikasi", "Stent o'rnatilgandan keyin", "Atrial fibrillyatsiya (ba'zi hollarda)"],
+    kontrand:["Peptik yara (faol)", "Qon ketish xavfi yuqori", "Aspiringa allergiya", "Bolalar (<12 yosh, Reye sindromi)", "Og'ir jigar/buyrak yetishmovchiligi"],
+    nojo_ra:["Oshqozon qon ketishi", "Bronxospazm (ASA-astma)", "Quloq shovqini", "Anafilaksiya (kam)"],
+    interactions:[
+      {drug:'Varfarin', severity:'high', desc:'Qon ketish xavfi keskin ortadi — INR nazoratini kuchaytiring'},
+      {drug:'NSAIDlar (Ibuprofen)', severity:'high', desc:'Oshqozon qon ketishi, ASPIRINning antiagregant effektini blokashi mumkin'},
+      {drug:'SSRI antidepressantlar', severity:'med', desc:'Qon ketish xavfi ortadi'},
+      {drug:'ACE ingibitorlari', severity:'low', desc:'Yuqori dozada antihipertenziv effektni kamaytirishi mumkin'},
+    ],
+    monitoring:['Oshqozon simptomlarini kuzatish', 'Qon ketish belgilari', 'Bronxospazm xavfi astmatiklarda'],
+    pharmacology:{t_half:'15–20 min (aktiv metabolit: salitsil kislota 2–3 soat)', start:'30 min', peak:'1–2 soat', dist:'Keng', metabolism:'Jigar (gidroliz)'},
+  },
+  {
+    id:2, name:'Klopidogrel', inn:'Clopidogrel', group:'Antiagregantlar',
+    mechanism:"P2Y12 retseptorini qaytmas bloklaydi → ADF-bilan bog'liq trombosit agregatsiyasini inhibe qiladi",
+    doza:'75 mg × 1/kun; Yuklama doza: 300–600 mg (AKS da)',
+    yollar:'Per os',
+    ko_rsatmalar:["YuIK, AKS (Aspirin bilan birga)", "PTCA/stent o'rnatilgandan keyin", "TIA/Insult profilaktikasi", "Aspirin toqat qilmaydigan bemorlar"],
+    kontrand:["Faol qon ketish", "Og'ir jigar yetishmovchiligi", "CYP2C19 gen polimorfizmi (samaradorlik pasayadi)"],
+    nojo_ra:["Qon ketish", "Trombositopenik purpura (TTP, kam)", "Ich ketishi", "Bosh og'rig'i"],
+    interactions:[
+      {drug:'Omeprazol/Esomeprazol', severity:'high', desc:'CYP2C19 raqobati — Klopidogrel aktivatsiyasi 40% ga kamayadi. Pantoprazol afzalroq!'},
+      {drug:'Varfarin + Aspirin', severity:'high', desc:'Triple terapiya — qon ketish xavfi juda yuqori, faqat qisqa muddatga'},
+      {drug:'NSAIDlar', severity:'med', desc:'Qon ketish xavfi ortadi'},
+      {drug:'Morfin', severity:'med', desc:'Klopidogrel so\'rilishini kamaytirishi mumkin'},
+    ],
+    monitoring:['Qon ketish', 'Trombosit soni', 'CYP2C19 genotiplash tavsiya etiladi'],
+    pharmacology:{t_half:'~8 soat (aktiv metabolit)', start:'2–4 soat', peak:'3–7 kun', dist:'Keng', metabolism:'Jigar (CYP2C19)'},
+  },
+  // ═══ BETA-BLOKATORLAR ═══
+  {
+    id:3, name:'Bisoprolol', inn:'Bisoprolol', group:'Beta-blokatorlar',
+    mechanism:'Β1 selektiv adrenoretseptorlarni bloklaydi → YuQS va qon bosim pasayadi, miokard kislorod talabi kamayadi',
+    doza:'2.5–10 mg × 1/kun; Yurak yetishmovchiligida: 1.25 mg dan boshlash',
+    yollar:'Per os',
+    ko_rsatmalar:["Arterial gipertoniya", "YuIK (stenokardiya)", "Yurak yetishmovchiligi (EF↓)", "Takhikardiya, atrial fibrillyatsiya (QS nazorat)", "Miokard infarkti (profilaktika)"],
+    kontrand:["Bronxial astma (ehtiyot), og'ir YOQK", "AV blokada II–III daraja", "Simptomatik bradikardiya (<55/daq)", "Kardiogen shok", "Og'ir periferik arteriya kasalligi"],
+    nojo_ra:["Bradikardiya", "Charchoq, holsizlik", "Sovuq qo'l-oyoq", "Erektil disfunktsiya", "Bronxospazm (selektiv bo'lsa ham)"],
+    interactions:[
+      {drug:'Verapamil/Diltiazem', severity:'high', desc:'AV blokada va bradikardiya xavfi — birgalikda QATTIQ ehtiyot!'},
+      {drug:'Digoksin', severity:'high', desc:'AV o\'tkazuvchanligi yanada pasayadi, bradikardiya'},
+      {drug:'Insulin/Gipoglikemik', severity:'med', desc:'Gipoglikemiya belgilarini yashiradi (terlash qoladi), gipoglikemiyadan chiqishni kechiktiradi'},
+      {drug:'Klonidin', severity:'med', desc:'Klonidinni to\'xtatganda rikosheet gipertenziya — avval beta-blokatorn to\'xtating'},
+      {drug:'NSAIDlar', severity:'low', desc:'Antihipertenziv effektni kamaytirishi mumkin'},
+    ],
+    monitoring:['YuQS (maqsad 55–65/daqiqada)', 'QB', 'Bronxospazm belgilari', 'Glikemiya (DM da)'],
+    pharmacology:{t_half:'10–12 soat', start:'1–2 soat', peak:'2–4 soat', dist:'O\'rtacha', metabolism:'Jigar + buyrak (50/50)'},
+  },
+  {
+    id:4, name:'Metoprolol', inn:'Metoprolol succinate/tartrate', group:'Beta-blokatorlar',
+    mechanism:'Β1 selektiv beta-blokator (Bisoprolol ga o\'xshash), XL forma uzaytirilgan ta\'sirli',
+    doza:'Metoprolol succinate XL: 25–200 mg × 1/kun; Tartrate: 25–100 mg × 2/kun',
+    yollar:'Per os (IV forma ham mavjud)',
+    ko_rsatmalar:["Gipertoniya", "YuIK", "Yurak yetishmovchiligi", "Migreni profilaktikasi", "Hipertiroidizm (simptomatik)"],
+    kontrand:["Bisoprolol bilan bir xil", "Suksinat forma YuY da afzalroq (tartrate emas)"],
+    nojo_ra:["Bisoprolol bilan o'xshash", "Tartrate forma QS disfunktsiyasida kamroq samarali"],
+    interactions:[
+      {drug:'CYP2D6 ingibitorlari (Paroksetin, Fluoksetin)', severity:'high', desc:'Metoprolol konsentratsiyasi 2–5 barobar oshadi — bradikardiya xavfi'},
+      {drug:'Verapamil', severity:'high', desc:'Bisoprolol kabi — AV blokada xavfi'},
+      {drug:'Rifampitsin', severity:'med', desc:'Metoprolol konsentratsiyasini 4–5 barobar kamaytiradi (induktor)'},
+    ],
+    monitoring:['YuQS, QB', 'CYP2D6 inhibitorlarni tekshiring'],
+    pharmacology:{t_half:'3–7 soat (XL: 24 soat effekt)', start:'1 soat', peak:'1–2 soat', dist:'Keng', metabolism:'Jigar (CYP2D6)'},
+  },
+  // ═══ ACE INGIBITORLARI ═══
+  {
+    id:5, name:'Ramipril', inn:'Ramipril', group:'ACE Ingibitorlari',
+    mechanism:"Angiotensin I → Angiotensin II konversiyasini bloklaydi → vazodilatasiya, aldosteron↓, QB↓, buyrak proteksiya",
+    doza:'2.5–10 mg × 1/kun; YuY da: 1.25 mg dan boshlash',
+    yollar:'Per os',
+    ko_rsatmalar:["Arterial gipertoniya", "Yurak yetishmovchiligi (EF↓)", "Post-MI (yurak remodeling profilaktikasi)", "DM nefropatiyasi (proteinuriya↓)", "Yuqori kardiovaskulyar xavf (HOPE study)"],
+    kontrand:["Homiladorlik (II–III trimester) — teratogen!", "Angioödem tarixi (ACE ingibitoridan)", "Ikki tomonlama buyrak arteriyasi stenozu", "Giperkalemiya (K+ >5.5 mmol/l)", "ARB bilan birga (ALISKIREN + DM)"],
+    nojo_ra:["Quruq yo'tal (bradikinin↑) — 10–15%", "Angioödem (kam lekin xavfli)", "Giperkalemiya", "Kreatinin o'sishi (birinchi 2 haftada 20–30% normalda)", "Bosh aylanishi (1-doza)"],
+    interactions:[
+      {drug:'Kaliy tejovchi diuretiklar + KCl', severity:'high', desc:'Giperkalemiya — K+ >6.5 mmol/l hayot uchun xavfli'},
+      {drug:'NSAIDlar', severity:'high', desc:'QB tushiruvchi effekt kamayadi + buyrak funksiyasi yomonlashadi (triple whammy)'},
+      {drug:'Litiy', severity:'high', desc:'Litiy toksikligi — konsentratsiya oshadi'},
+      {drug:'Allopurinol', severity:'med', desc:'Stevens-Johnson sindromi xavfi (nadir)'},
+      {drug:'Diuretiklar (Furosemid)', severity:'low', desc:'Birinchi doza gipotoniyasi xavfi — doza moslashtiring'},
+    ],
+    monitoring:['QB (1-dozadan 2 soat keyin)', 'Kreatinin + elektrolitlar (2 haftadan keyin)', 'Yo\'tal belgilari', 'K+'],
+    pharmacology:{t_half:'13–17 soat', start:'1 soat', peak:'3–6 soat', dist:'O\'rtacha', metabolism:'Jigar (Ramiprilat — aktiv metabolit)'},
+  },
+  {
+    id:6, name:'Enalapril', inn:'Enalapril maleate', group:'ACE Ingibitorlari',
+    mechanism:'Ramipril bilan bir xil mexanizm. Enalaprilat — aktiv metabolit',
+    doza:'2.5–40 mg × 1–2/kun',
+    yollar:'Per os; IV (Enalaprilat)',
+    ko_rsatmalar:["Gipertoniya", "Yurak yetishmovchiligi", "Asimptomatik LV disfunktsiya"],
+    kontrand:["Ramipril bilan bir xil"],
+    nojo_ra:["Ramipril bilan o'xshash", "Yo'tal — Ramiprilga qaraganda tez-tez"],
+    interactions:[
+      {drug:'Kaliy tejovchi diuretiklar', severity:'high', desc:'Giperkalemiya'},
+      {drug:'NSAIDlar', severity:'high', desc:'Triple whammy'},
+    ],
+    monitoring:['Kreatinin, K+, QB'],
+    pharmacology:{t_half:'11 soat (Enalaprilat)', start:'1 soat', peak:'4–6 soat', dist:'O\'rtacha', metabolism:'Jigar (prodrug)'},
+  },
+  // ═══ ARB ═══
+  {
+    id:7, name:'Losartan', inn:'Losartan potassium', group:'ARB (Sartanlar)',
+    mechanism:"Angiotensin II AT1 retseptorini selektiv bloklaydi — ACE ingibitoriga o'xshash effekt, lekin yo'tal kamroq",
+    doza:'25–100 mg × 1/kun; Gipertoniya: 50–100 mg',
+    yollar:'Per os',
+    ko_rsatmalar:["Gipertoniya (ACE yo'tal bersa alternativa)", "DM nefropatiyasi (proteinuriya↓, RENAAL study)", "Yurak yetishmovchiligi", "Marfan sindromi (aorta dilatatsiyasi)"],
+    kontrand:["Homiladorlik!", "Giperkalemiya", "Ikki tomonlama buyrak arteriyasi stenozu", "ACE inhibitori bilan birga (dual RAAS blokada — kontrand)"],
+    nojo_ra:["Yo'tal YO'Q (ACE dan afzalligi)", "Bosh aylanishi", "Giperkalemiya", "Angioödem (juda kam, ACE ga qaraganda 10 marta kam)"],
+    interactions:[
+      {drug:'ACE ingibitorlari', severity:'high', desc:'Dual RAAS blokada — buyrak yetishmovchiligi, giperkalemiya, gipotoniya — TAQIQLANGAN'},
+      {drug:'Kaliy tejovchi diuretiklar', severity:'high', desc:'Giperkalemiya'},
+      {drug:'NSAIDlar', severity:'high', desc:'Antihipertenziv effekt↓, buyrak xavfi'},
+      {drug:'Flukonazol (CYP2C9 ingibitori)', severity:'med', desc:'Losartan → aktiv metabolit (E-3174) konversiyasi kamayadi, samaradorlik↓'},
+    ],
+    monitoring:['QB, K+, Kreatinin', 'Gipotoniya belgilari'],
+    pharmacology:{t_half:'2 soat (aktiv metabolit E-3174: 6–9 soat)', start:'1 soat', peak:'3–4 soat', dist:'O\'rtacha', metabolism:'Jigar (CYP2C9, CYP3A4)'},
+  },
+  // ═══ STATINLAR ═══
+  {
+    id:8, name:'Atorvastatin', inn:'Atorvastatin calcium', group:'Statinlar',
+    mechanism:"HMG-CoA reduktaza fermentini bloklaydi → jigar LDL sintezi↓ → LDL retseptorlari↑ → qon LDL↓, pleiotropik effektlar (antiinflammatuar, plak stabilizatsiya)",
+    doza:'10–80 mg × 1/kun (kechqurun); Yuqori xavf: 40–80 mg; O\'rta xavf: 10–20 mg',
+    yollar:'Per os (kechqurun afzal)',
+    ko_rsatmalar:["Birlamchi va ikkilamchi kardiovaskulyar profilaktika", "Dislipidemiya (LDL > maqsad)", "YuIK (LDL maqsad <1.8 mmol/l)", "DM + kardiovaskulyar xavf"],
+    kontrand:["Faol jigar kasalligi, ALT/AST >3× ULN", "Homiladorlik va emizish!", "Miyopati/rabdomioliz tarixi", "CYP3A4 kuchli ingibitorlari bilan (Itrakonazol, Siklosporin)"],
+    nojo_ra:["Miosit og'rig'i (myalgia) — 5–10%", "Miyopati (CK↑)", "Rabdomioliz (nadir, <1%)", "Transaminaza o'sishi (ALT/AST)", "Yangi DM riski (o'rtacha)", "Bosh og'rig'i"],
+    interactions:[
+      {drug:'Itrakonazol/Ketokonazol (CYP3A4 ingibitor)', severity:'high', desc:'Atorvastatin konsentratsiyasi 10–20 marta oshishi mumkin — RABDOMIOLIZ xavfi'},
+      {drug:'Siklosporin', severity:'high', desc:'Atorvastatin AUC 7–8 marta oshadi — doza 10 mg dan oshmsin'},
+      {drug:'Gemfibrozil', severity:'high', desc:'Statin bilan fibrat — miyopati xavfi. Fenofibrat xavfsizroq'},
+      {drug:'Rifampitsin (CYP3A4 induktor)', severity:'med', desc:'Atorvastatin konsentratsiyasi 40% ga tushadi — samaradorlik↓'},
+      {drug:'Amiodarone', severity:'med', desc:'Statin konsentratsiyasi oshishi, miyopati ehtimoli'},
+      {drug:'Digoksin', severity:'low', desc:'Digoksin konsentratsiyasi 20% oshadi'},
+    ],
+    monitoring:['ALT/AST (bazaviy va 3 oy keyin)', 'CK (miosit og\'rig\'i bo\'lsa)', 'LDL (6 haftadan keyin)', 'Glyukoza (DM riski)'],
+    pharmacology:{t_half:'14 soat (aktiv metabolit: 20–30 soat)', start:'Lipid effekti: 1–2 hafta', peak:'6–8 hafta (to\'liq effekt)', dist:'Keng', metabolism:'Jigar (CYP3A4)'},
+  },
+  {
+    id:9, name:'Rosuvastatin', inn:'Rosuvastatin calcium', group:'Statinlar',
+    mechanism:"HMG-CoA reduktaza ingibitori. Atorvastatinga qaraganda kuchliroq LDL pasaytiradi (10 mg Rosuvastatin ≈ 20 mg Atorvastatin ta\'siri)",
+    doza:'5–40 mg × 1/kun; Yuqori xavf: 20–40 mg',
+    yollar:'Per os (istalgan vaqt)',
+    ko_rsatmalar:["Yuqori va juda yuqori KV xavf", "Atorvastatinga toqat qilmaslik", "CKD (jigar metabolism ozroq)"],
+    kontrand:["Bir xil Atorvastatin bilan", "CKD og'ir (GFR <30) — doza 5 mg dan oshmsin"],
+    nojo_ra:["Miyalgia", "Miyopati (kamroq Atorvastatin dan)", "Proteinuriya (yuqori dozada)"],
+    interactions:[
+      {drug:'Siklosporin', severity:'high', desc:'AUC 7 marta oshadi — maksimal doza 5 mg'},
+      {drug:'Gemfibrozil', severity:'high', desc:'Miyopati xavfi — birgalikda qo\'llamang'},
+      {drug:'Antasidlar (Al/Mg)', severity:'low', desc:'2 soat oralig\'ida qabul qiling'},
+    ],
+    monitoring:['LDL, ALT/AST, CK', 'Proteinuriya (yuqori dozada)'],
+    pharmacology:{t_half:'19 soat', start:'1 hafta', peak:'4 hafta', dist:'Keng', metabolism:'Jigar (CYP2C9 oz, asosan glyukuronidatsiya)'},
+  },
+  // ═══ DIURETIKLAR ═══
+  {
+    id:10, name:'Furosemid', inn:'Furosemide', group:'Diuretiklar',
+    mechanism:"Genle ilmasining yuqori qismida Na-K-2Cl kotransporterni bloklaydi → kuchli diurez (25–30% filtratsiyalangan Na chiqaradi)",
+    doza:'20–80 mg/kun per os; IV: 20–40 mg; Og\'ir shish: 160–600 mg/kun',
+    yollar:'Per os, IV, IM',
+    ko_rsatmalar:["Yurak yetishmovchiligi (o'tkir va surunkali)", "Nefrotik sindrom", "Jigar sirozi (astsit)", "Gipertenziv kriz (IV)", "Giperkalemiya (IV)"],
+    kontrand:["Anuriya", "Furosemidga/sulfanilamiaga allergiya", "Gipokаlemiya (to'ldirmay)", "Og'ir gipovоlemiya"],
+    nojo_ra:["Gipokalemiya (K+ <3.5) — eng muhim!", "Gipomagnezemiya", "Giperurikemiya (podagra qo'zg'atishi)", "Giponatriemiya", "Ototoksiklik (yuqori dozada IV)", "Glyukoza toqatsizligi"],
+    interactions:[
+      {drug:'Aminoglikozidlar (Gentamicin)', severity:'high', desc:'Ototoksiklik — ikkalasi ham quloqqa zarar beradi, birgalikda xavfli'},
+      {drug:'Digoksin', severity:'high', desc:'Furosemid → Gipokalemiya → Digoksin toksikligi (aritmiya)'},
+      {drug:'Litiy', severity:'high', desc:'Furosemid Na chiqaradi → Litiy reak\'tiv reabsorbsiyasi → toksiklik'},
+      {drug:'NSAIDlar', severity:'high', desc:'Diuretik effekti 50% ga kamayadi + buyrak xavfi'},
+      {drug:'ACE ingibitorlari', severity:'med', desc:'1-doza gipotoniyasi — doza moslashtiring'},
+    ],
+    monitoring:['K+, Na+, Kreatinin (har hafta dastlab)', 'QB', 'Tana vazni (kunlik)', 'Diurez', 'Quloq eshitishi (yuqori IV dozada)'],
+    pharmacology:{t_half:'1–1.5 soat', start:'Per os: 30–60 min; IV: 5 min', peak:'Per os: 1–2 soat', dist:'O\'rtacha', metabolism:'Buyrak (asosiy)'},
+  },
+  {
+    id:11, name:'Gidroklorotiazid', inn:'Hydrochlorothiazide', group:'Diuretiklar',
+    mechanism:"Distal kanalchaning boshida Na-Cl kotransporterni bloklaydi → o'rtacha kuchli diurez",
+    doza:'12.5–50 mg × 1/kun (ertalab)',
+    yollar:'Per os',
+    ko_rsatmalar:["Arterial gipertoniya (1-qator monoterapiya yoki kombinatsiya)", "Yurak yetishmovchiligi (engil)", "Nefrolit (kaltsiy oksalat)"],
+    kontrand:["Podagra", "Gipokalemiya", "Giperurikemiya", "DM (glyukoza buzilishi)"],
+    nojo_ra:["Gipokalemiya (Furosemidga qaraganda kamroq)", "Giperurikemiya", "Giperglikemiya", "Hiperkaltsemiya", "Gipolipidемiya (kamroq)"],
+    interactions:[
+      {drug:'Litiy', severity:'high', desc:'Litiy toksikligi'},
+      {drug:'NSAIDlar', severity:'med', desc:'Antihipertenziv effekt↓'},
+      {drug:'Kaliy tejovchi diuretiklar', severity:'low', desc:'Kombinatsiya — gipokalemiyadan saqlaydi (Ko\'pincha atayin qo\'llanadi)'},
+    ],
+    monitoring:['K+, Na+, Glyukoza, Urat', 'QB'],
+    pharmacology:{t_half:'6–15 soat', start:'2 soat', peak:'4 soat', dist:'Keng', metabolism:'Buyrak'},
+  },
+  // ═══ KALSIY ANTAGONISTLAR ═══
+  {
+    id:12, name:'Amlodipine', inn:'Amlodipine besylate', group:'Kalsiy antagonistlar',
+    mechanism:"Digidrоpiridin — L-tipdagi kalsiy kanallarini (periferik arteriолalar) bloklaydi → vazodilatasiya → QB↓",
+    doza:'2.5–10 mg × 1/kun',
+    yollar:'Per os',
+    ko_rsatmalar:["Arterial gipertoniya (1-qator)", "Stabil stenokardiya", "Vazospastik stenokardiya (Prinzmetal)", "Raynaud sindromi"],
+    kontrand:["Og'ir aortik stenoz", "Kardiogen shok", "Beqaror stenokardiya (diatstol)"],
+    nojo_ra:["Oyoq shishi (pretibial, eng ko'p)", "Bosh og'rig'i, yuz qizarishi", "Bradikardiya YO'Q (digidrоpiridin)", "Tishlar shishi (giperplaziya)"],
+    interactions:[
+      {drug:'CYP3A4 ingibitorlari (Klаritromitsin, Itrakonazol)', severity:'med', desc:'Amlodipine konsentratsiyasi oshadi — QB juda tushishi mumkin'},
+      {drug:'Siklosporin', severity:'med', desc:'Siklosporin konsentratsiyasi oshadi'},
+      {drug:'Simvastatin', severity:'low', desc:'Simvastatin 40 mg bilan birgalikda miyopati xavfi ortadi'},
+    ],
+    monitoring:['QB, YuQS', 'Oyoq shishi'],
+    pharmacology:{t_half:'35–50 soat', start:'6–12 soat', peak:'6–12 soat', dist:'Keng', metabolism:'Jigar (CYP3A4)'},
+  },
+  // ═══ BRONXODILATATORLAR ═══
+  {
+    id:13, name:'Salbutamol', inn:'Salbutamol (Albuterol)', group:'Bronxodilatatorlar',
+    mechanism:"β2-adrenoretseptorni stimulyatsiya → bronx silliq mushaklari relaksatsiyasi → bronxodilatasiya (5–15 daqiqada)",
+    doza:'Inhaler: 100–200 mkg/doz × 3–4/kun; Nebulayzer: 2.5 mg × 3–4/kun',
+    yollar:'Ingalyatsion (MDI, DPI), Nebulayzer, Per os (kamroq)',
+    ko_rsatmalar:["Bronxial astma (relyever — zarur bo'lganda)", "YOQK (bronxospazm)", "O'tkir bronxospazm"],
+    kontrand:["Tirotoksikoz (ehtiyot)", "Gipertrofik obstruktiv kardiomiyopatiya"],
+    nojo_ra:["Tремор, titroq", "Taxikardiya", "Gipokalemiya (yuqori dozada)", "Paradoksal bronxospazm (kam)"],
+    interactions:[
+      {drug:'Beta-blokatorlar (Propranolol)', severity:'high', desc:'Bronxodilatatsiyanı bloklaydi — ASTMA DA QATTIQ TAQIQLANGAN'},
+      {drug:'Teofillin', severity:'med', desc:'Birgalikda — gipokalemiya va aritmiya xavfi'},
+      {drug:'Diuretiklar + kortikosteroidlar', severity:'med', desc:'Gipokalemiyani kuchaytiradi'},
+    ],
+    monitoring:['YuQS', 'K+ (yuqori doza)', 'PEFR/FEV1'],
+    pharmacology:{t_half:'3–8 soat', start:'5–15 min', peak:'30–60 min', dist:'O\'rtacha', metabolism:'Jigar'},
+  },
+  {
+    id:14, name:'Tiotropium', inn:'Tiotropium bromide', group:'Bronxodilatatorlar',
+    mechanism:"M3 muskarinik retseptorlarni uzoq muddatli bloklaydi → bronx silliq mushaklari relaksatsiyasi (24 soat davomida)",
+    doza:'18 mkg × 1/kun (HandiHaler) yoki 5 mkg Respimat × 1/kun',
+    yollar:'Ingalyatsion (DPI yoki Respimat)',
+    ko_rsatmalar:["YOQK (asosiy long-acting bronxodilatatatsiya)", "YOQK alevlanmalarini profilaktika"],
+    kontrand:["Glaukoma (tor burchakli)", "Prostata giperplaziyasi (ehtiyot)", "Tiotropiumga allergiya"],
+    nojo_ra:["Og'iz quruqligi (eng ko'p)", "Qabziyat", "Ko'z ichiga kirsa — glaukoma qo'zg'atishi"],
+    interactions:[
+      {drug:'Ipratropium', severity:'high', desc:'Ikki M-xolinolitik birgalikda — anticholinergik yon ta\'sir kuchayadi'},
+      {drug:'TCA antidepressantlar', severity:'med', desc:'Anticholinergik ta\'sirlar qo\'shiladi'},
+    ],
+    monitoring:['FEV1, 6 daqiqali yurish testi', 'Ko\'z ichki bosimi (glaukoma bo\'lsa)', 'Siydik tutish belgilari'],
+    pharmacology:{t_half:'5–6 kun', start:'30 min', peak:'3 soat', dist:'Keng', metabolism:'Buyrak + jigar'},
+  },
+  // ═══ PPI ═══
+  {
+    id:15, name:'Omeprazol', inn:'Omeprazole', group:'PPI (Proton nasos)',
+    mechanism:"Oshqozon parietal hujayralarida H+/K+-ATPazani (proton nasos) qaytmas bloklaydi → HCl sekretsiyasi 80–95% kamayadi",
+    doza:'20–40 mg × 1/kun (ertalab ovqatdan 30 min oldin); H.pylori eradikatsiya: 20 mg × 2/kun',
+    yollar:'Per os, IV',
+    ko_rsatmalar:["Peptik yara (GU, DU)", "GERD", "H.pylori eradikatsiya (uch qatorli sxema)", "Zollinger-Ellison sindromi", "NSAIDlar bilan birgalikda gastroproteksiya"],
+    kontrand:["Atazanavir bilan (HIV dori) — resorpsiya kamayadi"],
+    nojo_ra:["Bosh og'rig'i", "Ich ketishi yoki qabziyat", "Uzoq muddatda: Mg↓, Vit B12↓, osteoporoz xavfi", "C.difficile infeksiyasi xavfi ortadi"],
+    interactions:[
+      {drug:'Klopidogrel', severity:'high', desc:'CYP2C19 raqobati → Klopidogrel aktivatsiyasi kamayadi → antiagregant effekt↓. PANTOPRAZOL afzal!'},
+      {drug:'Atazanavir/Nelfinavir', severity:'high', desc:'pH oshishi → HIV proteaza ingibitorlari so\'rilmaydi — birgalikda TAQIQLANGAN'},
+      {drug:'Metotreksat', severity:'high', desc:'Metotreksat chiqarilishi kamayadi → toksiklik'},
+      {drug:'Varfarin', severity:'med', desc:'CYP2C9 ingibitsiya → INR oshishi mumkin'},
+      {drug:'Digoksin', severity:'low', desc:'Digoksin so\'rilishi biroz oshadi'},
+    ],
+    monitoring:['Simptomlar dinamikasi', 'Mg (uzoq muddatda)', 'Vit B12'],
+    pharmacology:{t_half:'0.5–1 soat (lekin effekt 24 soat)', start:'1 soat', peak:'2 soat', dist:'O\'rtacha', metabolism:'Jigar (CYP2C19 asosiy)'},
+  },
+  {
+    id:16, name:'Pantoprazol', inn:'Pantoprazole sodium', group:'PPI (Proton nasos)',
+    mechanism:"Omeprazol bilan bir xil — proton nasos ingibitori. CYP2C19 ga kamroq ta\'sir → Klopidogrel bilan kombinatsiya uchun AFZALROQ",
+    doza:'20–40 mg × 1–2/kun',
+    yollar:'Per os, IV',
+    ko_rsatmalar:["GERD, Peptik yara", "Klopidogrel qabul qiluvchi bemorlar (gastroproteksiya uchun)"],
+    kontrand:["Omeprazol bilan bir xil"],
+    nojo_ra:["Omeprazol bilan o'xshash, lekin CYP2C19 interaksiyasi kamroq"],
+    interactions:[
+      {drug:'Klopidogrel', severity:'low', desc:'Omeprazoldan farqli — Pantoprazol Klopidogrel aktivatsiyasiga minimal ta\'sir qiladi. Xavfsiz!'},
+      {drug:'Atazanavir', severity:'high', desc:'Omeprazol kabi — TAQIQLANGAN'},
+    ],
+    monitoring:['Omeprazol kabi'],
+    pharmacology:{t_half:'1 soat', start:'2.5 soat', peak:'2–4 soat', dist:'O\'rtacha', metabolism:'Jigar (CYP2C19 oz)'},
+  },
+  // ═══ ANTIGUTLI ═══
+  {
+    id:17, name:'Allopurinol', inn:'Allopurinol', group:'Antigutli',
+    mechanism:"Ksantin oksidaza fermentini inhibe qiladi → gipoksantin va ksantin → siydik kislotaga aylantirmaydi → qon siydik kislotasi↓",
+    doza:'100–300 mg × 1/kun (sutkada 800 mg gacha bo\'lishi mumkin); CKD da: doza kamaytiriladi',
+    yollar:'Per os',
+    ko_rsatmalar:["Podagra (surunkali, nöbetlararo davr)", "Giperürikemiya (simptomatik)", "Sichqoncha teri toshmasi oldini olish (xemoterapiya)", "Nefrolit (siydik kislotali)"],
+    kontrand:["O'tkir podagra hujumi vaqtida BOSHLASH (hujumni uzaytiradi!)", "Allopurinolga og'ir allergiya (SJS/TEN) — HLA-B*5801 genotip tekshiruvi"],
+    nojo_ra:["Teri toshma (5%)", "Stevens-Johnson sindromi (nadir, HLA-B*5801)", "O'tkir podagra huruji (boshlanishida)", "Gepatotoksiklik"],
+    interactions:[
+      {drug:'Azatioprin/Merkaptopurin', severity:'high', desc:'Azatioprin — Allopurinol metabolizmini bloklaydi → toksiklik. Doza 75% ga kamaytiring!'},
+      {drug:'Varfarin', severity:'high', desc:'INR oshishi — CYP2C9 ingibitsiya'},
+      {drug:'Ampitsillin/Amoksitsillin', severity:'med', desc:'Teri toshmasi xavfi 3 marta oshadi'},
+      {drug:'ACE ingibitorlari', severity:'med', desc:'Og\'ir allergik reaktsiya xavfi (nadir)'},
+      {drug:'Siklosporin', severity:'med', desc:'Siklosporin toksikligi ortadi'},
+    ],
+    monitoring:['Siydik kislotasi (maqsad <360 mkмol/l)', 'Kreatinin (CKD da doza)', 'Jigar fermentlari', 'Teri toshmasini kuzatish'],
+    pharmacology:{t_half:'1–2 soat (aktiv metabolit Oksipurinol: 18–30 soat)', start:'1–3 hafta', peak:'1–3 oy', dist:'O\'rtacha', metabolism:'Jigar'},
+  },
+  {
+    id:18, name:'Kolxitsin', inn:'Colchicine', group:'Antigutli',
+    mechanism:"Tubülinni bloklaydi → mikrotubulalar polimerlanmaydi → nötrofil migratsiyasi va faolligini inhibe qiladi → yallig'lanish↓",
+    doza:"O'tkir podagra: 1 mg, so'ng 1 soatdan keyin 0.5 mg; Profilaktika: 0.5 mg × 1–2/kun",
+    yollar:'Per os',
+    ko_rsatmalar:["O'tkir podagra (birinchi 24–36 soatda eng samarali)", "Perikarditis", "FMF (Familial Mediterranean Fever)"],
+    kontrand:["Og'ir buyrak yetishmovchiligi (GFR <30)", "Og'ir jigar yetishmovchiligi", "P-glikoprotein ingibitorlari bilan"],
+    nojo_ra:["Ich ketishi, qayt qilish (eng ko'p — doza limitatsiyasi)", "Miopatiya (uzoq muddatda)", "Neytropeniya (nadir)", "Neyrotoksiklik"],
+    interactions:[
+      {drug:'Klаritromitsin/Erythromycin (CYP3A4 + P-gp ingibitor)', severity:'high', desc:'Kolxitsin konsentratsiyasi 3–4 marta oshadi → HAYOT UCHUN XAVFLI toksiklik. CKD+makrolid = taqiqlangan!'},
+      {drug:'Siklosporin (P-gp ingibitor)', severity:'high', desc:'Kolxitsin toksikligi'},
+      {drug:'Statin', severity:'med', desc:'Miopatiya xavfi biroz ortadi'},
+    ],
+    monitoring:['Ich ketishi kuzatish', 'Qon tahlili (neytrofillar)', 'CK (miopatiya belgilari bo\'lsa)'],
+    pharmacology:{t_half:'27–31 soat', start:'12–24 soat', peak:'1–2 kun', dist:'Keng', metabolism:'Jigar (CYP3A4), P-glikoprotein substrat'},
+  },
+];
+
+// Interaction severity weights
+const SEV_ORDER = {high: 3, med: 2, low: 1};
+
+let dbFilter = 'all';
+let dbSearch = '';
+let dbSelectedForCheck = [];
+
+function initDorilarPage() {
+  const root = document.getElementById('dorilar-root');
+  if(!root) return;
+  root.innerHTML = `
+    <!-- HEADER -->
+    <div class="db-header">
+      <h1>💊 <span>Dori Bazasi</span> — Pharmacotherapy Reference</h1>
+      <p>${DRUG_DATABASE.length} ta preparat · O'zaro ta'sir tekshiruvi · Kontraindikatsiyalar · Klinik farmakologiya</p>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        <span class="badge badge-accent">🔴 Yuqori xavf interaksiyalar</span>
+        <span class="badge badge-yellow">🟡 O'rta xavf interaksiyalar</span>
+        <span class="badge" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#22c55e">🟢 Past xavf</span>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="db-stats-row">
+      <div class="db-stat"><div class="db-stat-n">${DRUG_DATABASE.length}</div><div class="db-stat-l">Jami preparatlar</div></div>
+      <div class="db-stat"><div class="db-stat-n">${Object.keys(DRUG_GROUPS).length}</div><div class="db-stat-l">Dori guruhlari</div></div>
+      <div class="db-stat"><div class="db-stat-n" style="color:var(--red)">${DRUG_DATABASE.reduce((s,d)=>s+d.interactions.filter(i=>i.severity==='high').length,0)}</div><div class="db-stat-l">Xavfli interaksiyalar</div></div>
+      <div class="db-stat"><div class="db-stat-n" style="color:var(--yellow)">${DRUG_DATABASE.reduce((s,d)=>s+d.interactions.filter(i=>i.severity==='med').length,0)}</div><div class="db-stat-l">O'rta interaksiyalar</div></div>
+    </div>
+
+    <!-- INTERACTION CHECKER -->
+    <div class="ix-checker">
+      <div class="ix-title">⚡ O'zaro ta'sir tekshiruvi (Drug-Drug Interaction Checker)</div>
+      <div class="ix-input-row">
+        <div class="ix-drug-add">
+          <select id="ix-select" class="db-search-input" style="min-width:180px;cursor:pointer">
+            <option value="">— Dori tanlang —</option>
+            ${DRUG_DATABASE.map(d=>`<option value="${d.id}">${d.name} (${d.inn})</option>`).join('')}
+          </select>
+          <button class="btn-primary" style="padding:9px 16px;white-space:nowrap" onclick="ixAddDrug()">+ Qo'shish</button>
+        </div>
+        <button class="btn-ghost" onclick="ixCheck()" style="padding:9px 18px">🔍 Tekshirish</button>
+        <button class="btn-danger" onclick="ixClear()" style="padding:9px 14px">✕ Tozalash</button>
+      </div>
+      <div class="ix-selected" id="ix-selected-list"></div>
+      <div class="ix-result" id="ix-result" style="display:none"></div>
+    </div>
+
+    <!-- SEARCH & FILTER -->
+    <div class="db-search-bar">
+      <input class="db-search-input" id="db-search" placeholder="🔍 Dori nomi yoki INN bo'yicha qidirish..." oninput="dbSearchFilter(this.value)">
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
+      <button class="db-filter-btn active" id="df-all" onclick="dbSetFilter('all',this)">Hammasi (${DRUG_DATABASE.length})</button>
+      ${Object.entries(DRUG_GROUPS).map(([g,v])=>`<button class="db-filter-btn" id="df-${g}" onclick="dbSetFilter('${g}',this)">${v.icon} ${g} (${DRUG_DATABASE.filter(d=>d.group===g).length})</button>`).join('')}
+    </div>
+
+    <!-- DRUG GRID -->
+    <div class="db-grid" id="db-grid"></div>
+  `;
+
+  dbRenderGrid();
+}
+
+function dbSetFilter(f, btn) {
+  dbFilter = f;
+  document.querySelectorAll('.db-filter-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  dbRenderGrid();
+}
+
+function dbSearchFilter(val) {
+  dbSearch = val.toLowerCase();
+  dbRenderGrid();
+}
+
+function dbRenderGrid() {
+  const grid = document.getElementById('db-grid');
+  if(!grid) return;
+  let drugs = DRUG_DATABASE;
+  if(dbFilter !== 'all') drugs = drugs.filter(d => d.group === dbFilter);
+  if(dbSearch) drugs = drugs.filter(d => d.name.toLowerCase().includes(dbSearch) || d.inn.toLowerCase().includes(dbSearch) || d.group.toLowerCase().includes(dbSearch));
+
+  if(drugs.length === 0) {
+    grid.innerHTML = `<div class="empty-st" style="grid-column:1/-1;padding:40px 0"><div class="bi">🔍</div><h3>Topilmadi</h3><p>Boshqa kalit so'z bilan qidirib ko'ring</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = drugs.map(d => {
+    const g = DRUG_GROUPS[d.group] || {color:'var(--accent)',bg:'rgba(0,212,170,.1)',icon:'💊'};
+    const highCount = d.interactions.filter(i=>i.severity==='high').length;
+    const medCount = d.interactions.filter(i=>i.severity==='med').length;
+    return `
+    <div class="drug-card" onclick="showDrugModal(${d.id})">
+      <div class="drug-card-top">
+        <div class="drug-icon" style="background:${g.bg};border:1px solid ${g.color}33">${g.icon}</div>
+        <div style="flex:1">
+          <div class="drug-name">${d.name}</div>
+          <div class="drug-inn">${d.inn}</div>
+          <div style="display:flex;gap:4px;margin-top:5px;flex-wrap:wrap">
+            <span class="drug-group-tag" style="background:${g.bg};border:1px solid ${g.color}44;color:${g.color}">${d.group}</span>
+            ${highCount > 0 ? `<span style="padding:2px 7px;border-radius:6px;font-size:9px;font-weight:800;background:rgba(255,77,106,.12);border:1px solid rgba(255,77,106,.25);color:var(--red)">⚠️ ${highCount} ta xavfli</span>` : ''}
+          </div>
+        </div>
+      </div>
+      <div class="drug-card-body">
+        <div class="drug-info-row"><span class="drug-info-key">Doza</span><span class="drug-info-val">${d.doza.substring(0,80)}${d.doza.length>80?'...':''}</span></div>
+        <div class="drug-info-row"><span class="drug-info-key">Ko'rsatmalar</span><span class="drug-info-val">${d.ko_rsatmalar.slice(0,2).join(', ')}${d.ko_rsatmalar.length>2?' ...':''}</span></div>
+        <div class="drug-interactions">
+          <div class="di-title">Asosiy interaksiyalar (${d.interactions.length} ta)</div>
+          ${d.interactions.slice(0,3).map(ix=>`
+          <div class="di-item">
+            <div class="di-sev ${ix.severity}"></div>
+            <div class="di-text"><strong>${ix.drug}</strong> — ${ix.desc.substring(0,60)}${ix.desc.length>60?'...':''}</div>
+          </div>`).join('')}
+          ${d.interactions.length > 3 ? `<div style="font-size:10px;color:var(--text3);margin-top:4px">+ ${d.interactions.length-3} ta ko'proq → Batafsil ko'rish</div>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══ Drug Modal ═══ */
+function showDrugModal(id) {
+  const d = DRUG_DATABASE.find(x => x.id === id);
+  if(!d) return;
+  const g = DRUG_GROUPS[d.group] || {color:'var(--accent)',bg:'rgba(0,212,170,.1)',icon:'💊'};
+
+  const overlay = document.createElement('div');
+  overlay.className = 'drug-modal-overlay';
+  overlay.onclick = (e) => { if(e.target === overlay) overlay.remove(); };
+  overlay.innerHTML = `
+  <div class="drug-modal fade-in">
+    <div class="drug-modal-hdr">
+      <div style="width:48px;height:48px;border-radius:12px;background:${g.bg};border:1px solid ${g.color}44;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">${g.icon}</div>
+      <div style="flex:1">
+        <div style="font-size:18px;font-weight:800">${d.name}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px;letter-spacing:.5px">${d.inn}</div>
+        <div style="margin-top:5px"><span class="drug-group-tag" style="background:${g.bg};border:1px solid ${g.color}44;color:${g.color}">${d.group}</span></div>
+      </div>
+      <button onclick="this.closest('.drug-modal-overlay').remove()" style="background:rgba(255,77,106,.1);border:1px solid rgba(255,77,106,.25);border-radius:8px;padding:6px 12px;color:var(--red);cursor:pointer;font-family:var(--font);font-weight:700">✕ Yopish</button>
+    </div>
+    <div class="drug-modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title">⚙️ Mexanizm va farmakologiya</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.7;background:var(--surface2);border-radius:10px;padding:12px 14px">${d.mechanism}</div>
+        <div class="modal-info-grid" style="margin-top:10px">
+          <div class="modal-info-item"><div class="key">Yarim chiqarish (T½)</div><div class="val">${d.pharmacology.t_half}</div></div>
+          <div class="modal-info-item"><div class="key">Boshlanish vaqti</div><div class="val">${d.pharmacology.start}</div></div>
+          <div class="modal-info-item"><div class="key">Cho'qqi (Peak)</div><div class="val">${d.pharmacology.peak}</div></div>
+          <div class="modal-info-item"><div class="key">Metabolizm</div><div class="val">${d.pharmacology.metabolism}</div></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">💉 Doza va yo'llar</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.7;background:var(--surface2);border-radius:10px;padding:12px 14px">${d.doza}</div>
+        <div style="margin-top:6px;font-size:11px;color:var(--text3)">Kiritish yo'li: <strong style="color:var(--text)">${d.yollar}</strong></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">✅ Ko'rsatmalar</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px">${d.ko_rsatmalar.map(k=>`<span class="ok-tag">${k}</span>`).join('')}</div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">🚫 Kontraindikatsiyalar</div>
+        <div class="contra-list">${d.kontrand.map(k=>`<span class="contra-tag">⛔ ${k}</span>`).join('')}</div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">⚠️ Yon ta'sirlar</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px">${d.nojo_ra.map(n=>`<span style="padding:3px 9px;border-radius:6px;font-size:10px;font-weight:700;background:rgba(255,183,77,.1);border:1px solid rgba(255,183,77,.2);color:var(--yellow)">${n}</span>`).join('')}</div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">⚡ O'zaro ta'sirlar (Drug-Drug Interactions)</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${d.interactions.map(ix=>`
+          <div class="ix-alert ${ix.severity === 'high' ? 'danger' : ix.severity === 'med' ? 'warning' : 'safe'}">
+            <div class="ix-alert-icon">${ix.severity === 'high' ? '🔴' : ix.severity === 'med' ? '🟡' : '🟢'}</div>
+            <div class="ix-alert-body">
+              <div class="ix-alert-title">${ix.drug} — ${ix.severity === 'high' ? 'YUQORI XAVF' : ix.severity === 'med' ? "O'RTA XAVF" : 'PAST XAVF'}</div>
+              <div class="ix-alert-desc">${ix.desc}</div>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">📋 Monitoring parametrlari</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px">${d.monitoring.map(m=>`<span style="padding:3px 9px;border-radius:6px;font-size:10px;font-weight:700;background:var(--surface3);border:1px solid var(--border2);color:var(--text2)">${m}</span>`).join('')}</div>
+      </div>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+}
+
+/* ═══ Interaction Checker ═══ */
+function ixAddDrug() {
+  const sel = document.getElementById('ix-select');
+  if(!sel || !sel.value) return;
+  const id = parseInt(sel.value);
+  if(dbSelectedForCheck.find(x => x === id)) { showToast('⚠️ Bu dori allaqachon qo\'shilgan'); return; }
+  if(dbSelectedForCheck.length >= 8) { showToast('⚠️ Maksimum 8 ta dori'); return; }
+  dbSelectedForCheck.push(id);
+  ixRenderSelected();
+  sel.value = '';
+}
+
+function ixRemoveDrug(id) {
+  dbSelectedForCheck = dbSelectedForCheck.filter(x => x !== id);
+  ixRenderSelected();
+  document.getElementById('ix-result').style.display = 'none';
+}
+
+function ixRenderSelected() {
+  const cont = document.getElementById('ix-selected-list');
+  if(!cont) return;
+  if(dbSelectedForCheck.length === 0) { cont.innerHTML = ''; return; }
+  cont.innerHTML = dbSelectedForCheck.map(id => {
+    const d = DRUG_DATABASE.find(x => x.id === id);
+    const g = DRUG_GROUPS[d?.group] || {color:'var(--accent)',icon:'💊'};
+    return `<div class="ix-tag" style="border-color:${g.color}44;color:${g.color}">${g.icon} ${d?.name || '?'}<button onclick="ixRemoveDrug(${id})">×</button></div>`;
+  }).join('');
+}
+
+function ixCheck() {
+  if(dbSelectedForCheck.length < 2) { showToast('⚠️ Kamida 2 ta dori tanlang'); return; }
+
+  const resultDiv = document.getElementById('ix-result');
+  resultDiv.style.display = 'flex';
+
+  let alerts = [];
+
+  // Check all pairs
+  for(let i = 0; i < dbSelectedForCheck.length; i++) {
+    for(let j = i+1; j < dbSelectedForCheck.length; j++) {
+      const d1 = DRUG_DATABASE.find(x => x.id === dbSelectedForCheck[i]);
+      const d2 = DRUG_DATABASE.find(x => x.id === dbSelectedForCheck[j]);
+      if(!d1 || !d2) continue;
+
+      // Check d1's interactions for d2
+      d1.interactions.forEach(ix => {
+        const ixName = ix.drug.toLowerCase();
+        const d2Names = [d2.name.toLowerCase(), d2.inn.toLowerCase(), d2.group.toLowerCase()];
+        if(d2Names.some(n => n.includes(ixName) || ixName.includes(n.split(' ')[0]))) {
+          alerts.push({d1: d1.name, d2: d2.name, severity: ix.severity, desc: ix.desc});
+        }
+      });
+      // Check d2's interactions for d1
+      d2.interactions.forEach(ix => {
+        const ixName = ix.drug.toLowerCase();
+        const d1Names = [d1.name.toLowerCase(), d1.inn.toLowerCase(), d1.group.toLowerCase()];
+        if(d1Names.some(n => n.includes(ixName) || ixName.includes(n.split(' ')[0]))) {
+          const exists = alerts.find(a => (a.d1===d1.name||a.d1===d2.name) && (a.d2===d2.name||a.d2===d1.name) && a.severity === ix.severity);
+          if(!exists) alerts.push({d1: d2.name, d2: d1.name, severity: ix.severity, desc: ix.desc});
+        }
+      });
+    }
+  }
+
+  // Sort by severity
+  alerts.sort((a,b) => (SEV_ORDER[b.severity]||0) - (SEV_ORDER[a.severity]||0));
+
+  if(alerts.length === 0) {
+    resultDiv.innerHTML = `<div class="ix-alert safe"><div class="ix-alert-icon">✅</div><div class="ix-alert-body"><div class="ix-alert-title">Xavfli interaksiyalar aniqlanmadi</div><div class="ix-alert-desc">Tanlangan ${dbSelectedForCheck.length} ta dori o'rtasida ma'lumotlar bazasida muhim o'zaro ta'sir topilmadi. Lekin klinik holatga qarab individual baholash zarur.</div></div></div>`;
+  } else {
+    const highC = alerts.filter(a=>a.severity==='high').length;
+    const medC = alerts.filter(a=>a.severity==='med').length;
+    resultDiv.innerHTML = `
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <span style="font-size:11px;font-weight:800;color:var(--text2)">Topildi:</span>
+        ${highC>0?`<span class="badge badge-red">🔴 ${highC} ta yuqori xavf</span>`:''}
+        ${medC>0?`<span class="badge badge-yellow">🟡 ${medC} ta o'rta xavf</span>`:''}
+        ${alerts.filter(a=>a.severity==='low').length>0?`<span class="badge" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#22c55e">🟢 ${alerts.filter(a=>a.severity==='low').length} ta past xavf</span>`:''}
+      </div>
+      ${alerts.map(a=>`
+      <div class="ix-alert ${a.severity==='high'?'danger':a.severity==='med'?'warning':'safe'}">
+        <div class="ix-alert-icon">${a.severity==='high'?'🔴':a.severity==='med'?'🟡':'🟢'}</div>
+        <div class="ix-alert-body">
+          <div class="ix-alert-title">${a.d1} + ${a.d2} — ${a.severity==='high'?'⛔ YUQORI XAVF':a.severity==='med'?"⚠️ O'RTA XAVF":'ℹ️ PAST XAVF'}</div>
+          <div class="ix-alert-desc">${a.desc}</div>
+        </div>
+      </div>`).join('')}`;
+  }
+
+  showToast(`🔍 ${alerts.length} ta interaksiya topildi`);
+}
+
+function ixClear() {
+  dbSelectedForCheck = [];
+  ixRenderSelected();
+  const r = document.getElementById('ix-result');
+  if(r) r.style.display = 'none';
+}
+
+
+
+/* ════════════════════════════════════════════════
+   MOBILE NAVIGATION
+════════════════════════════════════════════════ */
+function buildMobileNav() {
+  const existing = document.getElementById('mob-nav');
+  if(existing) existing.remove();
+
+  const role = currentRole;
+  const links = NAV_CONFIG[role] || [];
+  // show max 5 items on mobile
+  const mobileLinks = links.slice(0, 5);
+
+  const nav = document.createElement('div');
+  nav.id = 'mob-nav';
+  nav.className = 'mob-nav';
+  nav.style.cssText = 'display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--surface);border-top:1px solid var(--border);padding:6px 0 6px;flex-direction:row;';
+
+  mobileLinks.forEach(l => {
+    const btn = document.createElement('button');
+    btn.className = 'mob-nav-item';
+    btn.id = 'mnl-' + l.id;
+    btn.innerHTML = `<span class="mni-icon">${l.icon}</span><span class="mni-label">${l.label.split(' ')[0]}</span>`;
+    btn.onclick = () => goPage(l.id);
+    nav.appendChild(btn);
+  });
+
+  document.body.appendChild(nav);
+  applyMobileNav();
+  window.addEventListener('resize', applyMobileNav);
+}
+
+function applyMobileNav() {
+  const nav = document.getElementById('mob-nav');
+  if(!nav) return;
+  const isMobile = window.innerWidth <= 768;
+  nav.style.display = isMobile ? 'flex' : 'none';
+}
+
+function updateMobileNavActive(pg) {
+  document.querySelectorAll('.mob-nav-item').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('mnl-' + pg);
+  if(btn) btn.classList.add('active');
+}
+
+// Patch goPage to also update mobile nav
+const _origGoPage = goPage;
+goPage = function(pg) {
+  _origGoPage(pg);
+  updateMobileNavActive(pg);
+};
+
+/* ════════════════════════════════════════════════
+   ANALYTICS PAGE
+════════════════════════════════════════════════ */
+
+// Simulated persistent data (would be real DB in production)
+const ANALYTICS_DATA = {
+  totalKeys: 24,
+  avgScore: 78,
+  streak: 5,
+  totalTime: 340, // minutes
+  weeklyKeys: [2,3,1,4,5,3,0], // Mon-Sun
+  monthlyKeys: [3,5,2,6,4,3,1,0,2,4,3,2,1,0,3,5,4,2,1,0,3,2,1,4,3,0,2,1,0,4,0],
+  categoryScores: [
+    {name:'Kardiologiya', icon:'❤️', score:82, keys:8, color:'#ff6b6b'},
+    {name:'Pulmonologiya', icon:'🫁', score:85, keys:6, color:'#4ecdc4'},
+    {name:'Gastroenterologiya', icon:'💊', score:72, keys:5, color:'#45b7d1'},
+    {name:'Revmotologiya', icon:'🦴', score:0, keys:0, color:'#96ceb4'},
+    {name:'Gepatologiya', icon:'🔬', score:0, keys:0, color:'#ffeaa7'},
+    {name:'Nefrologiya', icon:'💧', score:0, keys:0, color:'#dda0dd'},
+  ],
+  recentSessions: [
+    {date:'27.03.2026', name:'Gipertoniya kasalligi 1-bosqichi', score:null, cat:'Kardiologiya', time:25},
+    {date:'26.03.2026', name:'Bronxial astma · Engil', score:85, cat:'Pulmonologiya', time:18},
+    {date:'25.03.2026', name:'Oshqozon yarasi H.pylori+', score:72, cat:'Gastroenterologiya', time:22},
+    {date:'24.03.2026', name:'BA og\'ir darajali', score:91, cat:'Pulmonologiya', time:30},
+    {date:'23.03.2026', name:'YuIK Stabil stenokardiya', score:68, cat:'Kardiologiya', time:20},
+    {date:'22.03.2026', name:'Gipertoniya kasalligi 2-bosqichi', score:79, cat:'Kardiologiya', time:19},
+    {date:'21.03.2026', name:'GERD va peptik yara', score:88, cat:'Gastroenterologiya', time:15},
+  ],
+  topErrors: [
+    {name:'Noto\'g\'ri doza', count:4, color:'#ff4d6a'},
+    {name:'Kontraindikatsiya e\'tiborga olinmagan', count:3, color:'#ff4d6a'},
+    {name:'O\'zaro ta\'sir tekshirilmagan', count:2, color:'#ffb74d'},
+    {name:'Muddat ko\'rsatilmagan', count:2, color:'#ffb74d'},
+    {name:'Monitoring ko\'rsatilmagan', count:1, color:'#00d4aa'},
+  ],
+  rankings: [
+    {name:'Yusupov Jasur', score:94, keys:32, isMe:false},
+    {name:'Karimova Dilnoza', score:91, keys:28, isMe:false},
+    {name:'Toshmatov Bobur', score:88, keys:25, isMe:false},
+    {name:'Xoliqova Munira', score:85, keys:22, isMe:false},
+    {name:'Qurbonov Anusher', score:78, keys:24, isMe:true},
+    {name:'Ergashev Sherzod', score:74, keys:18, isMe:false},
+  ],
+};
+
+function initAnalyticsPage() {
+  const root = document.getElementById('analytics-root');
+  if(!root) return;
+
+  const d = ANALYTICS_DATA;
+  const completedKeys = d.recentSessions.filter(s => s.score !== null);
+  const avgCompleted = completedKeys.length ? Math.round(completedKeys.reduce((s,x)=>s+x.score,0)/completedKeys.length) : 0;
+
+  root.innerHTML = `
+  <!-- HERO -->
+  <div class="an-hero">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+      <div>
+        <h1 style="font-size:22px;font-weight:800">📈 <span style="color:var(--accent)">Analytics</span> — Mening progress</h1>
+        <p style="color:var(--text2);font-size:13px;margin-top:4px">So'nggi 30 kunlik faolligingiz va o'sish dinamikasi</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-shrink:0">
+        <button class="btn-ghost" onclick="showToast('📄 PDF hisobot yuklanmoqda...')">📄 Hisobot</button>
+        <button class="btn-primary" onclick="goPage('t-keys')">▶ Keys yechish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="an-kpi-grid">
+    <div class="an-kpi">
+      <div class="an-kpi-glow" style="background:#00d4aa"></div>
+      <div class="an-kpi-label">Jami Keys Yechildi</div>
+      <div class="an-kpi-value" style="color:var(--accent)">${d.totalKeys}</div>
+      <div class="an-kpi-sub">ushbu oy davomida</div>
+      <div class="an-kpi-delta up">↑ +5 o'tgan oyga nisbatan</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi-glow" style="background:#00c4e8"></div>
+      <div class="an-kpi-label">O'rtacha Ball</div>
+      <div class="an-kpi-value">${avgCompleted}%</div>
+      <div class="an-kpi-sub">baholangan ${completedKeys.length} ta keys</div>
+      <div class="an-kpi-delta up">↑ +3% o'sish</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi-glow" style="background:#ffb74d"></div>
+      <div class="an-kpi-label">Streak</div>
+      <div class="an-kpi-value" style="color:var(--yellow)">🔥${d.streak}</div>
+      <div class="an-kpi-sub">ketma-ket kun</div>
+      <div class="an-kpi-delta up">Rekord: 12 kun</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi-glow" style="background:#a78bfa"></div>
+      <div class="an-kpi-label">Umumiy Vaqt</div>
+      <div class="an-kpi-value" style="color:#a78bfa">${Math.floor(d.totalTime/60)}s ${d.totalTime%60}d</div>
+      <div class="an-kpi-sub">o'quv jarayonida</div>
+      <div class="an-kpi-delta up">↑ +40 min hafta</div>
+    </div>
+  </div>
+
+  <!-- ACTIVITY HEATMAP + PROGRESS RADIALS -->
+  <div class="an-2col">
+    <div class="card">
+      <div class="card-hdr">📅 Faollik xaritasi (so'nggi 6 oy)</div>
+      <div style="padding:14px">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:8px;font-weight:700">Hujayra rangi = Keys soni</div>
+        <div class="an-heatmap" id="an-heatmap"></div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:10px">
+          <span style="font-size:10px;color:var(--text3)">Kam</span>
+          ${[0,1,2,3,4].map(i=>`<div style="width:12px;height:12px;border-radius:3px;background:rgba(0,212,170,${i*0.22+0.06})"></div>`).join('')}
+          <span style="font-size:10px;color:var(--text3)">Ko'p</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hdr">⭕ Toifalar bo'yicha Progress</div>
+      <div style="padding:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+        ${d.categoryScores.filter(c=>c.keys>0).map(cat => `
+        <div class="an-radial-wrap">
+          <div style="font-size:16px;margin-bottom:6px">${cat.icon}</div>
+          <div class="an-radial">
+            <svg viewBox="0 0 100 100" width="80" height="80">
+              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--border)" stroke-width="8"/>
+              <circle cx="50" cy="50" r="38" fill="none" stroke="${cat.color}" stroke-width="8"
+                stroke-dasharray="${cat.score * 2.39} 239" stroke-linecap="round"/>
+            </svg>
+            <div class="an-radial-text">
+              <div class="an-radial-pct" style="color:${cat.color}">${cat.score}%</div>
+              <div class="an-radial-lbl">${cat.keys} keys</div>
+            </div>
+          </div>
+          <div style="font-size:10px;color:var(--text2);font-weight:700;margin-top:4px;text-align:center">${cat.name.split(' ')[0]}</div>
+        </div>`).join('')}
+        ${d.categoryScores.filter(c=>c.keys===0).slice(0,3-d.categoryScores.filter(c=>c.keys>0).length).map(cat=>`
+        <div class="an-radial-wrap" style="opacity:.35">
+          <div style="font-size:16px;margin-bottom:6px">${cat.icon}</div>
+          <div class="an-radial">
+            <svg viewBox="0 0 100 100" width="80" height="80">
+              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--border)" stroke-width="8"/>
+            </svg>
+            <div class="an-radial-text"><div style="font-size:10px;color:var(--text3)">0%</div></div>
+          </div>
+          <div style="font-size:10px;color:var(--text3);font-weight:700;margin-top:4px;text-align:center">${cat.name.split(' ')[0]}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORY SCORES BAR + WEEKLY ACTIVITY -->
+  <div class="an-2col">
+    <div class="card">
+      <div class="card-hdr">📊 Kategoriyalar bo'yicha natijalar</div>
+      <div class="an-chart-wrap">
+        <div class="an-bar-chart">
+          ${d.categoryScores.map(cat => `
+          <div class="an-bar-row">
+            <div class="an-bar-label">${cat.icon} ${cat.name.length > 14 ? cat.name.substring(0,12)+'…' : cat.name}</div>
+            <div class="an-bar-track">
+              ${cat.score > 0 ? `<div class="an-bar-fill" style="width:${cat.score}%;background:linear-gradient(90deg,${cat.color}cc,${cat.color});color:${cat.score>40?'#fff':'transparent'}">
+                ${cat.score >= 40 ? cat.score+'%' : ''}
+              </div>` : `<div style="padding:4px 10px;font-size:10px;color:var(--text3)">O'rganilmagan</div>`}
+            </div>
+            <div class="an-bar-val">${cat.score > 0 ? cat.score+'%' : '—'}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hdr">📆 Haftalik faollik (keys soni)</div>
+      <div style="padding:16px">
+        <div style="display:flex;align-items:flex-end;gap:8px;height:120px">
+          ${['Du','Se','Ch','Pa','Ju','Sh','Ya'].map((day,i) => {
+            const val = d.weeklyKeys[i];
+            const maxVal = Math.max(...d.weeklyKeys, 1);
+            const h = Math.round((val/maxVal)*100);
+            const isToday = i === 4;
+            return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <div style="font-family:var(--mono);font-size:10px;font-weight:700;color:${val>0?'var(--accent)':'var(--text3)'}">${val||''}</div>
+              <div style="width:100%;height:${h}%;min-height:4px;border-radius:5px 5px 0 0;
+                background:${isToday?'linear-gradient(180deg,var(--accent),var(--cyan))':'rgba(var(--accent-rgb),'+(val>0?'0.35':'0.1')+')'};
+                border:1px solid ${isToday?'var(--accent)':'rgba(var(--accent-rgb),.2)'};
+                transition:height .8s cubic-bezier(.4,0,.2,1);"></div>
+              <div style="font-size:9px;font-weight:800;color:${isToday?'var(--accent)':'var(--text3)'}">${day}</div>
+            </div>`;
+          }).join('')}
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+          <div style="text-align:center"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--accent)">${d.weeklyKeys.reduce((s,v)=>s+v,0)}</div><div style="font-size:10px;color:var(--text3)">Bu hafta</div></div>
+          <div style="text-align:center"><div style="font-family:var(--mono);font-size:18px;font-weight:700">${Math.max(...d.weeklyKeys)}</div><div style="font-size:10px;color:var(--text3)">Rekord kun</div></div>
+          <div style="text-align:center"><div style="font-family:var(--mono);font-size:18px;font-weight:700">${d.weeklyKeys.filter(v=>v>0).length}</div><div style="font-size:10px;color:var(--text3)">Faol kunlar</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ERROR RADAR + RANKING + TIMELINE -->
+  <div class="an-3col">
+    <div class="card">
+      <div class="card-hdr">⚠️ Ko'p qilinadigan xatolar</div>
+      <div style="padding:12px 14px">
+        <div class="an-error-list">
+          ${d.topErrors.map((e,i) => `
+          <div class="an-error-item">
+            <div class="an-error-rank">#${i+1}</div>
+            <div class="an-error-name">${e.name}</div>
+            <div class="an-error-bar"><div class="an-error-fill" style="width:${Math.round(e.count/d.topErrors[0].count*100)}%;background:${e.color}"></div></div>
+            <div class="an-error-count" style="color:${e.color}">${e.count}x</div>
+          </div>`).join('')}
+        </div>
+        <div style="margin-top:12px;padding:10px;background:rgba(var(--accent-rgb),.05);border:1px solid rgba(var(--accent-rgb),.15);border-radius:8px">
+          <div style="font-size:10px;font-weight:800;color:var(--accent);margin-bottom:4px">💡 AI Tavsiya</div>
+          <div style="font-size:11px;color:var(--text2);line-height:1.5">Doza xatolarini kamaytirish uchun ESC/ESH 2023 protokolini qayta o'qing. Dori dozalari bo'yicha AI Tutor bilan mashq qiling.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr">🏆 Guruh reytingi</div>
+      <div style="padding:4px 0">
+        ${d.rankings.map((r,i) => `
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid var(--border);${r.isMe?'background:rgba(var(--accent-rgb),.04);':''}">
+          <div style="font-family:var(--mono);font-size:12px;font-weight:700;color:${i<3?'var(--yellow)':'var(--text3)'};width:22px">${i<3?['🥇','🥈','🥉'][i]:'#'+(i+1)}</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:700;color:${r.isMe?'var(--accent)':'var(--text)'}">${r.name}${r.isMe?' ← siz':''}</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:1px">${r.keys} keys</div>
+          </div>
+          <div style="font-family:var(--mono);font-size:13px;font-weight:700;color:${r.score>=80?'var(--accent)':'var(--yellow)'}">${r.score}%</div>
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr">📋 Oxirgi sessiyalar</div>
+      <div style="padding:8px 14px">
+        <div class="an-timeline">
+          ${d.recentSessions.map(s => `
+          <div class="an-tl-item">
+            <div class="an-tl-dot" style="background:${s.score===null?'var(--text3)':s.score>=80?'var(--accent)':s.score>=60?'var(--yellow)':'var(--red)'}"></div>
+            <div class="an-tl-content">
+              <div class="an-tl-date">${s.date} · ${s.time} min</div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div class="an-tl-name">${s.name.length > 24 ? s.name.substring(0,22)+'…' : s.name}</div>
+                <div class="an-tl-score" style="color:${s.score===null?'var(--text3)':s.score>=80?'var(--accent)':s.score>=60?'var(--yellow)':'var(--red)'}">
+                  ${s.score===null ? '⏳' : s.score}
+                </div>
+              </div>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  // Render heatmap
+  setTimeout(() => {
+    const hm = document.getElementById('an-heatmap');
+    if(!hm) return;
+    const cells = 26 * 6;
+    for(let i = 0; i < cells; i++) {
+      const val = Math.random() < 0.4 ? 0 : Math.floor(Math.random() * 5);
+      const div = document.createElement('div');
+      div.className = 'an-heat-cell';
+      div.style.background = val === 0 ? 'var(--border)' : `rgba(0,212,170,${0.15 + val * 0.18})`;
+      div.title = val + ' ta keys';
+      hm.appendChild(div);
+    }
+  }, 100);
+}
+
+/* ════════════════════════════════════════════════
+   AI TUTOR PAGE (Claude API powered)
+════════════════════════════════════════════════ */
+const AI_TOPICS = [
+  {id:'general', icon:'💬', label:'Umumiy savol'},
+  {id:'kardio', icon:'❤️', label:'Kardiologiya'},
+  {id:'pulmo', icon:'🫁', label:'Pulmonologiya'},
+  {id:'gastro', icon:'💊', label:'Gastroenterologiya'},
+  {id:'dori', icon:'🧪', label:'Dori mexanizmlari'},
+  {id:'interak', icon:'⚡', label:"O'zaro ta'sirlar"},
+  {id:'doza', icon:'⚖️', label:'Doza hisoblash'},
+  {id:'contra', icon:'🚫', label:'Kontraindikatsiyalar'},
+  {id:'protokol', icon:'📋', label:'Klinik protokollar'},
+  {id:'keys', icon:'🏥', label:'Keys tahlili'},
+];
+
+const TOPIC_PROMPTS = {
+  general: "Siz Pharmacotherapy Simulyatori uchun AI o'qituvchisiz. O'zbek tilida klinik farmakologiya va farmakoterapiya bo'yicha savollarni professional darajada javoblang. Javoblarni qisqa, aniq va klinik amaliyotga yo'naltirilgan qiling.",
+  kardio: "Siz kardiologiya farmakoterapiyasi mutaxassisisiz. Gipertoniya, YuIK, yurak yetishmovchiligi, aritmiya davolash protokollari, dori tanlov mezonlari haqida O'zbek tilida professional maslahat bering. ESC/ESH va AHA/ACC ko'rsatmalariga asoslanib javob bering.",
+  pulmo: "Siz pulmonologiya farmakoterapiyasi mutaxassisisiz. Bronxial astma (GINA protokoli), YOQK (GOLD), pnevmoniya davolash haqida O'zbek tilida professional maslahat bering.",
+  gastro: "Siz gastroenterologiya farmakoterapiyasi mutaxassisisiz. Peptik yara, H.pylori eradikatsiya, GERD, IBD davolash protokollari haqida O'zbek tilida professional maslahat bering.",
+  dori: "Siz klinik farmakologiya mutaxassisisiz. Dori mexanizmlari, farmakologik ta'sir, farmakokinetika (so'rilish, taqsimlanish, metabolizm, chiqarilish) haqida O'zbek tilida tushuntiring.",
+  interak: "Siz dori-dori o'zaro ta'sirlari mutaxassisisiz. Drug-drug interaction, farmakodynamik va farmakokinetik interaksiyalar, klinik ahamiyati, boshqaruv usullari haqida O'zbek tilida professional maslahat bering.",
+  doza: "Siz klinik farmakolog va doza hisoblash mutaxassisisiz. Doza tanlash mezonlari, titration, buyrak/jigar yetishmovchiligida doza moslashtirish haqida O'zbek tilida professional maslahat bering.",
+  contra: "Siz klinik farmakologiya mutaxassisisiz. Dori kontraindikatsiyalari, ehtiyot holatlari, xavf-foyda nisbati baholash haqida O'zbek tilida professional maslahat bering.",
+  protokol: "Siz klinik protokollar mutaxassisisiz. O'zbekiston MoH, ESC, WHO, NICE klinik ko'rsatmalari asosida davolash protokollari haqida O'zbek tilida professional maslahat bering.",
+  keys: "Siz klinik farmakologiya o'qituvchisisiz. Klinik keyslarni tahlil qilish, to'g'ri davo rejasi tuzish, xatolarni aniqlash va tushuntirish haqida O'zbek tilida professional maslahat bering.",
+};
+
+let aiTutorTopic = 'general';
+let aiTutorMessages = [];
+let aiTutorLoading = false;
+
+function initAITutorPage() {
+  const root = document.getElementById('ai-tutor-root');
+  if(!root) return;
+
+  root.innerHTML = `
+  <div class="ai-tutor-layout">
+    <div class="ai-tutor-sidebar">
+      <div class="ai-ts-head">
+        <div class="ai-ts-title">Mavzular</div>
+      </div>
+      <div class="ai-ts-body" id="ai-topic-list">
+        ${AI_TOPICS.map(t => `
+        <button class="ai-topic-btn ${t.id === aiTutorTopic ? 'active' : ''}" id="aitp-${t.id}" onclick="setAITopic('${t.id}')">
+          <span class="tp-icon">${t.icon}</span>${t.label}
+        </button>`).join('')}
+      </div>
+      <div style="padding:12px;border-top:1px solid var(--border)">
+        <button class="btn-danger" style="width:100%;padding:8px;font-size:11px" onclick="clearAIChat()">🗑 Suhbatni tozalash</button>
+      </div>
+    </div>
+
+    <div class="ai-chat-main">
+      <div class="ai-chat-topbar">
+        <div class="ai-chat-avatar">🤖</div>
+        <div>
+          <div class="ai-chat-name">PharmAI — Klinik Farmakologiya Tutori</div>
+          <div class="ai-chat-status" id="ai-status-text">✦ Tayyor · ${AI_TOPICS.find(t=>t.id===aiTutorTopic)?.label || 'Umumiy'}</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:6px">
+          <button class="btn-ghost" style="padding:5px 10px;font-size:11px" onclick="showToast('📋 Suhbat nusxalandi')">📋 Nusxa</button>
+        </div>
+      </div>
+
+      <div class="ai-chat-messages" id="ai-chat-messages">
+        <div class="ai-msg bot">
+          <div class="ai-msg-avatar">🤖</div>
+          <div>
+            <div class="ai-msg-bubble">
+              Assalomu alaykum! Men <strong>PharmAI</strong> — klinik farmakologiya bo'yicha AI o'qituvchingizman. 💊<br><br>
+              Men sizga quyidagilarda yordam bera olaman:<br>
+              • Dori mexanizmlari va farmakologiyasi<br>
+              • Davolash protokollari (ESC, WHO, MoH)<br>
+              • O'zaro ta'sirlar va kontraindikatsiyalar<br>
+              • Klinik keyslarni tahlil qilish<br>
+              • Doza hisoblash va monitoring<br><br>
+              Chap paneldan mavzu tanlang yoki savolingizni yozing! 🎓
+            </div>
+            <div class="ai-msg-time">Hozir</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-chat-input-area">
+        <div class="ai-quick-btns" id="ai-quick-btns">
+          <button class="ai-quick-btn" onclick="sendAIQuick('Gipertoniyada birinchi qator dorilar qaysilar?')">❤️ Gipertoniya 1-qator</button>
+          <button class="ai-quick-btn" onclick="sendAIQuick('Aspirin va Varfarin birga berish mumkinmi?')">⚡ Aspirin + Varfarin</button>
+          <button class="ai-quick-btn" onclick="sendAIQuick('Bronxial astma stepwise davolash protokolini tushuntiring')">🫁 BA protokoli</button>
+          <button class="ai-quick-btn" onclick="sendAIQuick('Omeprazol va Klopidogrelni birga berish to\'g\'rimi?')">💊 Omeprazol + Klopidogrel</button>
+          <button class="ai-quick-btn" onclick="sendAIQuick('Ramiprilni buyrak yetishmovchiligida qanday dozalab berish kerak?')">💧 ACE + CKD doza</button>
+        </div>
+        <div class="ai-input-row">
+          <textarea class="ai-input" id="ai-input-box" placeholder="Savol yozing... (Enter — yuborish, Shift+Enter — yangi qator)" rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAIMessage();}
+            this.style.height='44px';this.style.height=Math.min(this.scrollHeight,120)+'px';"></textarea>
+          <button class="ai-send-btn" id="ai-send-btn" onclick="sendAIMessage()" title="Yuborish">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function setAITopic(topicId) {
+  aiTutorTopic = topicId;
+  document.querySelectorAll('.ai-topic-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('aitp-' + topicId);
+  if(btn) btn.classList.add('active');
+  const statusEl = document.getElementById('ai-status-text');
+  const topicLabel = AI_TOPICS.find(t=>t.id===topicId)?.label || 'Umumiy';
+  if(statusEl) statusEl.textContent = '✦ Tayyor · ' + topicLabel;
+
+  // Add context message
+  const messagesEl = document.getElementById('ai-chat-messages');
+  if(messagesEl) {
+    const div = document.createElement('div');
+    div.style.cssText = 'text-align:center;padding:6px;font-size:10px;color:var(--text3);font-weight:700;letter-spacing:.5px;';
+    div.textContent = '— Mavzu o\'zgartirildi: ' + topicLabel + ' —';
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+}
+
+function sendAIQuick(text) {
+  const input = document.getElementById('ai-input-box');
+  if(input) input.value = text;
+  sendAIMessage();
+}
+
+function clearAIChat() {
+  aiTutorMessages = [];
+  const messagesEl = document.getElementById('ai-chat-messages');
+  if(messagesEl) messagesEl.innerHTML = `
+    <div class="ai-msg bot">
+      <div class="ai-msg-avatar">🤖</div>
+      <div>
+        <div class="ai-msg-bubble">Suhbat tozalandi. Yangi savol bering! 💊</div>
+        <div class="ai-msg-time">Hozir</div>
+      </div>
+    </div>`;
+  showToast('🗑 Suhbat tozalandi');
+}
+
+function appendAIMessage(role, text) {
+  const messagesEl = document.getElementById('ai-chat-messages');
+  if(!messagesEl) return;
+  const time = new Date().toLocaleTimeString('uz-UZ', {hour:'2-digit',minute:'2-digit'});
+  const div = document.createElement('div');
+  div.className = 'ai-msg ' + role;
+  const initials = currentRole === 'Talaba' ? 'QA' : currentRole === "O'qituvchi" ? 'TB' : 'AK';
+  div.innerHTML = `
+    <div class="ai-msg-avatar">${role === 'user' ? initials : '🤖'}</div>
+    <div>
+      <div class="ai-msg-bubble">${text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>')}</div>
+      <div class="ai-msg-time">${time}</div>
+    </div>`;
+  messagesEl.appendChild(div);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function showAITyping() {
+  const messagesEl = document.getElementById('ai-chat-messages');
+  if(!messagesEl) return;
+  const div = document.createElement('div');
+  div.className = 'ai-msg bot';
+  div.id = 'ai-typing-indicator';
+  div.innerHTML = `<div class="ai-msg-avatar">🤖</div><div class="ai-msg-bubble ai-typing"><span></span><span></span><span></span></div>`;
+  messagesEl.appendChild(div);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function removeAITyping() {
+  const el = document.getElementById('ai-typing-indicator');
+  if(el) el.remove();
+}
+
+async function sendAIMessage() {
+  if(aiTutorLoading) return;
+  const inputEl = document.getElementById('ai-input-box');
+  if(!inputEl) return;
+  const text = inputEl.value.trim();
+  if(!text) return;
+
+  inputEl.value = '';
+  inputEl.style.height = '44px';
+
+  appendAIMessage('user', text);
+  aiTutorMessages.push({role:'user', content: text});
+
+  aiTutorLoading = true;
+  const sendBtn = document.getElementById('ai-send-btn');
+  if(sendBtn) sendBtn.disabled = true;
+  showAITyping();
+
+  try {
+    const systemPrompt = TOPIC_PROMPTS[aiTutorTopic] || TOPIC_PROMPTS.general;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system: systemPrompt + '\n\nMuhim: Javoblarni O\'zbek tilida bering. Agar klinik farmakologiyaga aloqador bo\'lmasa, muloyimlik bilan mavzuga qaytaring. Qisqa va aniq javob bering (maksimum 300 so\'z).',
+        messages: aiTutorMessages.slice(-10),
+      })
+    });
+
+    const data = await response.json();
+    removeAITyping();
+
+    if(data.content && data.content[0]) {
+      const reply = data.content[0].text || 'Javob olishda xato yuz berdi.';
+      appendAIMessage('bot', reply);
+      aiTutorMessages.push({role:'assistant', content: reply});
+    } else if(data.error) {
+      appendAIMessage('bot', '⚠️ Xato: ' + (data.error.message || 'API xato'));
+    }
+  } catch(err) {
+    removeAITyping();
+    appendAIMessage('bot', '⚠️ Tarmoq xatosi. Internet aloqasini tekshiring va qayta urinib ko\'ring.');
+    console.error('AI API error:', err);
+  }
+
+  aiTutorLoading = false;
+  if(sendBtn) sendBtn.disabled = false;
+  const inp = document.getElementById('ai-input-box');
+  if(inp) inp.focus();
+}
+
 
 /* INIT */
 document.getElementById('login-page').style.display = 'flex';
