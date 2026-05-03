@@ -21,25 +21,25 @@ html,body{height:100%;font-family:var(--font);font-size:14px;}
 ::-webkit-scrollbar-thumb{border-radius:4px;}
 
 body.talaba {
-  --bg:#060e1c;--surface:#0b1629;--surface2:#0f1e36;--surface3:#152540;
-  --border:#1a2f50;--border2:#213660;--accent:#00d4aa;--accent2:#00e8ba;
-  --accent-rgb:0,212,170;--accent-dim:rgba(0,212,170,.1);--cyan:#00c4e8;
-  --text:#d8e8f8;--text2:#7090b0;--text3:#3d5570;--red:#ff4d6a;--yellow:#ffb74d;
-  --card:#080f1e;background:var(--bg);color:var(--text);
+  --bg:#ffffff;--surface:#f8fafb;--surface2:#f0f4f7;--surface3:#e8eef3;
+  --border:#dde4eb;--border2:#c8d4dd;--accent:#2da87a;--accent2:#25d392;
+  --accent-rgb:45,168,122;--accent-dim:rgba(45,168,122,.08);--cyan:#17a5c4;
+  --text:#0f1c26;--text2:#4a6275;--text3:#8fa5b5;--red:#d93555;--yellow:#c07a10;
+  --card:#f4f7fa;background:var(--bg);color:var(--text);
 }
 body.admin {
-  --bg:#0e0a1a;--surface:#160e28;--surface2:#1e1238;--surface3:#261648;
-  --border:#2a1a4a;--border2:#352060;--accent:#a855f7;--accent2:#c084fc;
-  --accent-rgb:168,85,247;--accent-dim:rgba(168,85,247,.1);--cyan:#e040fb;
-  --text:#ece0ff;--text2:#8060a0;--text3:#503870;--red:#ff4d6a;--yellow:#ffd740;
-  --card:#0a0614;background:var(--bg);color:var(--text);
+  --bg:#ffffff;--surface:#f8f6fc;--surface2:#f0ecf8;--surface3:#e8e2f2;
+  --border:#ddd8ee;--border2:#c8c0e0;--accent:#7c3aed;--accent2:#9061f9;
+  --accent-rgb:124,58,237;--accent-dim:rgba(124,58,237,.08);--cyan:#b026d4;
+  --text:#120e1e;--text2:#4a3870;--text3:#9080b0;--red:#d93555;--yellow:#b07010;
+  --card:#f4f1fb;background:var(--bg);color:var(--text);
 }
 body.oqituvchi {
-  --bg:#0a160e;--surface:#0e1e14;--surface2:#12261a;--surface3:#162e20;
-  --border:#1c3828;--border2:#244836;--accent:#22c55e;--accent2:#4ade80;
-  --accent-rgb:34,197,94;--accent-dim:rgba(34,197,94,.1);--cyan:#06b6d4;
-  --text:#dcf0e4;--text2:#609070;--text3:#3a5a44;--red:#ff4d6a;--yellow:#fbbf24;
-  --card:#080e0b;background:var(--bg);color:var(--text);
+  --bg:#ffffff;--surface:#f6faf7;--surface2:#edf5ef;--surface3:#e2efe5;
+  --border:#d4e8d8;--border2:#bfd8c4;--accent:#16a34a;--accent2:#22c55e;
+  --accent-rgb:22,163,74;--accent-dim:rgba(22,163,74,.08);--cyan:#0891b2;
+  --text:#0a1a0e;--text2:#3a6045;--text3:#80a888;--red:#d93555;--yellow:#b07010;
+  --card:#f0f7f2;background:var(--bg);color:var(--text);
 }
 ::-webkit-scrollbar-thumb{background:var(--border2);}
 
@@ -49,52 +49,52 @@ body.oqituvchi {
 #login-page{
   min-height:100vh;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  background:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0,212,170,.12), transparent 60%),
-             radial-gradient(ellipse 50% 40% at 90% 90%, rgba(0,196,232,.06), transparent 50%), #060e1c;
+  background:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(45,168,122,.08), transparent 60%),
+             radial-gradient(ellipse 50% 40% at 90% 90%, rgba(23,165,196,.05), transparent 50%), #f4f8f6;
   position:relative;overflow:hidden;
 }
 .login-bg-text{
   position:absolute;font-family:var(--mono);font-size:120px;font-weight:800;
-  color:rgba(0,212,170,.025);top:50%;left:50%;transform:translate(-50%,-50%);
+  color:rgba(45,168,122,.04);top:50%;left:50%;transform:translate(-50%,-50%);
   white-space:nowrap;pointer-events:none;letter-spacing:-8px;
 }
 .login-hero{text-align:center;margin-bottom:40px;animation:fadeDown .7s ease;}
-.login-hero .kichik{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:#00d4aa;text-transform:uppercase;margin-bottom:14px;opacity:.8;}
-.login-hero h1{font-size:30px;font-weight:800;color:#d8e8f8;line-height:1.25;}
-.login-hero h1 em{color:#00d4aa;font-style:normal;}
-.login-hero p{color:#7090b0;font-size:13px;margin-top:10px;}
+.login-hero .kichik{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:#2da87a;text-transform:uppercase;margin-bottom:14px;opacity:.8;}
+.login-hero h1{font-size:30px;font-weight:800;color:#0f1c26;line-height:1.25;}
+.login-hero h1 em{color:#2da87a;font-style:normal;}
+.login-hero p{color:#4a6275;font-size:13px;margin-top:10px;}
 .login-box{
-  background:rgba(11,22,41,.9);border:1px solid rgba(0,212,170,.15);
+  background:rgba(255,255,255,.96);border:1px solid rgba(45,168,122,.18);
   border-radius:20px;padding:40px;width:460px;max-width:96vw;
   backdrop-filter:blur(20px);
-  box-shadow:0 50px 120px rgba(0,0,0,.8),0 0 0 1px rgba(0,212,170,.05);
+  box-shadow:0 20px 60px rgba(45,168,122,.12),0 0 0 1px rgba(45,168,122,.06);
   animation:fadeUp .7s ease .1s both;
 }
-.login-box h3{font-size:11px;font-weight:800;letter-spacing:2.5px;color:#3d5570;margin-bottom:28px;text-transform:uppercase;}
+.login-box h3{font-size:11px;font-weight:800;letter-spacing:2.5px;color:#8fa5b5;margin-bottom:28px;text-transform:uppercase;}
 .fl{margin-bottom:18px;}
-.fl label{display:block;font-size:10px;font-weight:800;color:#3d5570;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;}
+.fl label{display:block;font-size:10px;font-weight:800;color:#8fa5b5;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;}
 .fl input,.fl select{
-  width:100%;background:#060e1c;border:1px solid #1a2f50;border-radius:10px;
-  padding:12px 16px;color:#d8e8f8;font-size:14px;font-family:var(--font);
+  width:100%;background:#f8fafb;border:1px solid #dde4eb;border-radius:10px;
+  padding:12px 16px;color:#0f1c26;font-size:14px;font-family:var(--font);
   outline:none;transition:border-color .2s,box-shadow .2s;appearance:none;
 }
-.fl input:focus,.fl select:focus{border-color:#00d4aa;box-shadow:0 0 0 3px rgba(0,212,170,.1);}
-.fl input::placeholder{color:#3d5570;}
-.fl select option{background:#0b1629;}
+.fl input:focus,.fl select:focus{border-color:#2da87a;box-shadow:0 0 0 3px rgba(45,168,122,.1);}
+.fl input::placeholder{color:#8fa5b5;}
+.fl select option{background:#ffffff;}
 .btn-login{
-  width:100%;margin-top:6px;background:linear-gradient(135deg,#00d4aa,#00c4e8);
-  border:none;border-radius:12px;padding:14px;color:#04101f;
+  width:100%;margin-top:6px;background:linear-gradient(135deg,#2da87a,#17a5c4);
+  border:none;border-radius:12px;padding:14px;color:#ffffff;
   font-size:13px;font-weight:800;font-family:var(--font);letter-spacing:2px;
-  cursor:pointer;transition:all .2s;box-shadow:0 8px 28px rgba(0,212,170,.35);text-transform:uppercase;
+  cursor:pointer;transition:all .2s;box-shadow:0 8px 28px rgba(45,168,122,.3);text-transform:uppercase;
 }
-.btn-login:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,212,170,.45);}
+.btn-login:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(45,168,122,.4);}
 .role-row{display:flex;gap:8px;margin-top:18px;}
 .rq-btn{
-  flex:1;padding:10px 8px;background:#080f1e;border:1px solid #1a2f50;
-  border-radius:10px;color:#7090b0;font-size:12px;font-weight:700;
+  flex:1;padding:10px 8px;background:#f4f8f6;border:1px solid #dde4eb;
+  border-radius:10px;color:#4a6275;font-size:12px;font-weight:700;
   cursor:pointer;transition:all .2s;font-family:var(--font);text-align:center;
 }
-.rq-btn:hover{border-color:#00d4aa;color:#00d4aa;background:rgba(0,212,170,.06);}
+.rq-btn:hover{border-color:#2da87a;color:#2da87a;background:rgba(45,168,122,.06);}
 
 /* ══════════════════════════════════════════════
    APP SHELL
@@ -952,7 +952,6 @@ body.oqituvchi {
         <span class="km-title" id="t-km-title">Klinik keys ma'lumotlari</span>
         <div class="tab-pair" id="t-bm-tabs">
           <button class="tb active" id="t-tb-bemor" onclick="tSwitchMode('bemor')">Bemor</button>
-          <button class="tb ai" id="t-tb-ai" onclick="tSwitchMode('ai')">🤖 AI Yordam</button>
         </div>
         <div class="act-row">
           <button class="act-b btn-danger" onclick="tClear()">🗑 Tozalash</button>
@@ -974,35 +973,6 @@ body.oqituvchi {
     </div>
 
     <div class="ks-right">
-      <div class="kr-sec">
-        <div class="kr-title">Ko'rib chiqilgan keyslar</div>
-        <div class="k-card" onclick="tSelectCase('gipertoniya','giper_1')">
-          <div class="k-card-cat">❤️ Kardiologiya</div>
-          <div class="k-card-dis">Gipertoniya kasalligi</div>
-          <div class="k-card-sub">1-bosqichi</div>
-          <div style="margin-top:7px;display:flex;justify-content:space-between;align-items:center">
-            <span class="badge badge-accent" style="font-size:9px">Engil</span>
-            <span style="font-size:10px;color:var(--text3)">Topshirilmagan</span>
-          </div>
-        </div>
-        <div class="k-card" onclick="tSelectCase('bronxial','ba_engil')">
-          <div class="k-card-cat">🫁 Pulmonologiya</div>
-          <div class="k-card-dis">Bronxial astma</div>
-          <div class="k-card-sub">Engil darajali</div>
-          <div style="margin-top:7px;display:flex;justify-content:space-between;align-items:center">
-            <span class="badge badge-yellow" style="font-size:9px">O'rta og'ir</span>
-            <span style="font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accent)">85</span>
-          </div>
-        </div>
-      </div>
-      <div class="kr-sec">
-        <div class="kr-title">Baholash</div>
-        <div class="bah-card" id="t-bah-card">
-          <div class="bah-icon">📊</div>
-          <div class="bah-title" style="color:var(--text2)">Tahlil qilinmagan</div>
-          <div class="bah-desc">Keys to'ldiring va «SI ga topshirish» tugmasini bosing.</div>
-        </div>
-      </div>
       <div class="kr-sec">
         <div class="kr-title">🤖 SI tahlili</div>
         <div class="ai-box" id="t-ai-box">
@@ -1286,7 +1256,6 @@ body.oqituvchi {
     <div class="o-grid">
       <div class="o-card"><div class="o-card-ic">👨‍🎓</div><div class="o-card-lbl">Talabalarim</div><div class="o-card-n">34</div><div class="o-card-s">3 ta guruh</div></div>
       <div class="o-card"><div class="o-card-ic">📋</div><div class="o-card-lbl">Mening keyslarim</div><div class="o-card-n">18</div><div class="o-card-s">6 ta qoralama</div></div>
-      <div class="o-card"><div class="o-card-ic">⏳</div><div class="o-card-lbl">Baholash kutmoqda</div><div class="o-card-n" style="color:var(--yellow)">7</div><div class="o-card-s">tekshirilishi lozim</div></div>
       <div class="o-card"><div class="o-card-ic">⭐</div><div class="o-card-lbl">Guruh o'rtachasi</div><div class="o-card-n" style="color:var(--accent)">79%</div><div class="o-card-s">bu oy</div></div>
     </div>
     <div class="o-main-grid">
@@ -1333,8 +1302,27 @@ body.oqituvchi {
           <div class="section-divider">Klinik ma'lumotlar</div>
           <div class="form-group"><label class="form-label">Shikoyatlar</label><textarea class="form-ta">Yurak sohasida og'riq, zo'riqishda hansirash, bosh og'rig'i.</textarea></div>
           <div class="form-group"><label class="form-label">Ob'ektiv belgilari</label><textarea class="form-ta">QB: 155/90 mmHg. YuQS: 78/daqiqa. Yurak tonlari bo'g'iqlashgan.</textarea></div>
+          <div class="form-group"><label class="form-label">Laborator tekshiruv natijalari</label><textarea class="form-ta" style="min-height:70px">Hb: 138 g/l. Leykositlar: 7.2×10⁹/l. Xolesterin: 6.2 mmol/l. LDL: 4.1 mmol/l. Glyukoza: 5.1 mmol/l. Kreatinin: 88 mkmol/l.</textarea></div>
+          <div class="section-divider">Instrumental tekshiruv natijalari</div>
+          <div class="form-group"><label class="form-label">EKG natijalari</label><textarea class="form-ta" style="min-height:60px" placeholder="EKG tavsifi...">Sinus ritmi, YuQS 78/daqiqa. Chap qorincha gipertrofiyasi. ST depressiyasi V4-V6 (1-1.5 mm).</textarea></div>
+          <div class="form-group"><label class="form-label">ExoKG / UZI natijalari</label><textarea class="form-ta" style="min-height:60px" placeholder="ExoKG tavsifi...">EF 52%. Diastol disfunktsiya I daraja. Chap qorincha orqa devori gipertrofiyasi (12.4 mm).</textarea></div>
+          <div class="form-group"><label class="form-label">Rentgen va boshqa instrumental</label><textarea class="form-ta" style="min-height:60px" placeholder="Boshqa instrumental natijalar...">Rentgen: Yurak soyasi kengaygan. O'pka tomiri kuchaygan.</textarea></div>
+          <div class="section-divider">Adabiyot qo'shish</div>
+          <div id="adabiyot-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px">
+            <div class="adabiyot-item" style="display:flex;gap:8px;align-items:center">
+              <input class="form-input" style="flex:1" placeholder="Manba nomi (masalan: ESC 2023)" value="ESC/ESH 2023">
+              <input class="form-input" style="flex:2" placeholder="Tavsif / sarlavha" value="Arterial gipertoniya bo'yicha qo'llanma">
+              <button class="btn-danger" style="padding:6px 10px;flex-shrink:0" onclick="this.closest('.adabiyot-item').remove()">🗑</button>
+            </div>
+            <div class="adabiyot-item" style="display:flex;gap:8px;align-items:center">
+              <input class="form-input" style="flex:1" placeholder="Manba nomi" value="AHA/ACC 2022">
+              <input class="form-input" style="flex:2" placeholder="Tavsif / sarlavha" value="Yurak-qon tomir kasalliklari">
+              <button class="btn-danger" style="padding:6px 10px;flex-shrink:0" onclick="this.closest('.adabiyot-item').remove()">🗑</button>
+            </div>
+          </div>
+          <button class="btn-ghost" style="width:100%;margin-bottom:10px" onclick="addAdabiyotRow()">➕ Adabiyot qo'shish</button>
           <div class="section-divider">AI baholash sozlamalari</div>
-          <div class="ce-grid"><div class="form-group"><label class="form-label">To'g'ri javob (asosiy dorilar)</label><textarea class="form-ta" style="min-height:70px">Aspirin 75mg + Bisoprolol 5mg + Ramipril 5mg + Atorvastatin 40mg</textarea></div><div class="form-group"><label class="form-label">Baholash mezonlari</label><textarea class="form-ta" style="min-height:70px">Antiagregant: 25 ball&#10;Beta-blokator: 20 ball&#10;RAAS blokatori: 25 ball&#10;Statin: 20 ball&#10;Doza: 10 ball</textarea></div></div>
+          <div class="ce-grid"><div class="form-group"><label class="form-label">To'g'ri javob (asosiy dorilar)</label><textarea class="form-ta" style="min-height:70px">Aspirin 75mg + Bisoprolol 5mg + Ramipril 5mg + Atorvastatin 40mg</textarea></div></div>
           <div class="save-bar"><button class="btn-primary" onclick="showToast('✅ Keys saqlandi va faol!')">✅ Saqlash va nashr etish</button><button class="btn-ghost" onclick="showToast('💾 Qoralama saqlandi')">💾 Qoralama sifatida saqlash</button><button class="btn-danger" onclick="showToast('🗑 O\'chirildi')">🗑 O'chirish</button></div>
         </div>
       </div>
@@ -1373,14 +1361,69 @@ body.oqituvchi {
         <div class="prof-card">
           <div class="prof-av" id="o-prof-av">TB</div>
           <div class="prof-name" id="o-prof-name">Dr. Toshpulatov B.</div>
-          <div class="prof-email" id="o-prof-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f98d968a91898c95988d968fb98a98949d9a918d90d78c83">[email&#160;protected]</a></div>
+          <div class="prof-email" id="o-prof-email">toshpulatov@samdchti.uz</div>
           <div class="prof-bds"><span class="badge badge-accent">O'qituvchi</span><span class="badge badge-accent">Kardiologiya</span><span class="badge badge-accent">SamDChTI</span></div>
-          <div class="prof-stats"><div class="ps"><div class="ps-v">18</div><div class="ps-l">Keys yaratildi</div></div><div class="ps"><div class="ps-v">34</div><div class="ps-l">Talabalar</div></div><div class="ps"><div class="ps-v" style="color:var(--accent)">81%</div><div class="ps-l">Guruh o'rtachasi</div></div><div class="ps"><div class="ps-v" style="color:var(--yellow)">7</div><div class="ps-l">Baholash kutmoqda</div></div></div>
+          <div class="prof-stats"><div class="ps"><div class="ps-v">18</div><div class="ps-l">Keys yaratildi</div></div><div class="ps"><div class="ps-v">34</div><div class="ps-l">Talabalar</div></div><div class="ps"><div class="ps-v" style="color:var(--accent)">81%</div><div class="ps-l">Guruh o'rtachasi</div></div></div>
         </div>
       </div>
       <div>
-        <div class="menu-card2"><div class="mc-title">O'qituvchi paneli</div><div class="mi" onclick="goPage('o-monitor')"><span class="mi-ic">📊</span><span class="mi-t">Talabalar monitoringi</span><span class="mi-a">›</span></div><div class="mi" onclick="goPage('o-create')"><span class="mi-ic">📋</span><span class="mi-t">Keyslarni boshqarish</span><span class="mi-a">›</span></div><div class="mi" onclick="goPage('o-results')"><span class="mi-ic">✅</span><span class="mi-t">Baholash kutmoqda (7 ta)</span><span class="mi-a">›</span></div></div>
+        <div class="menu-card2"><div class="mc-title">O'qituvchi paneli</div><div class="mi" onclick="goPage('o-monitor')"><span class="mi-ic">📊</span><span class="mi-t">Talabalar monitoringi</span><span class="mi-a">›</span></div><div class="mi" onclick="goPage('o-create')"><span class="mi-ic">📋</span><span class="mi-t">Keyslarni boshqarish</span><span class="mi-a">›</span></div></div>
         <button class="logout-btn" onclick="doLogout()">🚪 Tizimdan chiqish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- O'QITUVCHI: AI YORDAM -->
+  <div class="page" id="o-ai-help" style="flex-direction:column;">
+    <div class="ai-tutor-layout">
+      <div class="ai-tutor-sidebar">
+        <div class="ai-ts-head">
+          <div class="ai-ts-title">🤖 AI Yordam</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px">O'qituvchi uchun</div>
+        </div>
+        <div class="ai-ts-body" id="o-ai-topic-list">
+          <button class="ai-topic-btn active" id="oaitp-general" onclick="setOAITopic('general')"><span class="tp-icon">🏥</span>Umumiy farmakologiya</button>
+          <button class="ai-topic-btn" id="oaitp-kardio" onclick="setOAITopic('kardio')"><span class="tp-icon">❤️</span>Kardiologiya</button>
+          <button class="ai-topic-btn" id="oaitp-pulmo" onclick="setOAITopic('pulmo')"><span class="tp-icon">🫁</span>Pulmonologiya</button>
+          <button class="ai-topic-btn" id="oaitp-gastro" onclick="setOAITopic('gastro')"><span class="tp-icon">💊</span>Gastroenterologiya</button>
+          <button class="ai-topic-btn" id="oaitp-keys" onclick="setOAITopic('keys')"><span class="tp-icon">📋</span>Keys yaratish maslahat</button>
+          <button class="ai-topic-btn" id="oaitp-protokol" onclick="setOAITopic('protokol')"><span class="tp-icon">📚</span>Klinik protokollar</button>
+        </div>
+        <div style="padding:10px;border-top:1px solid var(--border);margin-top:auto">
+          <button class="btn-danger" style="width:100%;padding:7px" onclick="clearOAIChat()">🗑 Tozalash</button>
+        </div>
+      </div>
+      <div class="ai-chat-main">
+        <div class="ai-chat-topbar">
+          <div class="ai-chat-avatar">🤖</div>
+          <div>
+            <div class="ai-chat-name">PharmSim AI Assistant</div>
+            <div class="ai-chat-status" id="o-ai-status-text">✦ Tayyor · Umumiy farmakologiya</div>
+          </div>
+        </div>
+        <div class="ai-chat-messages" id="o-ai-chat-messages">
+          <div class="ai-msg bot">
+            <div class="ai-msg-avatar">🤖</div>
+            <div>
+              <div class="ai-msg-bubble">Salom, ustoz! Men farmakologiya va klinik farmakoterapiya bo'yicha sizga yordam bera olaman. Keys yaratishda maslahat, dori-darmon protokollari, o'qitish metodikasi haqida savollar bering. 💊</div>
+              <div class="ai-msg-time">Hozir</div>
+            </div>
+          </div>
+        </div>
+        <div class="ai-chat-input-area">
+          <div class="ai-quick-btns">
+            <button class="ai-quick-btn" onclick="sendOAIQuick('Metformin va insulin kombinatsiyasi qachon qo\'llaniladi?')">💉 Metformin + Insulin</button>
+            <button class="ai-quick-btn" onclick="sendOAIQuick('Yurak yetishmovchiligida EF bo\'yicha davolash farqi nima?')">❤️ HFrEF vs HFpEF</button>
+            <button class="ai-quick-btn" onclick="sendOAIQuick('Astma stepwise terapiyasini tushuntiring')">🫁 BA Stepwise</button>
+            <button class="ai-quick-btn" onclick="sendOAIQuick('NSAID va antikoagulyantlar birga berish mumkinmi?')">⚠️ NSAID + antikoag</button>
+          </div>
+          <div class="ai-input-row">
+            <textarea class="ai-input" id="o-ai-input-box" placeholder="Savol yozing... (Enter — yuborish, Shift+Enter — yangi qator)" rows="1"
+              onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendOAIMessage();}
+              this.style.height='44px';this.style.height=Math.min(this.scrollHeight,120)+'px';"></textarea>
+            <button class="ai-send-btn" id="o-ai-send-btn" onclick="sendOAIMessage()" title="Yuborish">➤</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1400,7 +1443,6 @@ const NAV_CONFIG = {
     {id:'t-keys', label:'Keys yechish', icon:'📋'},
     {id:'t-dorilar', label:'Dori Bazasi', icon:'💊'},
     {id:'t-analytics', label:'Analytics', icon:'📈'},
-    {id:'t-ai-tutor', label:'AI Tutor', icon:'🤖'},
     {id:'t-hisobot', label:'Hisobotim', icon:'📊'},
     {id:'t-profil', label:'Profil', icon:'👤'},
   ],
@@ -1409,6 +1451,7 @@ const NAV_CONFIG = {
     {id:'o-monitor', label:'Monitoring', icon:'📡'},
     {id:'o-create', label:'Keys yaratish', icon:'✏️'},
     {id:'o-results', label:'Natijalar', icon:'✅'},
+    {id:'o-ai-help', label:'AI Yordam', icon:'🤖'},
     {id:'o-profil', label:'Profil', icon:'👤'},
   ],
   'Admin': [
@@ -1577,6 +1620,7 @@ function goPage(pg) {
   if(pg === 't-dorilar') setTimeout(initDorilarPage, 50);
   if(pg === 't-analytics') setTimeout(initAnalyticsPage, 50);
   if(pg === 't-ai-tutor') setTimeout(initAITutorPage, 50);
+  if(pg === 'o-ai-help') { /* already rendered statically */ }
 }
 
 /* ════════════════════════════════════════════════
@@ -1652,7 +1696,6 @@ function tSelectCase(disId, subId) {
   tUpdateProg(0);
   document.querySelectorAll('#t-case-tabs .ctab').forEach((b,i) => b.classList.toggle('active', i===0));
   document.getElementById('t-tb-bemor').classList.add('active');
-  document.getElementById('t-tb-ai').classList.remove('active');
   tShowSection('pasport');
 }
 
@@ -1668,8 +1711,8 @@ function tSection(id, btn) {
 
 function tSwitchMode(mode) {
   tMode = mode;
-  document.getElementById('t-tb-bemor').classList.toggle('active', mode === 'bemor');
-  document.getElementById('t-tb-ai').classList.toggle('active', mode === 'ai');
+  const bemBtn = document.getElementById('t-tb-bemor');
+  if(bemBtn) bemBtn.classList.toggle('active', mode === 'bemor');
   if(tCaseLoaded) tShowSection(tCurSection);
 }
 
@@ -1707,77 +1750,6 @@ function buildDavoSection(body) {
   body.innerHTML = `
   <div class="rx-wrapper fade-in">
 
-    <!-- DV KARTA — Patient Info Card -->
-    <div class="dv-karta">
-      <div class="dv-karta-hdr">
-        <span class="dv-karta-title">📋 DV Karta — Dispanserizatsiya Kartasi</span>
-        <span class="dv-karta-num" id="dv-karta-num">DV-2024-248</span>
-      </div>
-      <div class="dv-karta-body">
-        <div class="dv-row">
-          <div class="dv-field">
-            <div class="dv-label">Bemor F.I.O.</div>
-            <input class="dv-input" id="dv-fio" value="Maksim Petrov Alexeyevich" placeholder="To'liq ismi...">
-          </div>
-          <div class="dv-field">
-            <div class="dv-label">Tug'ilgan sana</div>
-            <input class="dv-input" id="dv-tugilgan" type="date" value="1972-04-15">
-          </div>
-        </div>
-        <div class="dv-row-3">
-          <div class="dv-field">
-            <div class="dv-label">Yoshi</div>
-            <input class="dv-input" id="dv-yosh" value="52 yosh" placeholder="Yoshi...">
-          </div>
-          <div class="dv-field">
-            <div class="dv-label">Jinsi</div>
-            <select class="dv-select" id="dv-jins">
-              <option value="erkak" selected>Erkak</option>
-              <option value="ayol">Ayol</option>
-            </select>
-          </div>
-          <div class="dv-field">
-            <div class="dv-label">Qon guruhi</div>
-            <select class="dv-select" id="dv-qon">
-              <option>II (A) Rh+</option>
-              <option>I (O) Rh+</option>
-              <option>III (B) Rh+</option>
-              <option>IV (AB) Rh+</option>
-              <option>I (O) Rh-</option>
-            </select>
-          </div>
-        </div>
-        <div class="dv-field-full">
-          <div class="dv-label">Asosiy tashxis (ICD-10)</div>
-          <input class="dv-input" id="dv-tashxis" value="I25.1 — YuIK. Stabil zo'riqish stenokardiyasi. FS II. Gipertoniya kasalligi II bosqichi, 2-daraja." placeholder="Asosiy tashxis...">
-        </div>
-        <div class="dv-row">
-          <div class="dv-field">
-            <div class="dv-label">Asoratlar</div>
-            <input class="dv-input" id="dv-asorat" value="YuE 2-daraja. Qorinchalar ekstrasistoliya" placeholder="Asoratlar...">
-          </div>
-          <div class="dv-field">
-            <div class="dv-label">Yo'ldosh kasalliklar</div>
-            <input class="dv-input" id="dv-yoldosh" value="Dislipidemiya, Semizlik I daraja" placeholder="Yo'ldosh kasalliklar...">
-          </div>
-        </div>
-        <div class="dv-row-3">
-          <div class="dv-field">
-            <div class="dv-label">Allergiya</div>
-            <input class="dv-input" id="dv-allerg" value="ACE ingibitorlariga yo'q" placeholder="Allergik reaktsiyalar...">
-          </div>
-          <div class="dv-field">
-            <div class="dv-label">Buyruq sanasi</div>
-            <input class="dv-input" id="dv-sana" type="date" value="${new Date().toISOString().split('T')[0]}">
-          </div>
-          <div class="dv-field">
-            <div class="dv-label">Keyingi ko'rik</div>
-            <input class="dv-input" id="dv-keyingi" type="date">
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- PHARMACOTHERAPY TABLE -->
     <div class="dv-karta">
       <div class="dv-karta-hdr">
@@ -1806,44 +1778,6 @@ function buildDavoSection(body) {
               <tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text3);font-size:12px">Dori qo'shish uchun «+ Dori qo'shish» tugmasini bosing yoki Demo ni sinab ko'ring</td></tr>
             </tbody>
           </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- SI BAHOLASH MEZONLARI -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-      <div class="dv-karta">
-        <div class="dv-karta-hdr">
-          <span class="dv-karta-title">🎯 Baholash mezonlari (SI)</span>
-          <span id="rx-total-score" style="font-family:var(--mono);font-size:14px;font-weight:700;color:var(--accent)">0 / 100</span>
-        </div>
-        <div class="dv-karta-body" style="padding:12px 14px">
-          <div class="score-breakdown" id="score-checklist">
-            <div class="score-item"><div class="score-icon">💊</div><div class="score-name">Antiagregant (Aspirin)</div><div class="score-pts">25 ball</div><div class="score-check" id="sc-1" onclick="toggleScore('sc-1',25)">○</div></div>
-            <div class="score-item"><div class="score-icon">❤️</div><div class="score-name">Beta-blokator</div><div class="score-pts">20 ball</div><div class="score-check" id="sc-2" onclick="toggleScore('sc-2',20)">○</div></div>
-            <div class="score-item"><div class="score-icon">🔴</div><div class="score-name">RAAS blokatori (ACE/ARB)</div><div class="score-pts">25 ball</div><div class="score-check" id="sc-3" onclick="toggleScore('sc-3',25)">○</div></div>
-            <div class="score-item"><div class="score-icon">📊</div><div class="score-name">Statin (LDL maqsadi)</div><div class="score-pts">20 ball</div><div class="score-check" id="sc-4" onclick="toggleScore('sc-4',20)">○</div></div>
-            <div class="score-item"><div class="score-icon">⚖️</div><div class="score-name">Doza to'g'ri ko'rsatilgan</div><div class="score-pts">10 ball</div><div class="score-check" id="sc-5" onclick="toggleScore('sc-5',10)">○</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dv-karta">
-        <div class="dv-karta-hdr">
-          <span class="dv-karta-title">📝 Qo'shimcha izohlar</span>
-        </div>
-        <div class="dv-karta-body">
-          <div class="dv-field-full">
-            <div class="dv-label">Maxsus ko'rsatmalar va monitoring</div>
-            <textarea class="dv-ta" id="dv-monitoring" placeholder="Monitoring rejasi, maxsus ko'rsatmalar...">QB nazorati: har hafta dastlab, keyin oyiga bir marta.
-LDL nazorati: 6 haftadan so'ng.
-Kreatinin, kaliy: 2 haftadan so'ng (RAAS terapiyasi boshlangach).</textarea>
-          </div>
-          <div class="dv-field-full">
-            <div class="dv-label">Bemor uchun tavsiyalar</div>
-            <textarea class="dv-ta" id="dv-tavsiya" placeholder="Bemor uchun tavsiyalar...">Tuz miqdorini kamaytirish (&lt;5g/kun). Jismoniy faollik: 30 daqiqa, haftasiga 5 kun. Chekishni tashlash. Vaznni nazorat qilish.</textarea>
-          </div>
-          <div class="note-yellow" style="margin-bottom:0">⚠️ <strong>Eslatma:</strong> Kontraindikatsiyalarni tekshiring. RAAS + kaliyni tejovchi diuretiklar birga buyurmang. Beta-blokatoni kesilmang (faqat asta-sekin kamaytiring).</div>
         </div>
       </div>
     </div>
@@ -1941,17 +1875,7 @@ function rxAddDrug(data) {
       <option ${data.shakl==='Damlamasi'?'selected':''}>Damlamasi</option>
     </select></td>
     <td><input placeholder="75mg..." value="${data.doza}" style="background:transparent;border:none;padding:8px 10px;color:var(--text);font-size:12px;font-family:var(--font);outline:none;width:100%;"></td>
-    <td><select style="background:transparent;border:none;padding:8px 10px;color:var(--text);font-size:12px;font-family:var(--font);outline:none;width:100%;appearance:none;cursor:pointer;">
-      <option ${data.tartibi==='1×1'?'selected':''}>1×1</option>
-      <option ${data.tartibi==='1×2'?'selected':''}>1×2</option>
-      <option ${data.tartibi==='1×3'?'selected':''}>1×3</option>
-      <option ${data.tartibi==='2×1'?'selected':''}>2×1</option>
-      <option ${data.tartibi==='Ovqatdan oldin'?'selected':''}>Ovqatdan oldin</option>
-      <option ${data.tartibi==='Ovqatdan keyin'?'selected':''}>Ovqatdan keyin</option>
-      <option ${data.tartibi==='Kechqurun'?'selected':''}>Kechqurun</option>
-      <option ${data.tartibi==='Ertalab'?'selected':''}>Ertalab</option>
-      <option ${data.tartibi==='Zarur bo\'lganda'?'selected':''}>Zarur bo'lganda</option>
-    </select></td>
+    <td><input placeholder="Yozing..." value="${data.tartibi||''}" style="background:transparent;border:none;padding:8px 10px;color:var(--text);font-size:12px;font-family:var(--font);outline:none;width:100%;"></td>
     <td><select style="background:transparent;border:none;padding:8px 10px;color:var(--text);font-size:12px;font-family:var(--font);outline:none;width:100%;appearance:none;cursor:pointer;">
       <option ${data.muddat==='Doimiy'?'selected':''}>Doimiy</option>
       <option ${data.muddat==='7 kun'?'selected':''}>7 kun</option>
@@ -3409,6 +3333,120 @@ async function sendAIMessage() {
   if(inp) inp.focus();
 }
 
+
+/* ════════════════════════════════════════════════
+   TEACHER AI YORDAM
+════════════════════════════════════════════════ */
+let oAIMessages = [];
+let oAILoading = false;
+let oAITopic = 'general';
+const O_TOPIC_PROMPTS = {
+  general:"Siz klinik farmakologiya professori sifatida o'qituvchilarga yordam bering. Professional, aniq va O'zbek tilida javob bering.",
+  kardio:"Kardiologiya farmakoterapiyasi bo'yicha chuqur bilimingiz bor. Gipertoniya, YuIK, YuY, aritmiyalar davolanishi haqida professional maslahat bering.",
+  pulmo:"Pulmonologiya farmakoterapiyasi mutaxassisi sifatida bronxial astma, YOQK, pnevmoniya davolanishi haqida professional maslahat bering.",
+  gastro:"Gastroenterologiya farmakoterapiyasi bo'yicha oshqozon kasalliklari, gepatitlar, IBD davolanishi haqida professional maslahat bering.",
+  keys:"Klinik keyslarni tahlil qilish, davolash rejasini baholash va o'qitish metodikasi haqida professional maslahat bering.",
+  protokol:"ESC, WHO, O'zbekiston MoH klinik protokollari asosida davolash standartlari haqida professional ma'lumot bering.",
+};
+
+function setOAITopic(id) {
+  oAITopic = id;
+  document.querySelectorAll('#o-ai-topic-list .ai-topic-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('oaitp-' + id);
+  if(btn) btn.classList.add('active');
+  const topics = {general:'Umumiy farmakologiya',kardio:'Kardiologiya',pulmo:'Pulmonologiya',gastro:'Gastroenterologiya',keys:'Keys maslahat',protokol:'Protokollar'};
+  const st = document.getElementById('o-ai-status-text');
+  if(st) st.textContent = '✦ Tayyor · ' + (topics[id] || 'Umumiy');
+}
+
+function clearOAIChat() {
+  oAIMessages = [];
+  const el = document.getElementById('o-ai-chat-messages');
+  if(el) el.innerHTML = '<div class="ai-msg bot"><div class="ai-msg-avatar">🤖</div><div><div class="ai-msg-bubble">Suhbat tozalandi. Yangi savol bering!</div><div class="ai-msg-time">Hozir</div></div></div>';
+  showToast('Suhbat tozalandi');
+}
+
+function appendOAIMessage(role, text) {
+  const el = document.getElementById('o-ai-chat-messages');
+  if(!el) return;
+  const time = new Date().toLocaleTimeString('uz-UZ',{hour:'2-digit',minute:'2-digit'});
+  const div = document.createElement('div');
+  div.className = 'ai-msg ' + role;
+  div.innerHTML = '<div class="ai-msg-avatar">'+(role==='user'?'TB':'🤖')+'</div><div><div class="ai-msg-bubble">'+text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'</div><div class="ai-msg-time">'+time+'</div></div>';
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+}
+
+function showOAITyping() {
+  const el = document.getElementById('o-ai-chat-messages');
+  if(!el) return;
+  const div = document.createElement('div');
+  div.className = 'ai-msg bot'; div.id = 'o-ai-typing';
+  div.innerHTML = '<div class="ai-msg-avatar">🤖</div><div class="ai-msg-bubble ai-typing"><span></span><span></span><span></span></div>';
+  el.appendChild(div); el.scrollTop = el.scrollHeight;
+}
+
+function removeOAITyping() { const el = document.getElementById('o-ai-typing'); if(el) el.remove(); }
+
+function sendOAIQuick(text) {
+  const inp = document.getElementById('o-ai-input-box');
+  if(inp) { inp.value = text; sendOAIMessage(); }
+}
+
+async function sendOAIMessage() {
+  if(oAILoading) return;
+  const inputEl = document.getElementById('o-ai-input-box');
+  if(!inputEl) return;
+  const text = inputEl.value.trim();
+  if(!text) return;
+  inputEl.value = ''; inputEl.style.height = '44px';
+  appendOAIMessage('user', text);
+  oAIMessages.push({role:'user', content: text});
+  oAILoading = true;
+  const sendBtn = document.getElementById('o-ai-send-btn');
+  if(sendBtn) sendBtn.disabled = true;
+  showOAITyping();
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system: (O_TOPIC_PROMPTS[oAITopic]||O_TOPIC_PROMPTS.general) + " O'zbek tilida javob bering. Aniq va qisqa javob bering (maksimum 400 so'z).",
+        messages: oAIMessages.slice(-10),
+      })
+    });
+    const data = await response.json();
+    removeOAITyping();
+    if(data.content && data.content[0]) {
+      const reply = data.content[0].text || 'Javob olishda xato.';
+      appendOAIMessage('bot', reply);
+      oAIMessages.push({role:'assistant', content: reply});
+    } else if(data.error) {
+      appendOAIMessage('bot', 'Xato: ' + (data.error.message || 'API xato'));
+    }
+  } catch(err) {
+    removeOAITyping();
+    appendOAIMessage('bot', 'Tarmoq xatosi yuz berdi.');
+  }
+  oAILoading = false;
+  if(sendBtn) sendBtn.disabled = false;
+  const inp2 = document.getElementById('o-ai-input-box');
+  if(inp2) inp2.focus();
+}
+
+/* ADABIYOT */
+function addAdabiyotRow() {
+  const list = document.getElementById('adabiyot-list');
+  if(!list) return;
+  const div = document.createElement('div');
+  div.className = 'adabiyot-item';
+  div.style.cssText = 'display:flex;gap:8px;align-items:center';
+  div.innerHTML = '<input class="form-input" style="flex:1" placeholder="Manba nomi"><input class="form-input" style="flex:2" placeholder="Tavsif / sarlavha"><button class="btn-danger" style="padding:6px 10px;flex-shrink:0" onclick="this.closest(\'.adabiyot-item\').remove()">Ochirish</button>';
+  list.appendChild(div);
+  showToast('Adabiyot qoshildi');
+}
 
 /* INIT */
 document.getElementById('login-page').style.display = 'flex';
