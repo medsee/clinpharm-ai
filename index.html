@@ -1428,6 +1428,210 @@ body.oqituvchi {
     </div>
   </div>
 
+  <!-- O'QITUVCHI: DORI BAZA BOSHQARUVI -->
+  <div class="page pg-scroll" id="o-dori-baza">
+    <div class="db-header">
+      <h1>💊 <span>Dori Baza Boshqaruvi</span></h1>
+      <p>Yangi dorilar qo'shish, mavjudlarini tahrirlash va ma'lumotlar bazasini yangilash</p>
+    </div>
+    <div style="display:flex;gap:14px;height:calc(100vh - 220px);overflow:hidden;">
+      <!-- LEFT: list -->
+      <div style="width:260px;flex-shrink:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;display:flex;flex-direction:column;overflow:hidden;">
+        <div style="padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:10px;font-weight:800;letter-spacing:2px;color:var(--accent);text-transform:uppercase;">Preparatlar</span>
+          <button class="btn-primary" style="padding:5px 12px;font-size:11px;" onclick="oDoriNew()">+ Yangi</button>
+        </div>
+        <input id="o-dori-search" class="db-search-input" style="margin:10px;width:calc(100% - 20px);" placeholder="🔍 Qidirish..." oninput="oDoriFilter(this.value)">
+        <div style="overflow-y:auto;flex:1;" id="o-dori-list"></div>
+      </div>
+      <!-- RIGHT: form -->
+      <div style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow-y:auto;" id="o-dori-form-area">
+        <div class="empty-st" style="height:100%">
+          <div class="bi">💊</div>
+          <h3>Dori tanlang</h3>
+          <p>Chap paneldan dori tanlang yoki yangi dori qo'shing</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- O'QITUVCHI: ADABIYOT VA PDF KUTUBXONA -->
+  <div class="page pg-scroll" id="o-adabiyot">
+    <div class="db-header">
+      <h1>📚 <span>Adabiyot va Kutubxona</span></h1>
+      <p>Klinik protokollar, darsliklar, PDF kitoblar va ilmiy maqolalar to'plami</p>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        <span class="badge badge-accent">📄 PDF kitoblar</span>
+        <span class="badge badge-accent">🔗 Havolalar</span>
+        <span class="badge badge-accent">📋 Protokollar</span>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+      <div class="db-stat"><div class="db-stat-n" id="olib-pdf-count">3</div><div class="db-stat-l">PDF kitoblar</div></div>
+      <div class="db-stat"><div class="db-stat-n" id="olib-link-count">4</div><div class="db-stat-l">Protokol havolalar</div></div>
+      <div class="db-stat"><div class="db-stat-n" id="olib-article-count">0</div><div class="db-stat-l">Maqolalar</div></div>
+      <div class="db-stat"><div class="db-stat-n" style="color:var(--accent)" id="olib-total-count">7</div><div class="db-stat-l">Jami materiallar</div></div>
+    </div>
+
+    <!-- ADD SECTION -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+      <!-- PDF UPLOAD -->
+      <div class="card">
+        <div class="card-hdr">📄 PDF Kitob / Darslik qo'shish</div>
+        <div style="padding:16px;display:flex;flex-direction:column;gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Kitob nomi / Sarlavha</label>
+            <input class="form-input" id="olib-pdf-title" placeholder="Masalan: Klinik Farmakologiya 2024">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Muallif(lar)</label>
+            <input class="form-input" id="olib-pdf-author" placeholder="Muallif ismi yoki tashkilot">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Kategoriya</label>
+            <select class="form-input" id="olib-pdf-cat">
+              <option>Kardiologiya</option>
+              <option>Pulmonologiya</option>
+              <option>Gastroenterologiya</option>
+              <option>Revmotologiya</option>
+              <option>Nefrologiya</option>
+              <option>Endokrinologiya</option>
+              <option>Umumiy farmakologiya</option>
+              <option>Klinik protokol</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">PDF fayl yuklash</label>
+            <div id="pdf-drop-zone" style="border:2px dashed var(--border2);border-radius:10px;padding:24px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface2);"
+              ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
+              ondragleave="this.style.borderColor='var(--border2)'"
+              ondrop="oDoriPdfDrop(event)"
+              onclick="document.getElementById('olib-pdf-file').click()">
+              <div style="font-size:32px;margin-bottom:8px;">📤</div>
+              <div style="font-size:12px;font-weight:700;color:var(--text2);">PDF faylni bu yerga tashlang yoki bosing</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:4px;" id="pdf-file-name">Maksimum hajm: 50 MB</div>
+            </div>
+            <input type="file" id="olib-pdf-file" accept=".pdf" style="display:none;" onchange="oDoriPdfSelect(this)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tavsif (ixtiyoriy)</label>
+            <textarea class="form-ta" id="olib-pdf-desc" style="min-height:60px;" placeholder="Kitob haqida qisqacha..."></textarea>
+          </div>
+          <button class="btn-primary" onclick="oLibAddPdf()">📤 PDF Saqlash</button>
+        </div>
+      </div>
+
+      <!-- LINK ADD -->
+      <div class="card">
+        <div class="card-hdr">🔗 Havola / Protokol qo'shish</div>
+        <div style="padding:16px;display:flex;flex-direction:column;gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Manba nomi</label>
+            <input class="form-input" id="olib-link-title" placeholder="Masalan: ESC 2023 Guidelines">
+          </div>
+          <div class="form-group">
+            <label class="form-label">URL / Havola</label>
+            <input class="form-input" id="olib-link-url" placeholder="https://...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tur</label>
+            <select class="form-input" id="olib-link-type">
+              <option value="protokol">📋 Klinik protokol</option>
+              <option value="maqola">📝 Ilmiy maqola</option>
+              <option value="darslik">📖 Darslik</option>
+              <option value="qollanma">📚 Qo'llanma</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Kategoriya</label>
+            <select class="form-input" id="olib-link-cat">
+              <option>Umumiy farmakologiya</option>
+              <option>Kardiologiya</option>
+              <option>Pulmonologiya</option>
+              <option>Gastroenterologiya</option>
+              <option>Revmotologiya</option>
+              <option>Nefrologiya</option>
+              <option>Klinik protokol</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tavsif</label>
+            <textarea class="form-ta" id="olib-link-desc" style="min-height:60px;" placeholder="Manba haqida qisqacha..."></textarea>
+          </div>
+          <button class="btn-primary" onclick="oLibAddLink()">🔗 Havola Saqlash</button>
+        </div>
+        <!-- EXISTING LINKS -->
+        <div style="border-top:1px solid var(--border);padding:14px;">
+          <div style="font-size:10px;font-weight:800;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;">Mavjud protokol havolalar</div>
+          <div id="olib-link-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PDF LIBRARY TABLE -->
+    <div class="card">
+      <div class="card-hdr" style="display:flex;align-items:center;justify-content:space-between;">
+        <span>📚 PDF Kutubxona</span>
+        <input class="db-search-input" style="width:220px;padding:6px 12px;font-size:12px;" placeholder="🔍 Qidirish..." oninput="oLibSearch(this.value)">
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="student-table" id="olib-pdf-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Sarlavha</th>
+              <th>Muallif</th>
+              <th>Kategoriya</th>
+              <th>Hajm</th>
+              <th>Sana</th>
+              <th>Amallar</th>
+            </tr>
+          </thead>
+          <tbody id="olib-pdf-tbody">
+            <tr>
+              <td>1</td>
+              <td><span style="font-weight:700;">Klinik Farmakologiya</span><div style="font-size:10px;color:var(--text3);">Umumiy darslik</div></td>
+              <td>Abdullayev U.A.</td>
+              <td><span class="badge badge-accent" style="font-size:9px;">Umumiy farmakologiya</span></td>
+              <td>8.4 MB</td>
+              <td>12.01.2024</td>
+              <td>
+                <button class="btn-ghost" style="padding:4px 10px;font-size:10px;" onclick="showToast('📖 PDF ko\'rilmoqda')">👁 Ko'rish</button>
+                <button class="btn-danger" style="padding:4px 8px;font-size:10px;margin-left:4px;" onclick="oLibDeletePdf(this)">🗑</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><span style="font-weight:700;">ESC/ESH 2023 Hypertension Guidelines</span><div style="font-size:10px;color:var(--text3);">Klinik protokol</div></td>
+              <td>ESC/ESH Komiteti</td>
+              <td><span class="badge badge-accent" style="font-size:9px;">Kardiologiya</span></td>
+              <td>4.2 MB</td>
+              <td>15.02.2024</td>
+              <td>
+                <button class="btn-ghost" style="padding:4px 10px;font-size:10px;" onclick="showToast('📖 PDF ko\'rilmoqda')">👁 Ko'rish</button>
+                <button class="btn-danger" style="padding:4px 8px;font-size:10px;margin-left:4px;" onclick="oLibDeletePdf(this)">🗑</button>
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><span style="font-weight:700;">GINA 2024 Bronxial Astma Protokoli</span><div style="font-size:10px;color:var(--text3);">Global qo'llanma</div></td>
+              <td>GINA Committee</td>
+              <td><span class="badge badge-accent" style="font-size:9px;">Pulmonologiya</span></td>
+              <td>3.8 MB</td>
+              <td>20.03.2024</td>
+              <td>
+                <button class="btn-ghost" style="padding:4px 10px;font-size:10px;" onclick="showToast('📖 PDF ko\'rilmoqda')">👁 Ko'rish</button>
+                <button class="btn-danger" style="padding:4px 8px;font-size:10px;margin-left:4px;" onclick="oLibDeletePdf(this)">🗑</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- Toast -->
@@ -1450,6 +1654,8 @@ const NAV_CONFIG = {
     {id:'o-monitor', label:'Monitoring', icon:'📡'},
     {id:'o-create', label:'Keys yaratish', icon:'✏️'},
     {id:'o-results', label:'Natijalar', icon:'✅'},
+    {id:'o-dori-baza', label:'Dori Baza', icon:'💊'},
+    {id:'o-adabiyot', label:'Adabiyot', icon:'📚'},
     {id:'o-ai-help', label:'AI Yordam', icon:'🤖'},
     {id:'o-profil', label:'Profil', icon:'👤'},
   ],
@@ -1620,6 +1826,8 @@ function goPage(pg) {
   if(pg === 't-analytics') setTimeout(initAnalyticsPage, 50);
   if(pg === 't-ai-tutor') setTimeout(initAITutorPage, 50);
   if(pg === 'o-ai-help') { /* already rendered statically */ }
+  if(pg === 'o-dori-baza') setTimeout(initODoriBaza, 50);
+  if(pg === 'o-adabiyot') setTimeout(initOAdabiyot, 50);
 }
 
 /* ════════════════════════════════════════════════
@@ -3435,16 +3643,271 @@ async function sendOAIMessage() {
   if(inp2) inp2.focus();
 }
 
-/* ADABIYOT */
+/* ADABIYOT KEYS FORM */
 function addAdabiyotRow() {
   const list = document.getElementById('adabiyot-list');
   if(!list) return;
   const div = document.createElement('div');
   div.className = 'adabiyot-item';
   div.style.cssText = 'display:flex;gap:8px;align-items:center';
-  div.innerHTML = '<input class="form-input" style="flex:1" placeholder="Manba nomi"><input class="form-input" style="flex:2" placeholder="Tavsif / sarlavha"><button class="btn-danger" style="padding:6px 10px;flex-shrink:0" onclick="this.closest(\'.adabiyot-item\').remove()">Ochirish</button>';
+  div.innerHTML = '<input class="form-input" style="flex:1" placeholder="Manba nomi"><input class="form-input" style="flex:2" placeholder="Tavsif / sarlavha"><button class="btn-danger" style="padding:6px 10px;flex-shrink:0" onclick="this.closest(\'.adabiyot-item\').remove()">🗑</button>';
   list.appendChild(div);
   showToast('Adabiyot qoshildi');
+}
+
+/* ════════════════════════════════════════════════
+   TEACHER DORI BAZA
+════════════════════════════════════════════════ */
+let oDoriSearchVal = '';
+
+function initODoriBaza() {
+  oDoriRenderList();
+}
+
+function oDoriRenderList() {
+  const el = document.getElementById('o-dori-list');
+  if(!el) return;
+  let drugs = DRUG_DATABASE;
+  if(oDoriSearchVal) drugs = drugs.filter(d => d.name.toLowerCase().includes(oDoriSearchVal) || d.group.toLowerCase().includes(oDoriSearchVal));
+  el.innerHTML = drugs.map(d => {
+    const g = DRUG_GROUPS[d.group] || {icon:'💊',color:'var(--accent)'};
+    return `<div class="cat-item" onclick="oDoriEdit(${d.id})" style="display:flex;align-items:center;gap:8px;margin:2px 8px;border-radius:8px;">
+      <span>${g.icon}</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${d.name}</div>
+        <div style="font-size:9px;color:var(--text3);">${d.group}</div>
+      </div>
+    </div>`;
+  }).join('') + `<div style="padding:10px 14px;text-align:center;">
+    <button class="btn-ghost" style="width:100%;padding:7px;font-size:11px;" onclick="oDoriNew()">+ Yangi dori qo'shish</button>
+  </div>`;
+}
+
+function oDoriFilter(val) {
+  oDoriSearchVal = val.toLowerCase();
+  oDoriRenderList();
+}
+
+function oDoriNew() {
+  const area = document.getElementById('o-dori-form-area');
+  if(!area) return;
+  area.innerHTML = `
+  <div style="padding:20px;">
+    <div style="font-size:15px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;">
+      <span>➕ Yangi Dori Qo'shish</span>
+      <button class="btn-primary" onclick="showToast('✅ Dori saqlandi! (Demo)')">💾 Saqlash</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label class="form-label">Dori nomi (savdo nomi)</label><input class="form-input" placeholder="Masalan: Aspirin"></div>
+      <div class="form-group"><label class="form-label">INN (xalqaro nom)</label><input class="form-input" placeholder="Masalan: Acetylsalicylic acid"></div>
+      <div class="form-group"><label class="form-label">Dori guruhi</label><select class="form-input">
+        <option>Antiagregantlar</option><option>Beta-blokatorlar</option><option>ACE Ingibitorlari</option>
+        <option>ARB (Sartanlar)</option><option>Statinlar</option><option>Diuretiklar</option>
+        <option>Kalsiy antagonistlar</option><option>Bronxodilatatorlar</option><option>PPI (Proton nasos)</option>
+        <option>Antibiotiklar</option><option>NSAIDlar</option><option>Boshqa</option>
+      </select></div>
+      <div class="form-group"><label class="form-label">Doza</label><input class="form-input" placeholder="75-325 mg x 1/kun"></div>
+    </div>
+    <div class="section-divider" style="margin:16px 0 12px;">Farmakologiya</div>
+    <div class="form-group"><label class="form-label">Mexanizm ta'siri</label><textarea class="form-ta" style="min-height:80px;" placeholder="Qisqa farmakologik mexanizm..."></textarea></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+      <div class="form-group"><label class="form-label">T½ (yarim chiqarish)</label><input class="form-input" placeholder="8-12 soat"></div>
+      <div class="form-group"><label class="form-label">Boshlanish vaqti</label><input class="form-input" placeholder="30-60 min"></div>
+      <div class="form-group"><label class="form-label">Metabolizm</label><input class="form-input" placeholder="Jigar (CYP3A4)"></div>
+    </div>
+    <div class="section-divider" style="margin:16px 0 12px;">Ko'rsatmalar va Kontraindikatsiyalar</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label class="form-label">Ko'rsatmalar (har satr — 1 ta)</label><textarea class="form-ta" style="min-height:100px;" placeholder="Arterial gipertoniya&#10;YuIK&#10;Miokard infarkti profilaktikasi"></textarea></div>
+      <div class="form-group"><label class="form-label">Kontraindikatsiyalar</label><textarea class="form-ta" style="min-height:100px;" placeholder="Bronxial astma&#10;Gemorragik diatez&#10;Homiladorlik"></textarea></div>
+    </div>
+    <div class="section-divider" style="margin:16px 0 12px;">O'zaro ta'sirlar (Interactions)</div>
+    <div id="o-ix-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
+      <div class="adabiyot-item" style="display:grid;grid-template-columns:2fr 80px 3fr auto;gap:8px;align-items:center;">
+        <input class="form-input" placeholder="Dori nomi" value="NSAIDlar">
+        <select class="form-input"><option value="high">🔴 Yuqori</option><option value="med" selected>🟡 O'rta</option><option value="low">🟢 Past</option></select>
+        <input class="form-input" placeholder="Izoh / mexanizm" value="Antiplatelet effektni kuchaytiradi, qon ketish xavfi">
+        <button class="btn-danger" style="padding:6px 8px;" onclick="this.closest('.adabiyot-item').remove()">🗑</button>
+      </div>
+    </div>
+    <button class="btn-ghost" style="width:100%;margin-bottom:16px;" onclick="oIxAddRow()">+ Interaction qo'shish</button>
+    <div class="section-divider" style="margin:16px 0 12px;">Yon ta'sirlar va Monitoring</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label class="form-label">Yon ta'sirlar (har satr — 1 ta)</label><textarea class="form-ta" style="min-height:80px;" placeholder="Qon ketish xavfi&#10;Oshqozon bezovtaligi"></textarea></div>
+      <div class="form-group"><label class="form-label">Monitoring parametrlari</label><textarea class="form-ta" style="min-height:80px;" placeholder="QB nazorati&#10;Buyrak funksiyasi"></textarea></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="btn-primary" onclick="showToast('✅ Dori bazaga qo\'shildi!')">✅ Saqlash va Qo'shish</button>
+      <button class="btn-ghost" onclick="showToast('💾 Qoralama saqlandi')">💾 Qoralama</button>
+    </div>
+  </div>`;
+}
+
+function oDoriEdit(id) {
+  const d = DRUG_DATABASE.find(x => x.id === id);
+  if(!d) return;
+  const g = DRUG_GROUPS[d.group] || {icon:'💊'};
+  const area = document.getElementById('o-dori-form-area');
+  if(!area) return;
+  area.innerHTML = `
+  <div style="padding:20px;">
+    <div style="font-size:15px;font-weight:800;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;">
+      <span>${g.icon} ${d.name} — Tahrirlash</span>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-ghost" onclick="showDrugModal(${id})">👁 Ko'rish</button>
+        <button class="btn-primary" onclick="showToast('✅ Saqlandi!')">💾 Saqlash</button>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">${d.group} · INN: ${d.inn}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label class="form-label">Dori nomi</label><input class="form-input" value="${d.name}"></div>
+      <div class="form-group"><label class="form-label">INN</label><input class="form-input" value="${d.inn}"></div>
+      <div class="form-group"><label class="form-label">Dori guruhi</label><input class="form-input" value="${d.group}"></div>
+      <div class="form-group"><label class="form-label">Doza</label><input class="form-input" value="${d.doza.replace(/"/g,'&quot;')}"></div>
+    </div>
+    <div class="form-group" style="margin-top:10px;"><label class="form-label">Mexanizm</label><textarea class="form-ta" style="min-height:80px;">${d.mechanism}</textarea></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;">
+      <div class="form-group"><label class="form-label">Ko'rsatmalar</label><textarea class="form-ta" style="min-height:90px;">${d.ko_rsatmalar.join('\n')}</textarea></div>
+      <div class="form-group"><label class="form-label">Kontraindikatsiyalar</label><textarea class="form-ta" style="min-height:90px;">${d.kontrand.join('\n')}</textarea></div>
+      <div class="form-group"><label class="form-label">Yon ta'sirlar</label><textarea class="form-ta" style="min-height:90px;">${d.nojo_ra.join('\n')}</textarea></div>
+      <div class="form-group"><label class="form-label">Monitoring</label><textarea class="form-ta" style="min-height:90px;">${d.monitoring.join('\n')}</textarea></div>
+    </div>
+    <div class="section-divider" style="margin:14px 0 10px;">O'zaro ta'sirlar</div>
+    <div style="overflow-x:auto;">
+      <table class="student-table">
+        <thead><tr><th>Dori</th><th>Xavf darajasi</th><th>Izoh</th></tr></thead>
+        <tbody>
+          ${d.interactions.map(ix=>`<tr>
+            <td style="font-weight:700;">${ix.drug}</td>
+            <td><span style="padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800;background:${ix.severity==='high'?'rgba(255,77,106,.12)':ix.severity==='med'?'rgba(255,183,77,.12)':'rgba(34,197,94,.12)'};color:${ix.severity==='high'?'var(--red)':ix.severity==='med'?'var(--yellow)':'var(--accent)'};">${ix.severity==='high'?'🔴 Yuqori':ix.severity==='med'?'🟡 O\'rta':'🟢 Past'}</span></td>
+            <td style="font-size:12px;color:var(--text2);">${ix.desc}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="btn-primary" onclick="showToast('✅ Saqlandi!')">✅ Saqlash</button>
+      <button class="btn-danger" onclick="showToast('🗑 O\'chirildi')">🗑 O'chirish</button>
+    </div>
+  </div>`;
+}
+
+function oIxAddRow() {
+  const list = document.getElementById('o-ix-list');
+  if(!list) return;
+  const div = document.createElement('div');
+  div.className = 'adabiyot-item';
+  div.style.cssText = 'display:grid;grid-template-columns:2fr 80px 3fr auto;gap:8px;align-items:center;';
+  div.innerHTML = '<input class="form-input" placeholder="Dori nomi"><select class="form-input"><option value="high">🔴 Yuqori</option><option value="med">🟡 O\'rta</option><option value="low">🟢 Past</option></select><input class="form-input" placeholder="Izoh / mexanizm"><button class="btn-danger" style="padding:6px 8px;" onclick="this.closest(\'.adabiyot-item\').remove()">🗑</button>';
+  list.appendChild(div);
+}
+
+/* ════════════════════════════════════════════════
+   TEACHER ADABIYOT / KUTUBXONA
+════════════════════════════════════════════════ */
+let oLibLinks = [
+  {title:'ESC/ESH 2023 Gipertoniya qo\'llanmasi', url:'https://www.escardio.org', type:'protokol', cat:'Kardiologiya'},
+  {title:'GINA 2024 Bronxial Astma', url:'https://ginasthma.org', type:'protokol', cat:'Pulmonologiya'},
+  {title:'AHA/ACC 2022 Yurak kasalliklari', url:'https://www.ahajournals.org', type:'protokol', cat:'Kardiologiya'},
+  {title:"O'zbekiston MoH 2023 Milliy protokollar", url:'https://minzdrav.uz', type:'protokol', cat:'Klinik protokol'},
+];
+
+function initOAdabiyot() {
+  oLibRenderLinks();
+}
+
+function oLibRenderLinks() {
+  const el = document.getElementById('olib-link-list');
+  if(!el) return;
+  el.innerHTML = oLibLinks.map((l,i) => `
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;">
+    <span style="font-size:16px;">${l.type==='protokol'?'📋':'📝'}</span>
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.title}</div>
+      <div style="font-size:10px;color:var(--text3);">${l.cat} · <a href="${l.url}" target="_blank" style="color:var(--accent);">Ochish →</a></div>
+    </div>
+    <button class="btn-danger" style="padding:4px 8px;font-size:10px;flex-shrink:0;" onclick="oLibDeleteLink(${i})">🗑</button>
+  </div>`).join('');
+  const cnt = document.getElementById('olib-link-count');
+  if(cnt) cnt.textContent = oLibLinks.length;
+  const tot = document.getElementById('olib-total-count');
+  if(tot) tot.textContent = oLibLinks.length + 3;
+}
+
+function oLibAddLink() {
+  const title = document.getElementById('olib-link-title')?.value?.trim();
+  const url = document.getElementById('olib-link-url')?.value?.trim();
+  const type = document.getElementById('olib-link-type')?.value || 'protokol';
+  const cat = document.getElementById('olib-link-cat')?.value || 'Umumiy';
+  if(!title || !url) { showToast('Sarlavha va URL kiriting!'); return; }
+  oLibLinks.push({title, url, type, cat});
+  oLibRenderLinks();
+  document.getElementById('olib-link-title').value = '';
+  document.getElementById('olib-link-url').value = '';
+  document.getElementById('olib-link-desc').value = '';
+  showToast('Havola qoshildi!');
+}
+
+function oLibDeleteLink(i) {
+  oLibLinks.splice(i, 1);
+  oLibRenderLinks();
+  showToast('Havola ochirildi');
+}
+
+function oDoriPdfDrop(e) {
+  e.preventDefault();
+  const file = e.dataTransfer?.files?.[0];
+  if(file && file.type === 'application/pdf') {
+    document.getElementById('pdf-file-name').textContent = file.name + ' (' + (file.size/1024/1024).toFixed(1) + ' MB)';
+    document.getElementById('pdf-drop-zone').style.borderColor = 'var(--accent)';
+  } else showToast('Faqat PDF fayl!');
+}
+
+function oDoriPdfSelect(input) {
+  const file = input.files?.[0];
+  if(file) {
+    document.getElementById('pdf-file-name').textContent = file.name + ' (' + (file.size/1024/1024).toFixed(1) + ' MB)';
+    document.getElementById('pdf-drop-zone').style.borderColor = 'var(--accent)';
+  }
+}
+
+function oLibAddPdf() {
+  const title = document.getElementById('olib-pdf-title')?.value?.trim();
+  const author = document.getElementById('olib-pdf-author')?.value?.trim() || '—';
+  const cat = document.getElementById('olib-pdf-cat')?.value || 'Umumiy';
+  const fileEl = document.getElementById('olib-pdf-file');
+  const file = fileEl?.files?.[0];
+  if(!title) { showToast('Sarlavha kiriting!'); return; }
+  const tbody = document.getElementById('olib-pdf-tbody');
+  if(tbody) {
+    const rowCount = tbody.querySelectorAll('tr').length + 1;
+    const tr = document.createElement('tr');
+    const size = file ? (file.size/1024/1024).toFixed(1) + ' MB' : '— MB';
+    const today = new Date().toLocaleDateString('uz-UZ');
+    tr.innerHTML = `<td>${rowCount}</td><td><span style="font-weight:700;">${title}</span><div style="font-size:10px;color:var(--text3);">${cat}</div></td><td>${author}</td><td><span class="badge badge-accent" style="font-size:9px;">${cat}</span></td><td>${size}</td><td>${today}</td><td><button class="btn-ghost" style="padding:4px 10px;font-size:10px;" onclick="showToast('PDF ko\\'rilmoqda')">👁 Ko'rish</button><button class="btn-danger" style="padding:4px 8px;font-size:10px;margin-left:4px;" onclick="oLibDeletePdf(this)">🗑</button></td>`;
+    tbody.appendChild(tr);
+    const cnt = document.getElementById('olib-pdf-count');
+    if(cnt) cnt.textContent = rowCount;
+    document.getElementById('olib-pdf-title').value = '';
+    document.getElementById('olib-pdf-author').value = '';
+    document.getElementById('olib-pdf-desc').value = '';
+    document.getElementById('pdf-file-name').textContent = 'Maksimum hajm: 50 MB';
+    document.getElementById('pdf-drop-zone').style.borderColor = 'var(--border2)';
+    showToast('PDF kutubxonaga qoshildi!');
+  }
+}
+
+function oLibDeletePdf(btn) {
+  btn.closest('tr').remove();
+  showToast('PDF ochirildi');
+}
+
+function oLibSearch(val) {
+  const tbody = document.getElementById('olib-pdf-tbody');
+  if(!tbody) return;
+  val = val.toLowerCase();
+  tbody.querySelectorAll('tr').forEach(tr => {
+    tr.style.display = !val || tr.textContent.toLowerCase().includes(val) ? '' : 'none';
+  });
 }
 
 /* INIT */
