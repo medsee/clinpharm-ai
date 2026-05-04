@@ -2,10 +2,15 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
+<!-- FOUC oldini olish: tema CSS yuklanishidan oldin dark class qo'yiladi -->
+<script>try{if(localStorage.getItem('pharmsim_theme')==='dark')document.documentElement.classList.add('pre-dark');}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pharmacotherapy Simulyatori — Klinik Farmakologiya</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* FOUC oldini olish — body dark class qo'yilishidan oldin */
+html.pre-dark body { background: #060e1c !important; }
+html.pre-dark #login-page { background: #060e1c !important; }
 /* ══════════════════════════════════════════════
    SHARED BASE
 ══════════════════════════════════════════════ */
@@ -1359,29 +1364,29 @@ body.dark .login-theme-btn {
   <div class="page" id="o-create">
     <div class="oc-inner">
       <div class="oc-left">
-        <div class="ulp-head"><span class="ulp-title">Mening keyslarim</span><button class="btn-ghost" style="padding:5px 10px;font-size:11px" onclick="showToast('➕ Yangi keys')">+Yangi</button></div>
-        <div class="oc-list">
-          <div class="oc-item active"><div class="oc-it-name">Gipertoniya kasalligi</div><div class="oc-it-meta">❤️ Kardiologiya · 1-bosqichi</div><div class="oc-status">Faol</div></div>
-          <div class="oc-item"><div class="oc-it-name">Bronxial astma</div><div class="oc-it-meta">🫁 Pulmonologiya · Engil</div><div class="oc-status">Faol</div></div>
-          <div class="oc-item"><div class="oc-it-name">Podagra — yangi</div><div class="oc-it-meta">🦴 Revmotologiya</div><div class="oc-status draft">Qoralama</div></div>
+        <div class="ulp-head"><span class="ulp-title">Mening keyslarim</span><button class="btn-ghost" style="padding:5px 10px;font-size:11px" onclick="oCaseNew()">+Yangi</button></div>
+        <div class="oc-list" id="oc-case-list">
+          <div class="oc-item active" data-id="1" onclick="oCaseLoad(this,'Gipertoniya kasalligi','❤️ Kardiologiya · 1-bosqichi','faol')"><div class="oc-it-name">Gipertoniya kasalligi</div><div class="oc-it-meta">❤️ Kardiologiya · 1-bosqichi</div><div class="oc-status">Faol</div></div>
+          <div class="oc-item" data-id="2" onclick="oCaseLoad(this,'Bronxial astma','🫁 Pulmonologiya · Engil','faol')"><div class="oc-it-name">Bronxial astma</div><div class="oc-it-meta">🫁 Pulmonologiya · Engil</div><div class="oc-status">Faol</div></div>
+          <div class="oc-item" data-id="3" onclick="oCaseLoad(this,'Podagra — yangi','🦴 Revmotologiya','qoralama')"><div class="oc-it-name">Podagra — yangi</div><div class="oc-it-meta">🦴 Revmotologiya</div><div class="oc-status draft">Qoralama</div></div>
         </div>
       </div>
-      <div class="oc-main">
-        <div class="oc-form">
-          <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:16px;font-weight:800">Keys tahrirlash</div><div style="display:flex;gap:8px"><button class="btn-ghost" onclick="showToast('👁 Ko\'rish rejimi')">👁 Ko'rish</button><button class="btn-primary" onclick="showToast('✅ Keys saqlandi!')">💾 Saqlash</button></div></div>
+      <div class="oc-main" id="oc-main-area">
+        <div class="oc-form" id="oc-form-content">
+          <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:16px;font-weight:800">Keys tahrirlash</div><div style="display:flex;gap:8px"><button class="btn-ghost" onclick="showToast('👁 Ko\'rish rejimi')">👁 Ko'rish</button><button class="btn-primary" onclick="oCaseSave()">💾 Saqlash</button></div></div>
           <div class="section-divider">Asosiy ma'lumot</div>
-          <div class="ce-grid"><div class="form-group"><label class="form-label">Kasallik nomi</label><input class="form-input" value="Gipertoniya kasalligi"></div><div class="form-group"><label class="form-label">Kategoriya</label><select class="form-input"><option>Kardiologiya</option><option>Pulmonologiya</option><option>Gastroenterologiya</option><option>Revmotologiya</option></select></div><div class="form-group"><label class="form-label">Bosqich / Daraja</label><input class="form-input" value="1-bosqichi"></div><div class="form-group"><label class="form-label">Qiyinlik darajasi</label><select class="form-input"><option>Engil darajali keys</option><option>O'rta og'ir keys</option><option>Og'ir keys</option></select></div></div>
+          <div class="ce-grid"><div class="form-group"><label class="form-label">Kasallik nomi</label><input class="form-input" id="oc-kasallik" value="Gipertoniya kasalligi"></div><div class="form-group"><label class="form-label">Kategoriya</label><select class="form-input" id="oc-kat"><option>Kardiologiya</option><option>Pulmonologiya</option><option>Gastroenterologiya</option><option>Revmotologiya</option><option>Nefrologiya</option><option>Gepatologiya</option></select></div><div class="form-group"><label class="form-label">Bosqich / Daraja</label><input class="form-input" id="oc-bosqich" value="1-bosqichi"></div><div class="form-group"><label class="form-label">Qiyinlik darajasi</label><select class="form-input" id="oc-qiyinlik"><option>Engil darajali keys</option><option>O'rta og'ir keys</option><option>Og'ir keys</option></select></div></div>
           <div class="section-divider">Bemor ma'lumotlari</div>
-          <div class="ce-grid"><div class="form-group"><label class="form-label">Bemor ismi</label><input class="form-input" value="Maksim"></div><div class="form-group"><label class="form-label">Yoshi / Jinsi</label><input class="form-input" value="52 yosh / Erkak"></div></div>
-          <div class="form-group"><label class="form-label">Asosiy tashxis</label><input class="form-input" value="YuIK. Stabil zo'riqish stenokardiyasi. FS II."></div>
+          <div class="ce-grid"><div class="form-group"><label class="form-label">Bemor ismi</label><input class="form-input" id="oc-fio" value="Maksim"></div><div class="form-group"><label class="form-label">Yoshi / Jinsi</label><input class="form-input" id="oc-yosh" value="52 yosh / Erkak"></div></div>
+          <div class="form-group"><label class="form-label">Asosiy tashxis</label><input class="form-input" id="oc-tashxis" value="YuIK. Stabil zo'riqish stenokardiyasi. FS II."></div>
           <div class="section-divider">Klinik ma'lumotlar</div>
-          <div class="form-group"><label class="form-label">Shikoyatlar</label><textarea class="form-ta">Yurak sohasida og'riq, zo'riqishda hansirash, bosh og'rig'i.</textarea></div>
-          <div class="form-group"><label class="form-label">Ob'ektiv belgilari</label><textarea class="form-ta">QB: 155/90 mmHg. YuQS: 78/daqiqa. Yurak tonlari bo'g'iqlashgan.</textarea></div>
-          <div class="form-group"><label class="form-label">Laborator tekshiruv natijalari</label><textarea class="form-ta" style="min-height:70px">Hb: 138 g/l. Leykositlar: 7.2×10⁹/l. Xolesterin: 6.2 mmol/l. LDL: 4.1 mmol/l. Glyukoza: 5.1 mmol/l. Kreatinin: 88 mkmol/l.</textarea></div>
+          <div class="form-group"><label class="form-label">Shikoyatlar</label><textarea class="form-ta" id="oc-shikoyat">Yurak sohasida og'riq, zo'riqishda hansirash, bosh og'rig'i.</textarea></div>
+          <div class="form-group"><label class="form-label">Ob'ektiv belgilari</label><textarea class="form-ta" id="oc-obyektiv">QB: 155/90 mmHg. YuQS: 78/daqiqa. Yurak tonlari bo'g'iqlashgan.</textarea></div>
+          <div class="form-group"><label class="form-label">Laborator tekshiruv natijalari</label><textarea class="form-ta" id="oc-lab" style="min-height:70px">Hb: 138 g/l. Leykositlar: 7.2×10⁹/l. Xolesterin: 6.2 mmol/l. LDL: 4.1 mmol/l. Glyukoza: 5.1 mmol/l. Kreatinin: 88 mkmol/l.</textarea></div>
           <div class="section-divider">Instrumental tekshiruv natijalari</div>
-          <div class="form-group"><label class="form-label">EKG natijalari</label><textarea class="form-ta" style="min-height:60px" placeholder="EKG tavsifi...">Sinus ritmi, YuQS 78/daqiqa. Chap qorincha gipertrofiyasi. ST depressiyasi V4-V6 (1-1.5 mm).</textarea></div>
-          <div class="form-group"><label class="form-label">ExoKG / UZI natijalari</label><textarea class="form-ta" style="min-height:60px" placeholder="ExoKG tavsifi...">EF 52%. Diastol disfunktsiya I daraja. Chap qorincha orqa devori gipertrofiyasi (12.4 mm).</textarea></div>
-          <div class="form-group"><label class="form-label">Rentgen va boshqa instrumental</label><textarea class="form-ta" style="min-height:60px" placeholder="Boshqa instrumental natijalar...">Rentgen: Yurak soyasi kengaygan. O'pka tomiri kuchaygan.</textarea></div>
+          <div class="form-group"><label class="form-label">EKG natijalari</label><textarea class="form-ta" id="oc-ekg" style="min-height:60px">Sinus ritmi, YuQS 78/daqiqa. Chap qorincha gipertrofiyasi. ST depressiyasi V4-V6 (1-1.5 mm).</textarea></div>
+          <div class="form-group"><label class="form-label">ExoKG / UZI natijalari</label><textarea class="form-ta" id="oc-exokg" style="min-height:60px">EF 52%. Diastol disfunktsiya I daraja. Chap qorincha orqa devori gipertrofiyasi (12.4 mm).</textarea></div>
+          <div class="form-group"><label class="form-label">Rentgen va boshqa instrumental</label><textarea class="form-ta" id="oc-rentgen" style="min-height:60px">Rentgen: Yurak soyasi kengaygan. O'pka tomiri kuchaygan.</textarea></div>
           <div class="section-divider">Adabiyot qo'shish</div>
           <div id="adabiyot-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px">
             <div class="adabiyot-item" style="display:flex;gap:8px;align-items:center">
@@ -1397,8 +1402,8 @@ body.dark .login-theme-btn {
           </div>
           <button class="btn-ghost" style="width:100%;margin-bottom:10px" onclick="addAdabiyotRow()">➕ Adabiyot qo'shish</button>
           <div class="section-divider">AI baholash sozlamalari</div>
-          <div class="ce-grid"><div class="form-group"><label class="form-label">To'g'ri javob (asosiy dorilar)</label><textarea class="form-ta" style="min-height:70px">Aspirin 75mg + Bisoprolol 5mg + Ramipril 5mg + Atorvastatin 40mg</textarea></div></div>
-          <div class="save-bar"><button class="btn-primary" onclick="showToast('✅ Keys saqlandi va faol!')">✅ Saqlash va nashr etish</button><button class="btn-ghost" onclick="showToast('💾 Qoralama saqlandi')">💾 Qoralama sifatida saqlash</button><button class="btn-danger" onclick="showToast('🗑 O\'chirildi')">🗑 O'chirish</button></div>
+          <div class="ce-grid"><div class="form-group"><label class="form-label">To'g'ri javob (asosiy dorilar)</label><textarea class="form-ta" id="oc-togri-javob" style="min-height:70px">Aspirin 75mg + Bisoprolol 5mg + Ramipril 5mg + Atorvastatin 40mg</textarea></div></div>
+          <div class="save-bar"><button class="btn-primary" onclick="oCaseSave('faol')">✅ Saqlash va nashr etish</button><button class="btn-ghost" onclick="oCaseSave('qoralama')">💾 Qoralama sifatida saqlash</button><button class="btn-danger" onclick="oCaseDelete()">🗑 O'chirish</button></div>
         </div>
       </div>
     </div>
@@ -1877,7 +1882,8 @@ function doLogin() {
 function doLogout() {
   document.getElementById('login-page').style.display = 'flex';
   document.getElementById('app').style.display = 'none';
-  document.body.className = '';
+  // Faqat rol classlarini olib tashlaymiz — 'dark' class saqlanib qoladi
+  document.body.classList.remove('talaba', 'oqituvchi', 'admin');
   tCaseLoaded = false; currentPage = '';
 }
 
@@ -1897,10 +1903,8 @@ function goPage(pg) {
   if(el) { el.classList.add('active'); el.classList.add('fade-in'); }
   const nl = document.getElementById('nl-' + pg);
   if(nl) nl.classList.add('active');
+  // Faqat mavjud sahifalar uchun init
   if(pg === 't-dorilar') setTimeout(initDorilarPage, 50);
-  if(pg === 't-analytics') setTimeout(initAnalyticsPage, 50);
-  if(pg === 't-ai-tutor') setTimeout(initAITutorPage, 50);
-  if(pg === 'o-ai-help') { /* already rendered statically */ }
   if(pg === 'o-dori-baza') setTimeout(initODoriBaza, 50);
   if(pg === 'o-adabiyot') setTimeout(initOAdabiyot, 50);
 }
@@ -1957,6 +1961,8 @@ function tSelectCase(disId, subId) {
   tCaseLoaded = true;
   tPct = 0; tCurSection = 'pasport'; tMode = 'bemor';
   rxDrugs = []; rxDrugCounter = 0;
+  // Baholash uchun case ID ni saqlaymiz
+  window._tCurCaseId = disId;
 
   let disName = '', subName = '';
   CATEGORIES.forEach(cat => cat.diseases.forEach(d => {
@@ -2213,19 +2219,8 @@ function toggleScore(id, pts) {
 }
 
 function updateTotalScore() {
-  const scores = {
-    'sc-1': 25, 'sc-2': 20, 'sc-3': 25, 'sc-4': 20, 'sc-5': 10
-  };
-  let total = 0;
-  Object.entries(scoreState).forEach(([id, checked]) => {
-    if(checked && scores[id]) total += scores[id];
-  });
-  const el = document.getElementById('rx-total-score');
-  if(el) {
-    el.textContent = total + ' / 100';
-    el.style.color = total >= 80 ? 'var(--accent)' : total >= 60 ? 'var(--yellow)' : 'var(--red)';
-  }
-  return total;
+  // Baholash mezonlari olib tashlangan — CASE_SCORING orqali baholash tSubmitRx da amalga oshiriladi
+  return 0;
 }
 
 /* ════════════════════════════════════════════════
@@ -2235,17 +2230,22 @@ function toggleRxPrint() {
   const area = document.getElementById('rx-print-area');
   if(!area) return;
 
-  // Update print data from fields
-  const fio = document.getElementById('dv-fio');
-  const yosh = document.getElementById('dv-yosh');
-  const jins = document.getElementById('dv-jins');
-  const tashxis = document.getElementById('dv-tashxis');
-  const monitoring = document.getElementById('dv-monitoring');
+  // DV Karta olib tashlangan — case section dan bemor ma'lumotlarini olamiz
+  const pasportRows = CASE_SECTIONS?.pasport?.rows || [];
+  const getFio = () => { const r = pasportRows.find(x => x[0] === 'F.I.Sh'); return r ? r[1] : 'Bemor'; };
+  const getYosh = () => { const r = pasportRows.find(x => x[0] === 'Yoshi'); return r ? r[1] : '—'; };
+  const getJins = () => { const r = pasportRows.find(x => x[0] === 'Jinsi'); return r ? r[1] : '—'; };
+  const getTashxis = () => { const r = pasportRows.find(x => x[0] === 'Asosiy tashxis'); return r ? r[1] : '—'; };
 
-  if(fio) document.getElementById('rx-print-fio').textContent = fio.value;
-  if(yosh && jins) document.getElementById('rx-print-yosh').textContent = yosh.value + ', ' + (jins.value === 'erkak' ? 'Erkak' : 'Ayol');
-  if(tashxis) document.getElementById('rx-print-tashxis').textContent = tashxis.value;
-  if(monitoring) document.getElementById('rx-print-monitor').textContent = monitoring.value;
+  const pFio = document.getElementById('rx-print-fio');
+  const pYosh = document.getElementById('rx-print-yosh');
+  const pTashxis = document.getElementById('rx-print-tashxis');
+  const pMonitor = document.getElementById('rx-print-monitor');
+
+  if(pFio) pFio.textContent = getFio();
+  if(pYosh) pYosh.textContent = getYosh() + ', ' + getJins();
+  if(pTashxis) pTashxis.textContent = getTashxis();
+  if(pMonitor) pMonitor.textContent = 'QB nazorati, LDL nazorati, Kreatinin tekshiruvi.';
 
   // Build drug list for print
   const tbody = document.getElementById('rx-tbody');
@@ -2266,7 +2266,10 @@ function toggleRxPrint() {
         const izoh = inputs[5]?.value || '';
         const div = document.createElement('div');
         div.className = 'rx-print-drug';
-        div.innerHTML = `<span class="rx-print-drug-num">${i+1}.</span><span class="rx-print-drug-name">${name} — ${shakl}</span><span class="rx-print-drug-dose">${doza}, ${tartibi}, ${muddat}${izoh ? ' (' + izoh + ')' : ''}</span>`;
+        const span1 = document.createElement('span'); span1.className = 'rx-print-drug-num'; span1.textContent = (i+1) + '.';
+        const span2 = document.createElement('span'); span2.className = 'rx-print-drug-name'; span2.textContent = name + ' — ' + shakl;
+        const span3 = document.createElement('span'); span3.className = 'rx-print-drug-dose'; span3.textContent = doza + ', ' + tartibi + ', ' + muddat + (izoh ? ' (' + izoh + ')' : '');
+        div.appendChild(span1); div.appendChild(span2); div.appendChild(span3);
         printDrugs.appendChild(div);
       });
     }
@@ -2278,40 +2281,121 @@ function toggleRxPrint() {
 }
 
 /* ════════════════════════════════════════════════
-   SUBMIT RX
+   KEYS BAHOLASH — har bir keys uchun alohida mezonlar
 ════════════════════════════════════════════════ */
+const CASE_SCORING = {
+  gipertoniya: {
+    groups: [
+      { name:'ACE ingibitori / ARB', keywords:['ramipril','enalapril','lisinopril','perindopril','losartan','valsartan','telmisartan','candesartan'], ball:30 },
+      { name:'Diuretik', keywords:['indapamid','hydrochlorothiazide','furosemid','torasemid','spironolakton'], ball:25 },
+      { name:'Kalsiy antagonist', keywords:['amlodipine','nifedipin','diltiazem','verapamil'], ball:25 },
+      { name:'Beta-blokator', keywords:['bisoprolol','metoprolol','atenolol','carvedilol','nebivolol'], ball:10 },
+      { name:'Doza ko\'rsatilgan', type:'dose_check', ball:10 },
+    ]
+  },
+  yurak_ishemik: {
+    groups: [
+      { name:'Antiagregant (Aspirin/Klopidogrel)', keywords:['aspirin','klopidogrel','clopidogrel','tiklopidine'], ball:25 },
+      { name:'Beta-blokator', keywords:['bisoprolol','metoprolol','atenolol','carvedilol','nebivolol'], ball:20 },
+      { name:'RAAS blokatori (ACE/ARB)', keywords:['ramipril','enalapril','lisinopril','perindopril','losartan','valsartan'], ball:25 },
+      { name:'Statin (LDL)', keywords:['atorvastatin','rosuvastatin','simvastatin','pravastatin'], ball:20 },
+      { name:'Doza ko\'rsatilgan', type:'dose_check', ball:10 },
+    ]
+  },
+  bronxial: {
+    groups: [
+      { name:'SABA (qisqa ta\'sirli beta-2)', keywords:['salbutamol','ventolin','fenoterol','terbutalin'], ball:25 },
+      { name:'Ingalyatsion kortikosteroid', keywords:['budesonid','beclometazon','flutikazon','flixotide'], ball:30 },
+      { name:'LABA (uzoq ta\'sirli beta-2)', keywords:['formoterol','salmeterol','indakaterol'], ball:20 },
+      { name:'Antileykotrien', keywords:['montelukast','zafirlukast'], ball:15 },
+      { name:'Doza ko\'rsatilgan', type:'dose_check', ball:10 },
+    ]
+  },
+  pnevmoniya: {
+    groups: [
+      { name:'Beta-laktam antibiotik', keywords:['amoksisillin','amoxicillin','amoxiclav','ampicillin','cefazolin','ceftriakson','cefuroxim'], ball:35 },
+      { name:'Makrolid / Floroquinolon', keywords:['azitromicin','klaritromicin','levofloksasin','moxifloksasin'], ball:30 },
+      { name:'Mukoaktiv dori', keywords:['ambroxol','acetylcysteine','bromheksin','karbocistein'], ball:15 },
+      { name:'Antipyretik (isitma)', keywords:['paracetamol','ibuprofen','nimesulid'], ball:10 },
+      { name:'Doza ko\'rsatilgan', type:'dose_check', ball:10 },
+    ]
+  },
+  oshqozon: {
+    groups: [
+      { name:'PPI (Proton nasos ingibitori)', keywords:['omeprazol','pantoprazol','lansoprazol','rabeprazol','ezomeprazol'], ball:30 },
+      { name:'H.pylori eradikatsiya (antibiotik)', keywords:['klaritromicin','amoksisillin','metronidazol','tinidazol','tetracyclin'], ball:35 },
+      { name:'Bismut preparati', keywords:['bismut','de-nol','vismut'], ball:15 },
+      { name:'Antasid / Gastroprotector', keywords:['almagel','fosfalugel','sukralfat'], ball:10 },
+      { name:'Doza ko\'rsatilgan', type:'dose_check', ball:10 },
+    ]
+  },
+  revmatoid: {
+    groups: [
+      { name:'DMARD (Metotreksat)', keywords:['metotreksat','methotrexate'], ball:35 },
+      { name:'NSAID (Og\'riq qoldirish)', keywords:['diklofenak','ibuprofen','naproxen','meloxicam','nimesulid'], ball:20 },
+      { name:'Kortikosteroid (qisqa kurs)', keywords:['prednizolon','prednisolone','deksametazon','methylprednisolone'], ball:25 },
+      { name:'Folik kislota (Mtx bilan)', keywords:['folik','folic'], ball:10 },
+      { name:'Doza ko\'rsatilgan', type:'dose_check', ball:10 },
+    ]
+  },
+  podagra: {
+    groups: [
+      { name:'Kolxitsin / NSAID (o\'tkir)', keywords:['kolxitsin','colchicine','indometasin','indomethacin','diklofenak','naproxen'], ball:30 },
+      { name:'Allopurinol (urikosupressiv)', keywords:['allopurinol','febuksokat','febuxostat'], ball:35 },
+      { name:'Kortikosteroid', keywords:['prednizolon','prednisolone','deksametazon'], ball:15 },
+      { name:'Ko\'p suyuqlik / Diet maslahat', keywords:['bikarbonat','soda'], ball:10 },
+      { name:'Doza ko\'rsatilgan', type:'dose_check', ball:10 },
+    ]
+  },
+  sbk: {
+    groups: [
+      { name:'RAAS blokatori (nefroproteksiya)', keywords:['ramipril','enalapril','lisinopril','losartan','valsartan','olmesartan'], ball:35 },
+      { name:'Antianemik (Erytropoetin/Fe)', keywords:['eritropoetin','erythropoietin','epoetin','darbepoetin','temir','ferrum','iron'], ball:25 },
+      { name:'Fosfat bog\'lovchi', keywords:['sevelamer','kaltsiy karbonat','calcium carbonate','lanthanum'], ball:20 },
+      { name:'Aktiv D vitamini', keywords:['kalsitriol','calcitriol','alfacalcidol'], ball:10 },
+      { name:'Doza ko\'rsatilgan', type:'dose_check', ball:10 },
+    ]
+  },
+};
+
+function getCaseScoring() {
+  // tCurCase — tanlangan case ID dan kasallik turini aniqlaymiz
+  const caseId = window._tCurCaseId || '';
+  for(const key of Object.keys(CASE_SCORING)) {
+    if(caseId.includes(key) || caseId.toLowerCase().includes(key.toLowerCase())) return CASE_SCORING[key];
+  }
+  // Default — YuIK (agar aniqlash imkoni bo'lmasa)
+  return CASE_SCORING['yurak_ishemik'];
+}
+
 function tSubmitRx() {
   const tbody = document.getElementById('rx-tbody');
   const hasRealRows = tbody && tbody.querySelectorAll('tr[id^="rx-row-"]').length > 0;
   if(!hasRealRows) { showToast('⚠️ Kamida bitta dori kiriting!'); return; }
 
-  const score = updateTotalScore();
-  const checked = Object.values(scoreState).filter(Boolean).length;
+  const rows = Array.from(tbody.querySelectorAll('tr[id^="rx-row-"]'));
+  const enteredDrugs = rows.map(row => {
+    const inputs = row.querySelectorAll('input');
+    return { name: (inputs[0]?.value || '').toLowerCase(), dose: (inputs[2]?.value || '').trim() };
+  }).filter(d => d.name.length > 0);
 
-  // Auto-check based on demo if score is 0
-  let finalScore = score;
-  if(finalScore === 0) {
-    // Auto-evaluate based on drug names
-    let autoScore = 0;
-    const rows = tbody.querySelectorAll('tr[id^="rx-row-"]');
-    rows.forEach(row => {
-      const nameInput = row.querySelector('input');
-      const name = (nameInput?.value || '').toLowerCase();
-      if(name.includes('aspirin') || name.includes('klopidogrel')) autoScore += 25;
-      else if(name.includes('bisoprolol') || name.includes('metoprolol') || name.includes('atenolol') || name.includes('carvedilol')) autoScore += 20;
-      else if(name.includes('ramipril') || name.includes('enalapril') || name.includes('lisinopril') || name.includes('perindopril') || name.includes('losartan') || name.includes('valsartan')) autoScore += 25;
-      else if(name.includes('atorvastatin') || name.includes('rosuvastatin') || name.includes('simvastatin')) autoScore += 20;
-    });
-    // Dose check — if any dose field is filled
-    let dozeCount = 0;
-    rows.forEach(row => {
-      const inputs = row.querySelectorAll('input');
-      if(inputs[2]?.value?.trim()) dozeCount++;
-    });
-    if(dozeCount === rows.length && rows.length > 0) autoScore += 10;
-    finalScore = Math.min(autoScore, 100);
-  }
+  const scoring = getCaseScoring();
+  let finalScore = 0;
+  const resultItems = [];
 
+  scoring.groups.forEach(grp => {
+    if(grp.type === 'dose_check') {
+      const allHaveDose = enteredDrugs.length > 0 && enteredDrugs.every(d => d.dose.length > 0);
+      if(allHaveDose) { finalScore += grp.ball; resultItems.push({ok:true, text:'Doza va muddat ko\'rsatilgan', ball:grp.ball}); }
+      else { resultItems.push({ok:false, text:'Ba\'zi dori dozalari ko\'rsatilmagan', ball:grp.ball}); }
+      return;
+    }
+    const found = enteredDrugs.find(d => grp.keywords.some(kw => d.name.includes(kw)));
+    if(found) { finalScore += grp.ball; resultItems.push({ok:true, text:grp.name + ' ✓', ball:grp.ball}); }
+    else { resultItems.push({ok:false, text:grp.name + ' — kiritilmagan', ball:grp.ball}); }
+  });
+
+  finalScore = Math.min(finalScore, 100);
   const baho = finalScore >= 86 ? '5' : finalScore >= 71 ? '4' : finalScore >= 56 ? '3' : '2';
   const bahoEmoji = finalScore >= 86 ? '🥇' : finalScore >= 71 ? '🥈' : finalScore >= 56 ? '🥉' : '❌';
 
@@ -2320,59 +2404,76 @@ function tSubmitRx() {
   tUpdateProg(100);
 
   const bahCard = document.getElementById('t-bah-card');
-  if(bahCard) bahCard.innerHTML = `<div class="bah-icon">${bahoEmoji}</div><div class="bah-title" style="color:var(--accent)">${finalScore} / 100 ball — Baho: ${baho}</div><div class="bah-desc" style="color:var(--text2)">${finalScore>=80 ? 'Yaxshi natija! Farmakoterapiya to\'g\'ri tanlangan.' : finalScore>=60 ? 'Qoniqarli. Doza va kombinatsiyani qayta ko\'rib chiqing.' : 'Qoniqarsiz. Asosiy dorilarni to\'liq belgilang.'}</div>`;
-  const aiBox = document.getElementById('t-ai-box');
-  if(aiBox) aiBox.innerHTML = `<div class="ai-ic">${finalScore>=80?'✅':'⚠️'}</div><p style="color:var(--text2)">${finalScore>=80 ? 'Aspirin + Beta-blokator + RAAS + Statin to\'g\'ri. Doza va muddat aniq ko\'rsatilgan.' : 'Muhim dorilardan biri yetishmaydi. Antiagregant, beta-blokator, RAAS, statin kombinatsiyasini tekshiring.'}</p>`;
+  if(bahCard) {
+    bahCard.innerHTML = '';
+    const icon = document.createElement('div'); icon.className = 'bah-icon'; icon.textContent = bahoEmoji;
+    const title = document.createElement('div'); title.className = 'bah-title'; title.style.color = 'var(--accent)'; title.textContent = finalScore + ' / 100 ball — Baho: ' + baho;
+    const desc = document.createElement('div'); desc.className = 'bah-desc'; desc.style.color = 'var(--text2)';
+    desc.textContent = finalScore >= 80 ? 'Yaxshi natija! Farmakoterapiya to\'g\'ri tanlangan.' : finalScore >= 60 ? 'Qoniqarli. Kombinatsiyani qayta ko\'rib chiqing.' : 'Qoniqarsiz. Asosiy dori guruhlarini to\'liq belgilang.';
+    bahCard.append(icon, title, desc);
+  }
 
-  // Show AI result in davo section
+  const aiBox = document.getElementById('t-ai-box');
+  if(aiBox) {
+    aiBox.innerHTML = '';
+    const ic = document.createElement('div'); ic.className = 'ai-ic'; ic.textContent = finalScore >= 80 ? '✅' : '⚠️';
+    const p = document.createElement('p'); p.style.color = 'var(--text2)';
+    p.textContent = finalScore >= 80 ? 'Farmakoterapiya to\'g\'ri tanlangan. Asosiy dori guruhlari to\'liq kiritilgan.' : 'Muhim dorilardan ba\'zilari yetishmaydi. Quyida batafsil ko\'rsatilgan.';
+    aiBox.append(ic, p);
+  }
+
   const aiResultBox = document.getElementById('rx-ai-result');
   const aiResultBody = document.getElementById('rx-ai-result-body');
   if(aiResultBox && aiResultBody) {
     aiResultBox.style.display = 'block';
-    aiResultBody.innerHTML = `
-      <div style="padding:16px">
-        <div class="ai-result-box">
-          <div class="ai-result-score">
-            <div><div class="ai-score-big">${finalScore}</div><div class="ai-score-label">Jami ball (100 dan)</div></div>
-            <div style="text-align:center"><div class="ai-baho" style="color:${finalScore>=86?'var(--accent)':finalScore>=71?'var(--yellow)':'var(--red)'}">${bahoEmoji} ${baho}</div><div style="font-size:11px;color:var(--text3)">Baho</div></div>
-          </div>
-          <p class="ai-comment">${finalScore>=80 ? '✅ Farmakoterapiya asosan to\'g\'ri tanlangan. Asosiy dorilar: antiagregant, beta-blokator, RAAS blokatori va statin to\'liq kiritilgan.' : finalScore>=60 ? '⚠️ Qoniqarli natija. Kombinatsiya to\'liq emas. Quyida xatolar ko\'rsatilgan.' : '❌ Qoniqarsiz natija. YuIK bilan gipertoniyada standart 4 ta asosiy dori guruhini belgilash shart.'}</p>
-          <div class="ai-mistakes">
-            ${finalScore>=25 ? '<div class="ai-ok-item"><span class="ai-item-icon">✅</span><span class="ai-item-text">Antiagregant terapiya (Aspirin/Klopidogrel) — to\'g\'ri</span></div>' : '<div class="ai-mistake-item"><span class="ai-item-icon">❌</span><span class="ai-item-text">Antiagregant terapiya (Aspirin 75-100mg/kun) yo\'q — YuIK da majburiy!</span></div>'}
-            ${finalScore>=45 ? '<div class="ai-ok-item"><span class="ai-item-icon">✅</span><span class="ai-item-text">Beta-blokator (Bisoprolol/Metoprolol) — to\'g\'ri</span></div>' : '<div class="ai-mistake-item"><span class="ai-item-icon">❌</span><span class="ai-item-text">Beta-blokator ko\'rsatilmagan — YuIK da YuQS nazorat uchun zarur</span></div>'}
-            ${finalScore>=70 ? '<div class="ai-ok-item"><span class="ai-item-icon">✅</span><span class="ai-item-text">RAAS blokatori (Ramipril/Lisinopril) — to\'g\'ri</span></div>' : '<div class="ai-mistake-item"><span class="ai-item-icon">❌</span><span class="ai-item-text">ACE ingibitori/ARB ko\'rsatilmagan — QB nazorat va kardioprotektor uchun zarur</span></div>'}
-            ${finalScore>=80 ? '<div class="ai-ok-item"><span class="ai-item-icon">✅</span><span class="ai-item-text">Statin terapiyasi (Atorvastatin 40-80mg) — to\'g\'ri</span></div>' : '<div class="ai-mistake-item"><span class="ai-item-icon">❌</span><span class="ai-item-text">Statin ko\'rsatilmagan — LDL 4.1 mmol/l bo\'lganda maqsad <1.8 mmol/l ga erishish zarur</span></div>'}
-            ${finalScore>=90 ? '<div class="ai-ok-item"><span class="ai-item-icon">✅</span><span class="ai-item-text">Doza va muddat to\'g\'ri ko\'rsatilgan</span></div>' : '<div class="ai-mistake-item"><span class="ai-item-icon">⚠️</span><span class="ai-item-text">Ba\'zi dozalar aniqroq ko\'rsatilishi mumkin (Atorvastatin 40→80mg LDL >4.0 da)</span></div>'}
-          </div>
-        </div>
-      </div>`;
+    const wrapper = document.createElement('div'); wrapper.style.padding = '16px';
+    const box = document.createElement('div'); box.className = 'ai-result-box';
+    const scoreRow = document.createElement('div'); scoreRow.className = 'ai-result-score';
+    const leftDiv = document.createElement('div');
+    const bigScore = document.createElement('div'); bigScore.className = 'ai-score-big'; bigScore.textContent = finalScore;
+    const scoreLabel = document.createElement('div'); scoreLabel.className = 'ai-score-label'; scoreLabel.textContent = 'Jami ball (100 dan)';
+    leftDiv.append(bigScore, scoreLabel);
+    const rightDiv = document.createElement('div'); rightDiv.style.textAlign = 'center';
+    const bahoEl = document.createElement('div'); bahoEl.className = 'ai-baho';
+    bahoEl.style.color = finalScore >= 86 ? 'var(--accent)' : finalScore >= 71 ? 'var(--yellow)' : 'var(--red)';
+    bahoEl.textContent = bahoEmoji + ' ' + baho;
+    const bahoSub = document.createElement('div'); bahoSub.style.cssText = 'font-size:11px;color:var(--text3)'; bahoSub.textContent = 'Baho';
+    rightDiv.append(bahoEl, bahoSub);
+    scoreRow.append(leftDiv, rightDiv);
+
+    const comment = document.createElement('p'); comment.className = 'ai-comment';
+    comment.textContent = finalScore >= 80 ? '✅ Farmakoterapiya asosan to\'g\'ri tanlangan.' : finalScore >= 60 ? '⚠️ Qoniqarli natija. Kombinatsiya to\'liq emas.' : '❌ Qoniqarsiz natija. Asosiy dori guruhlarini belgilang.';
+
+    const mistakes = document.createElement('div'); mistakes.className = 'ai-mistakes';
+    resultItems.forEach(item => {
+      const div = document.createElement('div'); div.className = item.ok ? 'ai-ok-item' : 'ai-mistake-item';
+      const ic2 = document.createElement('span'); ic2.className = 'ai-item-icon'; ic2.textContent = item.ok ? '✅' : '❌';
+      const txt = document.createElement('span'); txt.className = 'ai-item-text'; txt.textContent = item.text + ' (' + item.ball + ' ball)';
+      div.append(ic2, txt); mistakes.appendChild(div);
+    });
+
+    box.append(scoreRow, comment, mistakes);
+    wrapper.appendChild(box);
+    aiResultBody.innerHTML = '';
+    aiResultBody.appendChild(wrapper);
     aiResultBox.scrollIntoView({behavior:'smooth', block:'start'});
   }
 
-  showToast(`🎉 Ball: ${finalScore}/100 — Baho: ${baho} — Muvaffaqiyatli!`);
+  showToast('🎉 Ball: ' + finalScore + '/100 — Baho: ' + baho);
 }
 
 /* ════════════════════════════════════════════════
    TALABA — ACTIONS
 ════════════════════════════════════════════════ */
 function tClear() {
-  document.querySelectorAll('.ta, .dv-input, .dv-ta').forEach(t => {
-    if(t.tagName === 'INPUT' && (t.type === 'date' || t.id === 'dv-fio' || t.id === 'dv-tashxis')) return;
-    if(t.tagName === 'TEXTAREA' && (t.id === 'dv-monitoring' || t.id === 'dv-tavsiya')) return;
-    if(t.tagName === 'INPUT' && t.closest('#rx-main-table')) { t.value = ''; return; }
-    if(t.tagName === 'TEXTAREA') t.value = '';
-  });
-  // Clear drug table
+  // Dori jadvalini tozalaymiz
   const tbody = document.getElementById('rx-tbody');
   if(tbody) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text3);font-size:12px">Dori qo\'shish uchun «+ Dori qo\'shish» tugmasini bosing</td></tr>'; }
-  // Clear scores
+  // scoreState — baholash mezonlari olib tashlangan, faqat state tozalaymiz (DOM ga tegmaymiz)
   scoreState = {};
-  ['sc-1','sc-2','sc-3','sc-4','sc-5'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) { el.classList.remove('checked'); el.textContent = '○'; }
-  });
-  const ts = document.getElementById('rx-total-score');
-  if(ts) ts.textContent = '0 / 100';
+  rxDrugs = [];
+  rxDrugCounter = 0;
+  // AI natija yashiramiz
   const aiResult = document.getElementById('rx-ai-result');
   if(aiResult) aiResult.style.display = 'none';
   tUpdateProg(0);
@@ -3581,7 +3682,6 @@ async function sendAIMessage() {
 
   try {
     const systemPrompt = TOPIC_PROMPTS[aiTutorTopic] || TOPIC_PROMPTS.general;
-
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -3592,27 +3692,28 @@ async function sendAIMessage() {
         messages: aiTutorMessages.slice(-10),
       })
     });
-
+    if(!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData?.error?.message || 'Server xatosi: ' + response.status);
+    }
     const data = await response.json();
     removeAITyping();
-
     if(data.content && data.content[0]) {
       const reply = data.content[0].text || 'Javob olishda xato yuz berdi.';
       appendAIMessage('bot', reply);
       aiTutorMessages.push({role:'assistant', content: reply});
-    } else if(data.error) {
-      appendAIMessage('bot', '⚠️ Xato: ' + (data.error.message || 'API xato'));
+    } else {
+      appendAIMessage('bot', '⚠️ Javob formati noto\'g\'ri. Qayta urinib ko\'ring.');
     }
   } catch(err) {
     removeAITyping();
-    appendAIMessage('bot', '⚠️ Tarmoq xatosi. Internet aloqasini tekshiring va qayta urinib ko\'ring.');
-    console.error('AI API error:', err);
+    appendAIMessage('bot', '⚠️ ' + (err.message || 'Tarmoq xatosi. Internet aloqasini tekshiring.'));
+  } finally {
+    aiTutorLoading = false;
+    if(sendBtn) sendBtn.disabled = false;
+    const inp = document.getElementById('ai-input-box');
+    if(inp) inp.focus();
   }
-
-  aiTutorLoading = false;
-  if(sendBtn) sendBtn.disabled = false;
-  const inp = document.getElementById('ai-input-box');
-  if(inp) inp.focus();
 }
 
 
@@ -3699,23 +3800,122 @@ async function sendOAIMessage() {
         messages: oAIMessages.slice(-10),
       })
     });
+    if(!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData?.error?.message || 'Server xatosi: ' + response.status);
+    }
     const data = await response.json();
     removeOAITyping();
     if(data.content && data.content[0]) {
       const reply = data.content[0].text || 'Javob olishda xato.';
       appendOAIMessage('bot', reply);
       oAIMessages.push({role:'assistant', content: reply});
-    } else if(data.error) {
-      appendOAIMessage('bot', 'Xato: ' + (data.error.message || 'API xato'));
+    } else {
+      appendOAIMessage('bot', '⚠️ Javob formati noto\'g\'ri. Qayta urinib ko\'ring.');
     }
   } catch(err) {
     removeOAITyping();
-    appendOAIMessage('bot', 'Tarmoq xatosi yuz berdi.');
+    appendOAIMessage('bot', '⚠️ ' + (err.message || 'Tarmoq xatosi yuz berdi.'));
+  } finally {
+    oAILoading = false;
+    if(sendBtn) sendBtn.disabled = false;
+    const inp2 = document.getElementById('o-ai-input-box');
+    if(inp2) inp2.focus();
   }
-  oAILoading = false;
-  if(sendBtn) sendBtn.disabled = false;
-  const inp2 = document.getElementById('o-ai-input-box');
-  if(inp2) inp2.focus();
+}
+
+/* ════════════════════════════════════════════════
+   O'QITUVCHI — KEYS YARATISH BOSHQARUVI
+════════════════════════════════════════════════ */
+// Keyslar ro'yxati (session davomida saqlanadi)
+let oCaseList = [
+  {id:1, name:'Gipertoniya kasalligi', meta:'❤️ Kardiologiya · 1-bosqichi', status:'faol'},
+  {id:2, name:'Bronxial astma', meta:'🫁 Pulmonologiya · Engil', status:'faol'},
+  {id:3, name:'Podagra — yangi', meta:'🦴 Revmotologiya', status:'qoralama'},
+];
+let oCaseCurrentId = 1;
+let oCaseCounter = 3;
+
+function oCaseNew() {
+  oCaseCurrentId = null;
+  // Ro'yxatdagi aktiv holatni olib tashlaymiz
+  document.querySelectorAll('#oc-case-list .oc-item').forEach(el => el.classList.remove('active'));
+  // Formani bo'shatamiz
+  const fields = {
+    'oc-kasallik': '', 'oc-bosqich': '', 'oc-fio': '', 'oc-yosh': '',
+    'oc-tashxis': '', 'oc-shikoyat': '', 'oc-obyektiv': '', 'oc-lab': '',
+    'oc-ekg': '', 'oc-exokg': '', 'oc-rentgen': '', 'oc-togri-javob': ''
+  };
+  Object.entries(fields).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if(el) el.value = val;
+  });
+  // Adabiyot ro'yxatini tozalaymiz
+  const adEl = document.getElementById('adabiyot-list');
+  if(adEl) adEl.innerHTML = '';
+  // Sarlavhani yangilaymiz
+  const formContent = document.getElementById('oc-form-content');
+  if(formContent) {
+    const title = formContent.querySelector('div[style*="font-size:16px"]');
+    if(title) title.textContent = 'Yangi Keys Yaratish';
+  }
+  showToast('📝 Yangi keys formasi ochildi');
+}
+
+function oCaseLoad(el, name, meta, status) {
+  oCaseCurrentId = parseInt(el.closest('.oc-item')?.dataset?.id || 0);
+  document.querySelectorAll('#oc-case-list .oc-item').forEach(e => e.classList.remove('active'));
+  el.closest ? el.closest('.oc-item').classList.add('active') : el.classList.add('active');
+  // Sarlavhani tahrirlash holatiga o'tkazamiz
+  const formContent = document.getElementById('oc-form-content');
+  if(formContent) {
+    const titleEl = formContent.querySelector('div[style*="font-size:16px"]');
+    if(titleEl) titleEl.textContent = 'Keys tahrirlash';
+  }
+  showToast('✏️ ' + name + ' — tahrirlash uchun ochildi');
+}
+
+function oCaseSave(status) {
+  const kasallik = document.getElementById('oc-kasallik')?.value?.trim();
+  const kat = document.getElementById('oc-kat')?.value || '';
+  const bosqich = document.getElementById('oc-bosqich')?.value?.trim() || '';
+  if(!kasallik) { showToast('⚠️ Kasallik nomini kiriting!'); return; }
+  const savedStatus = status || 'faol';
+  const list = document.getElementById('oc-case-list');
+  if(oCaseCurrentId === null && list) {
+    // Yangi keys qo'shamiz
+    oCaseCounter++;
+    const newId = oCaseCounter;
+    const catIcons = {'Kardiologiya':'❤️','Pulmonologiya':'🫁','Gastroenterologiya':'💊','Revmotologiya':'🦴','Nefrologiya':'💧','Gepatologiya':'🔬'};
+    const icon = catIcons[kat] || '📋';
+    const meta = icon + ' ' + kat + (bosqich ? ' · ' + bosqich : '');
+    const item = document.createElement('div');
+    item.className = 'oc-item active';
+    item.dataset.id = newId;
+    item.onclick = function() { oCaseLoad(this, kasallik, meta, savedStatus); };
+    const nm = document.createElement('div'); nm.className = 'oc-it-name'; nm.textContent = kasallik;
+    const mt = document.createElement('div'); mt.className = 'oc-it-meta'; mt.textContent = meta;
+    const st = document.createElement('div'); st.className = 'oc-status' + (savedStatus === 'qoralama' ? ' draft' : '');
+    st.textContent = savedStatus === 'faol' ? 'Faol' : 'Qoralama';
+    item.append(nm, mt, st);
+    // Barcha itemlardan active olamiz
+    document.querySelectorAll('#oc-case-list .oc-item').forEach(e => e.classList.remove('active'));
+    list.appendChild(item);
+    oCaseCurrentId = newId;
+    showToast('✅ Yangi keys saqlandi va ' + (savedStatus === 'faol' ? 'nashr etildi!' : 'qoralama sifatida saqlandi!'));
+  } else {
+    showToast('✅ Keys saqlandi — ' + kasallik);
+  }
+}
+
+function oCaseDelete() {
+  if(oCaseCurrentId === null) { showToast('⚠️ Hech qanday keys tanlanmagan'); return; }
+  const active = document.querySelector('#oc-case-list .oc-item.active');
+  if(active) active.remove();
+  oCaseCurrentId = null;
+  // Formani tozalaymiz
+  oCaseNew();
+  showToast('🗑 Keys o\'chirildi');
 }
 
 /* ADABIYOT KEYS FORM */
@@ -3887,6 +4087,14 @@ let oLibLinks = [
 ];
 
 function initOAdabiyot() {
+  // localStorage dan avvalgi linklar tiklanadi
+  try {
+    const saved = localStorage.getItem('pharmsim_oLibLinks');
+    if(saved) {
+      const parsed = JSON.parse(saved);
+      if(Array.isArray(parsed)) oLibLinks = parsed;
+    }
+  } catch(e) {}
   oLibRenderLinks();
 }
 
@@ -3913,13 +4121,27 @@ function oLibAddLink() {
   const url = document.getElementById('olib-link-url')?.value?.trim();
   const type = document.getElementById('olib-link-type')?.value || 'protokol';
   const cat = document.getElementById('olib-link-cat')?.value || 'Umumiy';
-  if(!title || !url) { showToast('Sarlavha va URL kiriting!'); return; }
+  if(!title) { showToast('⚠️ Sarlavha kiriting!'); return; }
+  if(!url) { showToast('⚠️ URL kiriting!'); return; }
+  // XSS himoya: faqat http:// yoki https:// protokollari ruxsat
+  try {
+    const parsed = new URL(url);
+    if(parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
+      showToast('⚠️ Faqat https:// yoki http:// havolalar qabul qilinadi!');
+      return;
+    }
+  } catch(e) {
+    showToast('⚠️ URL formati noto\'g\'ri! (https://... bilan boshlang)');
+    return;
+  }
   oLibLinks.push({title, url, type, cat});
+  // localStorage ga saqlaymiz
+  try { localStorage.setItem('pharmsim_oLibLinks', JSON.stringify(oLibLinks)); } catch(e) {}
   oLibRenderLinks();
   document.getElementById('olib-link-title').value = '';
   document.getElementById('olib-link-url').value = '';
-  document.getElementById('olib-link-desc').value = '';
-  showToast('Havola qoshildi!');
+  if(document.getElementById('olib-link-desc')) document.getElementById('olib-link-desc').value = '';
+  showToast('✅ Havola qo\'shildi!');
 }
 
 function oLibDeleteLink(i) {
@@ -3945,29 +4167,59 @@ function oDoriPdfSelect(input) {
   }
 }
 
+let oLibPdfCounter = 3; // boshlang'ich 3 ta demo qator bor
+
 function oLibAddPdf() {
   const title = document.getElementById('olib-pdf-title')?.value?.trim();
   const author = document.getElementById('olib-pdf-author')?.value?.trim() || '—';
   const cat = document.getElementById('olib-pdf-cat')?.value || 'Umumiy';
   const fileEl = document.getElementById('olib-pdf-file');
   const file = fileEl?.files?.[0];
-  if(!title) { showToast('Sarlavha kiriting!'); return; }
+  if(!title) { showToast('⚠️ Sarlavha kiriting!'); return; }
+  // Fayl hajmini tekshiramiz (50MB limit)
+  if(file && file.size > 50 * 1024 * 1024) { showToast('⚠️ Fayl 50MB dan katta!'); return; }
   const tbody = document.getElementById('olib-pdf-tbody');
   if(tbody) {
-    const rowCount = tbody.querySelectorAll('tr').length + 1;
+    oLibPdfCounter++;
     const tr = document.createElement('tr');
-    const size = file ? (file.size/1024/1024).toFixed(1) + ' MB' : '— MB';
+    const size = file ? (file.size / 1024 / 1024).toFixed(1) + ' MB' : '— MB';
     const today = new Date().toLocaleDateString('uz-UZ');
-    tr.innerHTML = `<td>${rowCount}</td><td><span style="font-weight:700;">${title}</span><div style="font-size:10px;color:var(--text3);">${cat}</div></td><td>${author}</td><td><span class="badge badge-accent" style="font-size:9px;">${cat}</span></td><td>${size}</td><td>${today}</td><td><button class="btn-ghost" style="padding:4px 10px;font-size:10px;" onclick="showToast('PDF ko\\'rilmoqda')">👁 Ko'rish</button><button class="btn-danger" style="padding:4px 8px;font-size:10px;margin-left:4px;" onclick="oLibDeletePdf(this)">🗑</button></td>`;
+    // textContent ishlatamiz (XSS himoya)
+    const td1 = document.createElement('td'); td1.textContent = oLibPdfCounter;
+    const td2 = document.createElement('td');
+    const strong = document.createElement('strong'); strong.textContent = title;
+    const sub = document.createElement('div'); sub.style.cssText = 'font-size:10px;color:var(--text3)'; sub.textContent = cat;
+    td2.appendChild(strong); td2.appendChild(sub);
+    const td3 = document.createElement('td'); td3.textContent = author;
+    const td4 = document.createElement('td');
+    const badge = document.createElement('span'); badge.className = 'badge badge-accent'; badge.style.fontSize = '9px'; badge.textContent = cat;
+    td4.appendChild(badge);
+    const td5 = document.createElement('td'); td5.textContent = size;
+    const td6 = document.createElement('td'); td6.textContent = today;
+    const td7 = document.createElement('td');
+    const btn1 = document.createElement('button'); btn1.className = 'btn-ghost'; btn1.style.cssText = 'padding:4px 10px;font-size:10px;'; btn1.textContent = '👁 Ko\'rish';
+    btn1.onclick = () => showToast('📖 PDF ko\'rilmoqda');
+    const btn2 = document.createElement('button'); btn2.className = 'btn-danger'; btn2.style.cssText = 'padding:4px 8px;font-size:10px;margin-left:4px;';
+    btn2.textContent = '🗑'; btn2.onclick = function(){ oLibDeletePdf(this); };
+    td7.appendChild(btn1); td7.appendChild(btn2);
+    tr.append(td1, td2, td3, td4, td5, td6, td7);
     tbody.appendChild(tr);
+
+    // Statistikani yangilaymiz
+    const visibleRows = tbody.querySelectorAll('tr:not([style*="display: none"])').length;
     const cnt = document.getElementById('olib-pdf-count');
-    if(cnt) cnt.textContent = rowCount;
+    if(cnt) cnt.textContent = visibleRows;
+    const tot = document.getElementById('olib-total-count');
+    if(tot) tot.textContent = visibleRows + oLibLinks.length;
+
+    // Formani tozalaymiz
     document.getElementById('olib-pdf-title').value = '';
     document.getElementById('olib-pdf-author').value = '';
     document.getElementById('olib-pdf-desc').value = '';
     document.getElementById('pdf-file-name').textContent = 'Maksimum hajm: 50 MB';
     document.getElementById('pdf-drop-zone').style.borderColor = 'var(--border2)';
-    showToast('PDF kutubxonaga qoshildi!');
+    if(fileEl) fileEl.value = '';
+    showToast('✅ PDF kutubxonaga qo\'shildi!');
   }
 }
 
@@ -4015,6 +4267,8 @@ function loadTheme() {
     const saved = localStorage.getItem('pharmsim_theme');
     isDark = saved === 'dark';
     applyTheme();
+    // FOUC helper classini olib tashlaymiz
+    document.documentElement.classList.remove('pre-dark');
   } catch(e) {}
 }
 
